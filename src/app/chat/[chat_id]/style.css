@@ -1,0 +1,22 @@
+/* 基础遮罩 */
+.chat-content::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -10px;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to bottom, transparent, #fff 85%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+/* 输入框激活时，遮罩完全显示，同时整体文字变淡 */
+.dim-content {
+  opacity: 0.38;
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+.dim-content::after {
+  opacity: 1;
+}
