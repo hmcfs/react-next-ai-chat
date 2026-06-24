@@ -34,15 +34,15 @@ export default function SignInPage() {
       setIsLoading(false);
       return;
     }
-    let chatId = localStorage.getItem('chatId');
+    /*    let chatId = localStorage.getItem('chatId');
     if (chatId === null) {
       chatId = v4().replace(/-/g, '');
 
       localStorage.setItem('chatId', chatId);
-    }
-    router.push(`/chat/${chatId}`);
+    } */
+    router.push('/chat');
 
-    router.refresh();
+    //router.refresh();
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
