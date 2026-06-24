@@ -1,16 +1,26 @@
 'use client';
 import { useChat } from '@ai-sdk/react';
 import { useState, useRef, useEffect } from 'react';
+import { clientApi } from '../../lib/client-request';
 export default function Chat() {
   const [input, setInput] = useState('');
   const { messages, sendMessage } = useChat();
   const [isFocus, setIsFocus] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    sendMessage({ text: input });
-    setInput('');
+    try {
+      e.preventDefault();
+      if (!input.trim()) return;
+      const res = await clientApi.post<{ id: string; title: string }>('/api/chat/session', {
+        content: input,
+      });
+      const { id, title } = res;
+
+      sendMessage({ text: input });
+      setInput('');
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <div className="w-full h-screen min-h-[250px] flex flex-col justify-between items-center">

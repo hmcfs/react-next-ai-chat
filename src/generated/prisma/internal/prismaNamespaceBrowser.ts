@@ -73,7 +73,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const Chat_messageScalarFieldEnum = {
-  id: 'id',
+  msg_id: 'msg_id',
   chat_id: 'chat_id',
   role: 'role',
   content: 'content',

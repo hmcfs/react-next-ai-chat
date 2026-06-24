@@ -280,21 +280,21 @@ export type chat_sessionScalarWhereWithAggregatesInput = {
 }
 
 export type chat_sessionCreateInput = {
-  chat_id: string
+  chat_id?: string
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
   chat_message?: Prisma.chat_messageCreateNestedManyWithoutChat_sessionInput
   sys_user: Prisma.sys_userCreateNestedOneWithoutChat_sessionInput
 }
 
 export type chat_sessionUncheckedCreateInput = {
-  chat_id: string
+  chat_id?: string
   user_id: bigint | number
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
   chat_message?: Prisma.chat_messageUncheckedCreateNestedManyWithoutChat_sessionInput
 }
@@ -320,11 +320,11 @@ export type chat_sessionUncheckedUpdateInput = {
 }
 
 export type chat_sessionCreateManyInput = {
-  chat_id: string
+  chat_id?: string
   user_id: bigint | number
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
 }
 
@@ -413,6 +413,14 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type BigIntFieldUpdateOperationsInput = {
+  set?: bigint | number
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
 export type chat_sessionCreateNestedManyWithoutSys_userInput = {
   create?: Prisma.XOR<Prisma.chat_sessionCreateWithoutSys_userInput, Prisma.chat_sessionUncheckedCreateWithoutSys_userInput> | Prisma.chat_sessionCreateWithoutSys_userInput[] | Prisma.chat_sessionUncheckedCreateWithoutSys_userInput[]
   connectOrCreate?: Prisma.chat_sessionCreateOrConnectWithoutSys_userInput | Prisma.chat_sessionCreateOrConnectWithoutSys_userInput[]
@@ -456,20 +464,20 @@ export type chat_sessionUncheckedUpdateManyWithoutSys_userNestedInput = {
 }
 
 export type chat_sessionCreateWithoutChat_messageInput = {
-  chat_id: string
+  chat_id?: string
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
   sys_user: Prisma.sys_userCreateNestedOneWithoutChat_sessionInput
 }
 
 export type chat_sessionUncheckedCreateWithoutChat_messageInput = {
-  chat_id: string
+  chat_id?: string
   user_id: bigint | number
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
 }
 
@@ -508,19 +516,19 @@ export type chat_sessionUncheckedUpdateWithoutChat_messageInput = {
 }
 
 export type chat_sessionCreateWithoutSys_userInput = {
-  chat_id: string
+  chat_id?: string
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
   chat_message?: Prisma.chat_messageCreateNestedManyWithoutChat_sessionInput
 }
 
 export type chat_sessionUncheckedCreateWithoutSys_userInput = {
-  chat_id: string
+  chat_id?: string
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
   chat_message?: Prisma.chat_messageUncheckedCreateNestedManyWithoutChat_sessionInput
 }
@@ -564,10 +572,10 @@ export type chat_sessionScalarWhereInput = {
 }
 
 export type chat_sessionCreateManySys_userInput = {
-  chat_id: string
+  chat_id?: string
   title?: string
   create_time?: Date | string
-  update_time: Date | string
+  update_time?: Date | string
   is_delete?: boolean
 }
 

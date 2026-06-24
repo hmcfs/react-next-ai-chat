@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:pull-only": " prisma db pull",
+    "db:migrate": " prisma migrate dev",
     "db:gen": " prisma generate",
-    "db:sync": "pnpm run db:pull-only && pnpm run db:gen"
+    "db:sync": "pnpm run db:migrate && pnpm run db:gen"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.73",
