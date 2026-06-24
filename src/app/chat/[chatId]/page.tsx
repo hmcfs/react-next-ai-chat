@@ -3,14 +3,38 @@ import './style.css';
 import { useChat } from '@ai-sdk/react';
 import { useState, useRef, useEffect } from 'react';
 import MessageContent from '@/app/components/MessageContent';
-
+import { useChatStore } from '@/lib/store';
+import { useRouter, useParams } from 'next/navigation';
+import { DefaultChatTransport } from 'ai';
 export default function Chat() {
   const [input, setInput] = useState('');
-  const { messages, sendMessage } = useChat();
+  const params = useParams();
+  const chatId = params.chatId as string;
+  const { messages, sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: `/api/chat/${chatId}`,
+      // 每次请求自动追加到请求 body
+      body: {
+        chatId: chatId,
+      },
+    }),
+  });
   const [isFocus, setIsFocus] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { setIsNewChat } = useChatStore();
+  const content = useChatStore((state) => state.content);
+  const isNewChat = useChatStore((state) => state.isNewChat);
+  const hasConsume = useRef(false);
 
-  //   新消息到达时自动滚动到底部
+  console.log('chatId', chatId);
+  useEffect(() => {
+    if (isNewChat && !hasConsume.current && content.trim()) {
+      setIsNewChat(false);
+      hasConsume.current = true;
+      content.trim() && sendMessage({ text: content }, { body: { chatId } });
+    }
+  }, [isNewChat, content]);
+  //  自动滚动到底部
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);

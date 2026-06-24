@@ -1,6 +1,10 @@
 'use client';
-
-async function request<T>(url: string, options?: RequestInit): Promise<T> {
+interface Result<T> {
+  code: number | string;
+  msg: string;
+  data?: T;
+}
+async function request<T>(url: string, options?: RequestInit): Promise<Result<T>> {
   const headers = options?.headers ?? {};
   if (!(options?.body instanceof FormData)) headers['Content-Type'] = 'application/json';
   const res = await fetch(url, { ...options, headers });
@@ -19,7 +23,7 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     throw new Error(err.message || 'Request failed');
   }
 
-  return data as T;
+  return data as Result<T>;
 }
 export const clientApi = {
   get: <T>(url: string, options?: RequestInit) => request<T>(url, { ...options, method: 'GET' }),

@@ -8,30 +8,29 @@ datasource db {
 }
 
 model chat_message {
-  msg_id       String       @id @db.Char(32) @default(dbgenerated("replace(gen_random_uuid()::text, '-'::text, ''::text)"))
+  msg_id       String       @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32)
   chat_id      String       @db.Char(32)
   role         String       @db.VarChar(10)
   content      String
   create_time  DateTime     @default(now())
-  // 绑定关联名 "session_msg"
-  chat_session chat_session @relation("session_msg", fields: [chat_id], references: [chat_id], onDelete: Cascade)
+  chat_session chat_session @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
 
   @@index([chat_id], map: "idx_chatid")
 }
 
 model chat_session {
-  chat_id      String         @id @default(dbgenerated("replace(gen_random_uuid()::text, '-'::text, ''::text)")) @db.Char(32)
+  chat_id      String         @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32)
   user_id      BigInt
   title        String         @default("") @db.VarChar(255)
   create_time  DateTime       @default(now())
-  update_time  DateTime       @default(now()) @updatedAt // 补上自动更新时间
+  update_time  DateTime       @default(now())
   is_delete    Boolean        @default(false)
-  // 和子表同一个关联名
-  chat_message chat_message[] @relation("session_msg")
+  chat_message chat_message[]
   sys_user     sys_user       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id, is_delete], map: "idx_userid")
 }
+
 model sys_user {
   id           BigInt         @id @default(autoincrement())
   username     String         @unique @db.VarChar(50)

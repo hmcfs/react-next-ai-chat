@@ -1,22 +1,36 @@
 'use client';
-import { useChat } from '@ai-sdk/react';
+
 import { useState, useRef, useEffect } from 'react';
 import { clientApi } from '../../lib/client-request';
+import { useRouter } from 'next/navigation';
+import { useChatStore } from '../../lib/store/useChatStore';
 export default function Chat() {
+  const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
   const [input, setInput] = useState('');
-  const { messages, sendMessage } = useChat();
+
   const [isFocus, setIsFocus] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const [showTip, setShowTip] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       if (!input.trim()) return;
-      const res = await clientApi.post<{ id: string; title: string }>('/api/chat/session', {
+      const res = await clientApi.post<{ chatId: string; title: string }>('/api/chat/session', {
         content: input,
       });
-      const { id, title } = res;
+      const { chatId, title } = res.data || {};
 
-      sendMessage({ text: input });
+      if (!res.code) {
+        setShowTip(true);
+        setInput('');
+        return;
+      }
+      setTitle(title || '');
+      setContent(input || '');
+      setIsNewChat(true);
+      router.push(`/chat/${chatId}`);
+
       setInput('');
     } catch (e) {
       console.log(e);

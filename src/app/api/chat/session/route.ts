@@ -27,9 +27,13 @@ export async function POST(req: NextRequest) {
       },
     });
     const { chat_id, title } = newSession;
-    return NextResponse.json({ data: { chat_id, title }, code: 1, msg: 'create session success' });
+    return NextResponse.json({
+      data: { chatId: chat_id, title: title, content },
+      code: 1,
+      msg: 'create session success',
+    });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: 'create session failed' }, { status: 500 });
+    return NextResponse.json({ msg: 'create session failed', code: 0 }, { status: 500 });
   }
 }
