@@ -1,6 +1,7 @@
 'use client';
 import './style.css';
 import { useChat } from '@ai-sdk/react';
+
 import { useState } from 'react';
 import MessageContent from '@/app/components/MessageContent';
 export default function Chat() {
@@ -8,10 +9,7 @@ export default function Chat() {
   const { messages, sendMessage } = useChat();
   const [isFocus, setIsFocus] = useState(false);
   return (
-    <div
-      className=" flex flex-col w-full max-w-[var(--chat-layout-width)] py-24 pt-24 mx-auto stretch focus:outline-none}
-      "
-    >
+    <div className=" flex flex-col w-full max-w-[var(--chat-layout-width)] py-24 pt-24 mx-auto stretch focus:outline-none">
       {messages.map((message) => (
         <div key={message.id} className="whitespace-pre-wrap">
           {message.role === 'user' ? 'User: ' : 'AI: '}
@@ -39,7 +37,7 @@ export default function Chat() {
           sendMessage({ text: input });
           setInput('');
         }}
-        className="fixed pb-4 w-4/5 left-[var(--chat-layout-side)] bg-white flex justify-center items-center  bottom-0  z-999 "
+        className="fixed bottom-0 left-[var(--sidebar-offset,var(--chat-layout-side))] right-0 pb-4 bg-white flex justify-center items-center z-999"
       >
         <div
           // className={`dim-content ${isFocus ? 'dim-content' : ''} chat-content   w-[var(--chat-layout-width)] shadow-2xl rounded-[20px] border-gray-100 focus-within:border-blue-100    border-2  `}

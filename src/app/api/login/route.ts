@@ -5,9 +5,6 @@ import { prisma } from '@/lib/prisma';
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json();
 
-  /* if (username !== 'user' || password !== '123') {
-    return NextResponse.json({ error: 'Invalid username or password' }, { status: 400 });
-  } */
   if (!username || !password)
     return NextResponse.json({ error: 'Username and password are required' }, { status: 400 });
   const user = await prisma.sys_user.findUnique({
