@@ -1,6 +1,7 @@
 import { getId } from '@/lib/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { fail } from '@/lib/error/response';
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,8 +34,7 @@ export async function POST(req: NextRequest) {
       msg: 'create session success',
     });
   } catch (e) {
-    console.error(e);
-    return NextResponse.json({ msg: 'create session failed', code: 0 }, { status: 500 });
+    return fail(e);
   }
 }
 export async function GET(req: NextRequest) {

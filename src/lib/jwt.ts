@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import { NextRequest } from 'next/server';
+import { AuthError } from './error/error';
 const JWT_SECRET = process.env.JWT_SECRET as string;
 export function verifyToken(token: string): null | any {
   try {
@@ -13,4 +15,9 @@ export function signToken(payload: Record<string, any>, expire?: number) {
 }
 export function getId(token: string) {
   return verifyToken(token)?.userId;
+}
+export function getAuthContext(req: NextRequest): string | AuthError | number {
+  const context = getId(req.cookies.get('token')?.value || '');
+  if (!context) throw new AuthError();
+  return context;
 }
