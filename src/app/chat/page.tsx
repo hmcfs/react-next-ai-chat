@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { clientApi } from '../../lib/client-request';
 import { useRouter } from 'next/navigation';
 import { useChatStore } from '../../lib/store/useChatStore';
+import { toast } from 'sonner';
 export default function Chat() {
   const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
   const [input, setInput] = useState('');
@@ -22,7 +23,7 @@ export default function Chat() {
       const { chatId, title } = res.data || {};
 
       if (!res.code) {
-        setShowTip(true);
+        toast.error(res.msg || '创建对话失败');
         setInput('');
         return;
       }

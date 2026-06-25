@@ -37,3 +37,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: 'create session failed', code: 0 }, { status: 500 });
   }
 }
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+
+    const page = Number(searchParams.get('page')) || 1;
+    const pageSize = Number(searchParams.get('pageSize')) || 10;
+    const skip = (page - 1) * pageSize;
+    const userId = getId(req.cookies.get('token')?.value || '');
+    if (!userId) {
+      return NextResponse.json({ error: ' Please login first', code: 0 }, { status: 401 });
+    }
+    const historyList = await prisma.chat_session.findMany({
+      where: { user_id: userId, is_delete: false },
+      select: {
+        chat_id: true,
+        title: true,
+        create_time: true,
+        update_time: true,
+      },
+      orderBy: { create_time: 'desc' },
+      take: pageSize,
+      skip,
+    });
+    return NextResponse.json({
+      data: { historyList, page, pageSize },
+      code: 1,
+      msg: 'Select history chat success',
+    });
+  } catch (e) {
+    console.error('查询聊天记录失败：', e);
+    return NextResponse.json({ error: 'Select history chat failed', code: 0 }, { status: 500 });
+  }
+}
