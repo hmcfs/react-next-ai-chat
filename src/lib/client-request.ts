@@ -5,8 +5,8 @@ interface Result<T> {
   data?: T;
 }
 async function request<T>(url: string, options?: RequestInit): Promise<Result<T>> {
-  const headers = options?.headers ?? {};
-  if (!(options?.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+  const headers = new Headers(options?.headers ?? {});
+  if (!(options?.body instanceof FormData)) headers.set('Content-Type', 'application/json');
   const res = await fetch(url, { ...options, headers });
 
   if (res.status === 401) {

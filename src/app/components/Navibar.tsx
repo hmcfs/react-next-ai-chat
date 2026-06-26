@@ -1,28 +1,26 @@
 'use client';
-import { useState } from 'react';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
-  SidebarFooter,
+  SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Plus, Search, Square, MoreHorizontal } from 'lucide-react';
-import Image from 'next/image';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { useSidebarVisible } from '@/hooks/useSidebarVisible';
-import { Dispatch, SetStateAction } from 'react';
+import { MoreHorizontal, Search } from 'lucide-react';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'sonner';
 import { CustomDialog } from '../chat/components/CustomDialog';
-import { useEffect } from 'react';
 // 模拟数据类型
 interface ChatRecord {
   id: string;
@@ -65,7 +63,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
     '30天内': mockChatList.filter((item) => item.group === '30天内'),
   };
   const { isCollapsed, ref } = useSidebarVisible();
-  console.log(isCollapsed);
+  // console.log(isCollapsed);
   const path = usePathname();
   const router = useRouter();
 

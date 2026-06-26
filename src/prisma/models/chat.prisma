@@ -8,6 +8,7 @@ model ChatMessage {
   chatSession ChatSession @relation(fields: [chatId], references: [chatId], onDelete: Cascade)
 
   @@index([chatId], map: "idx_chatid")
+   @@unique([chatId, content,role]) 
   @@map("chat_message")
 }
 model ChatSession {

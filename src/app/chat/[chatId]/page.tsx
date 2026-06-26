@@ -1,11 +1,11 @@
 'use client';
-import './style.css';
-import { useChat } from '@ai-sdk/react';
-import { useState, useRef, useEffect } from 'react';
 import MessageContent from '@/app/components/MessageContent';
 import { useChatStore } from '@/lib/store';
-import { useRouter, useParams } from 'next/navigation';
+import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import './style.css';
 export default function Chat() {
   const [input, setInput] = useState('');
   const params = useParams();
@@ -26,7 +26,7 @@ export default function Chat() {
   const isNewChat = useChatStore((state) => state.isNewChat);
   const hasConsume = useRef(false);
 
-  console.log('chatId', chatId);
+  // console.log('chatId', chatId);
   useEffect(() => {
     if (isNewChat && !hasConsume.current && content.trim()) {
       setIsNewChat(false);

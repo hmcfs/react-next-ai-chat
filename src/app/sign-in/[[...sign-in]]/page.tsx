@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { clientApi } from '@/lib/client-request';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { v4 } from 'uuid';
-import { clientApi } from '@/lib/client-request';
+import { useState } from 'react';
 export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -30,7 +29,7 @@ export default function SignInPage() {
     );
 
     if (!res.code) {
-      setError(res.message || '用户名或密码错误');
+      setError(res?.msg || '用户名或密码错误');
       setIsLoading(false);
       return;
     }

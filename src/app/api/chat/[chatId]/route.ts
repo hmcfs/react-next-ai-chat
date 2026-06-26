@@ -7,7 +7,7 @@ const bailian = createOpenAI({
   baseURL: process.env.BAILIAN_BASE_URL,
 });
 
-export async function POST(req: NextRequest, { params }: { params: { chatId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ chatId: string }> }) {
   const { messages, chatId }: { messages: UIMessage[]; chatId: string } = await req.json();
   //console.log('params', await params);
   const lastMsg = messages[messages.length - 1];

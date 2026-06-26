@@ -1,15 +1,20 @@
 import { prisma } from '@/lib/prisma';
+let count = 0;
+console.log('createSession', ++count);
 export async function createSession(userId: number, content: string) {
   const session = await prisma.chatSession.create({
     data: {
       userId: userId,
       title: content.slice(0, 20),
-      chatMessage: {
-        create: {
-          role: 'user',
-          content: content,
-        },
-      },
+    },
+  });
+
+  // 2. 再独立创建 Message
+  await prisma.chatMessage.create({
+    data: {
+      chatId: session.chatId,
+      role: 'user',
+      content: content,
     },
   });
   return { chatId: session.chatId, title: session.title, content };
