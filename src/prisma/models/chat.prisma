@@ -3,7 +3,7 @@ model ChatMessage {
   chatId      String      @db.Char(32) @map("chat_id") // ← 必须加
   role        String      @db.VarChar(10)
   content     String
-  createTime  DateTime    @default(now()) @map("create_time") // ← 必须加
+  createTime  DateTime    @default(now())  @db.Timestamptz  @map("create_time") // ← 必须加
   
   chatSession ChatSession @relation(fields: [chatId], references: [chatId], onDelete: Cascade)
 
@@ -15,8 +15,8 @@ model ChatSession {
   chatId      String   @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32) @map("chat_id")
   userId      BigInt   @map("user_id")        // ← 关键修复
   title       String   @default("") @db.VarChar(255)
-  createTime  DateTime @default(now()) @map("create_time")
-  updateTime  DateTime @default(now()) @map("update_time")
+  createTime  DateTime @default(now())  @db.Timestamptz  @map("create_time")
+  updateTime  DateTime @default(now())  @db.Timestamptz @map("update_time")
   isDelete    Boolean  @default(false) @map("is_delete")
 
   chatMessage ChatMessage[]

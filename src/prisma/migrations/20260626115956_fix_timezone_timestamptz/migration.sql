@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "chat_message"
+ALTER COLUMN "create_time"
+SET DATA TYPE TIMESTAMPTZ;
+
+-- AlterTable
+ALTER TABLE "chat_session"
+ALTER COLUMN "create_time"
+SET DATA TYPE TIMESTAMPTZ,
+ALTER COLUMN "update_time"
+SET DATA TYPE TIMESTAMPTZ;

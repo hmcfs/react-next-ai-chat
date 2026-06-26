@@ -11,8 +11,15 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
+  // 设置数据库会话时区为 UTC，确保 adapter 的 formatDateTime 输出（无时区后缀的 UTC 时间）被正确解释
+  const dbUrl = process.env.DATABASE_URL!;
+  const timezoneOpt = 'options=-c%20timezone=UTC';
+  const connectionString = dbUrl.includes('?')
+    ? `${dbUrl}&${timezoneOpt}`
+    : `${dbUrl}?${timezoneOpt}`;
+
   const pool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString,
     max: 10, // 最大连接数
     idleTimeoutMillis: 20_000, // 空闲超时
     connectionTimeoutMillis: 10_000, // 连接超时
@@ -22,7 +29,6 @@ function createPrismaClient() {
   const adapter = new PrismaPg(pool);
   return new PrismaClient({
     adapter,
-    log: ['query', 'info', 'warn', 'error'],
   });
 }
 
