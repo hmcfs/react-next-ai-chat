@@ -196,7 +196,6 @@ export type ChatMessageOrderByWithRelationInput = {
 
 export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
   msgId?: string
-  chatId_content_role?: Prisma.ChatMessageChatIdContentRoleCompoundUniqueInput
   AND?: Prisma.ChatMessageWhereInput | Prisma.ChatMessageWhereInput[]
   OR?: Prisma.ChatMessageWhereInput[]
   NOT?: Prisma.ChatMessageWhereInput | Prisma.ChatMessageWhereInput[]
@@ -205,7 +204,7 @@ export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
-}, "msgId" | "chatId_content_role">
+}, "msgId">
 
 export type ChatMessageOrderByWithAggregationInput = {
   msgId?: Prisma.SortOrder
@@ -282,12 +281,6 @@ export type ChatMessageUncheckedUpdateManyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ChatMessageChatIdContentRoleCompoundUniqueInput = {
-  chatId: string
-  content: string
-  role: string
 }
 
 export type ChatMessageCountOrderByAggregateInput = {
