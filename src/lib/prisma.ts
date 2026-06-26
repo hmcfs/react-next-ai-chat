@@ -20,7 +20,10 @@ function createPrismaClient() {
 
   //   2. 将已配置好的 pool 传入适配器
   const adapter = new PrismaPg(pool);
-  return new PrismaClient({ adapter });
+  return new PrismaClient({
+    adapter,
+    log: ['query', 'info', 'warn', 'error'],
+  });
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
