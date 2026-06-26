@@ -1,0 +1,26 @@
+model ChatMessage {
+  msgId       String      @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32) @map("msg_id") // ← 必须加
+  chatId      String      @db.Char(32) @map("chat_id") // ← 必须加
+  role        String      @db.VarChar(10)
+  content     String
+  createTime  DateTime    @default(now()) @map("create_time") // ← 必须加
+  
+  chatSession ChatSession @relation(fields: [chatId], references: [chatId], onDelete: Cascade)
+
+  @@index([chatId], map: "idx_chatid")
+  @@map("chat_message")
+}
+model ChatSession {
+  chatId      String   @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32) @map("chat_id")
+  userId      BigInt   @map("user_id")        // ← 关键修复
+  title       String   @default("") @db.VarChar(255)
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @default(now()) @map("update_time")
+  isDelete    Boolean  @default(false) @map("is_delete")
+
+  chatMessage ChatMessage[]
+  sysUser     SysUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isDelete], map: "idx_userid")
+  @@map("chat_session")
+}

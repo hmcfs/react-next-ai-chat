@@ -384,9 +384,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  chat_message: 'chat_message',
-  chat_session: 'chat_session',
-  sys_user: 'sys_user'
+  ChatMessage: 'ChatMessage',
+  ChatSession: 'ChatSession',
+  SysUser: 'SysUser'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,229 +402,229 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "chat_message" | "chat_session" | "sys_user"
+    modelProps: "chatMessage" | "chatSession" | "sysUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    chat_message: {
-      payload: Prisma.$chat_messagePayload<ExtArgs>
-      fields: Prisma.chat_messageFieldRefs
+    ChatMessage: {
+      payload: Prisma.$ChatMessagePayload<ExtArgs>
+      fields: Prisma.ChatMessageFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.chat_messageFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload> | null
+          args: Prisma.ChatMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.chat_messageFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>
+          args: Prisma.ChatMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>
         }
         findFirst: {
-          args: Prisma.chat_messageFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload> | null
+          args: Prisma.ChatMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.chat_messageFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>
+          args: Prisma.ChatMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>
         }
         findMany: {
-          args: Prisma.chat_messageFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>[]
+          args: Prisma.ChatMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
         }
         create: {
-          args: Prisma.chat_messageCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>
+          args: Prisma.ChatMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>
         }
         createMany: {
-          args: Prisma.chat_messageCreateManyArgs<ExtArgs>
+          args: Prisma.ChatMessageCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.chat_messageCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>[]
+          args: Prisma.ChatMessageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
         }
         delete: {
-          args: Prisma.chat_messageDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>
+          args: Prisma.ChatMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>
         }
         update: {
-          args: Prisma.chat_messageUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>
+          args: Prisma.ChatMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>
         }
         deleteMany: {
-          args: Prisma.chat_messageDeleteManyArgs<ExtArgs>
+          args: Prisma.ChatMessageDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.chat_messageUpdateManyArgs<ExtArgs>
+          args: Prisma.ChatMessageUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.chat_messageUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>[]
+          args: Prisma.ChatMessageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
         }
         upsert: {
-          args: Prisma.chat_messageUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_messagePayload>
+          args: Prisma.ChatMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMessagePayload>
         }
         aggregate: {
-          args: Prisma.Chat_messageAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateChat_message>
+          args: Prisma.ChatMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChatMessage>
         }
         groupBy: {
-          args: Prisma.chat_messageGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Chat_messageGroupByOutputType>[]
+          args: Prisma.ChatMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChatMessageGroupByOutputType>[]
         }
         count: {
-          args: Prisma.chat_messageCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Chat_messageCountAggregateOutputType> | number
+          args: Prisma.ChatMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChatMessageCountAggregateOutputType> | number
         }
       }
     }
-    chat_session: {
-      payload: Prisma.$chat_sessionPayload<ExtArgs>
-      fields: Prisma.chat_sessionFieldRefs
+    ChatSession: {
+      payload: Prisma.$ChatSessionPayload<ExtArgs>
+      fields: Prisma.ChatSessionFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.chat_sessionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload> | null
+          args: Prisma.ChatSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.chat_sessionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>
+          args: Prisma.ChatSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>
         }
         findFirst: {
-          args: Prisma.chat_sessionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload> | null
+          args: Prisma.ChatSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.chat_sessionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>
+          args: Prisma.ChatSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>
         }
         findMany: {
-          args: Prisma.chat_sessionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>[]
+          args: Prisma.ChatSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>[]
         }
         create: {
-          args: Prisma.chat_sessionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>
+          args: Prisma.ChatSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>
         }
         createMany: {
-          args: Prisma.chat_sessionCreateManyArgs<ExtArgs>
+          args: Prisma.ChatSessionCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.chat_sessionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>[]
+          args: Prisma.ChatSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>[]
         }
         delete: {
-          args: Prisma.chat_sessionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>
+          args: Prisma.ChatSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>
         }
         update: {
-          args: Prisma.chat_sessionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>
+          args: Prisma.ChatSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>
         }
         deleteMany: {
-          args: Prisma.chat_sessionDeleteManyArgs<ExtArgs>
+          args: Prisma.ChatSessionDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.chat_sessionUpdateManyArgs<ExtArgs>
+          args: Prisma.ChatSessionUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.chat_sessionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>[]
+          args: Prisma.ChatSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>[]
         }
         upsert: {
-          args: Prisma.chat_sessionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$chat_sessionPayload>
+          args: Prisma.ChatSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatSessionPayload>
         }
         aggregate: {
-          args: Prisma.Chat_sessionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateChat_session>
+          args: Prisma.ChatSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChatSession>
         }
         groupBy: {
-          args: Prisma.chat_sessionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Chat_sessionGroupByOutputType>[]
+          args: Prisma.ChatSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChatSessionGroupByOutputType>[]
         }
         count: {
-          args: Prisma.chat_sessionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Chat_sessionCountAggregateOutputType> | number
+          args: Prisma.ChatSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChatSessionCountAggregateOutputType> | number
         }
       }
     }
-    sys_user: {
-      payload: Prisma.$sys_userPayload<ExtArgs>
-      fields: Prisma.sys_userFieldRefs
+    SysUser: {
+      payload: Prisma.$SysUserPayload<ExtArgs>
+      fields: Prisma.SysUserFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.sys_userFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload> | null
+          args: Prisma.SysUserFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.sys_userFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>
+          args: Prisma.SysUserFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>
         }
         findFirst: {
-          args: Prisma.sys_userFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload> | null
+          args: Prisma.SysUserFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.sys_userFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>
+          args: Prisma.SysUserFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>
         }
         findMany: {
-          args: Prisma.sys_userFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>[]
+          args: Prisma.SysUserFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>[]
         }
         create: {
-          args: Prisma.sys_userCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>
+          args: Prisma.SysUserCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>
         }
         createMany: {
-          args: Prisma.sys_userCreateManyArgs<ExtArgs>
+          args: Prisma.SysUserCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.sys_userCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>[]
+          args: Prisma.SysUserCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>[]
         }
         delete: {
-          args: Prisma.sys_userDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>
+          args: Prisma.SysUserDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>
         }
         update: {
-          args: Prisma.sys_userUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>
+          args: Prisma.SysUserUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>
         }
         deleteMany: {
-          args: Prisma.sys_userDeleteManyArgs<ExtArgs>
+          args: Prisma.SysUserDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.sys_userUpdateManyArgs<ExtArgs>
+          args: Prisma.SysUserUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.sys_userUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>[]
+          args: Prisma.SysUserUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>[]
         }
         upsert: {
-          args: Prisma.sys_userUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$sys_userPayload>
+          args: Prisma.SysUserUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SysUserPayload>
         }
         aggregate: {
-          args: Prisma.Sys_userAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSys_user>
+          args: Prisma.SysUserAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSysUser>
         }
         groupBy: {
-          args: Prisma.sys_userGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Sys_userGroupByOutputType>[]
+          args: Prisma.SysUserGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SysUserGroupByOutputType>[]
         }
         count: {
-          args: Prisma.sys_userCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Sys_userCountAggregateOutputType> | number
+          args: Prisma.SysUserCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SysUserCountAggregateOutputType> | number
         }
       }
     }
@@ -667,36 +667,36 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const Chat_messageScalarFieldEnum = {
-  msg_id: 'msg_id',
-  chat_id: 'chat_id',
+export const ChatMessageScalarFieldEnum = {
+  msgId: 'msgId',
+  chatId: 'chatId',
   role: 'role',
   content: 'content',
-  create_time: 'create_time'
+  createTime: 'createTime'
 } as const
 
-export type Chat_messageScalarFieldEnum = (typeof Chat_messageScalarFieldEnum)[keyof typeof Chat_messageScalarFieldEnum]
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
-export const Chat_sessionScalarFieldEnum = {
-  chat_id: 'chat_id',
-  user_id: 'user_id',
+export const ChatSessionScalarFieldEnum = {
+  chatId: 'chatId',
+  userId: 'userId',
   title: 'title',
-  create_time: 'create_time',
-  update_time: 'update_time',
-  is_delete: 'is_delete'
+  createTime: 'createTime',
+  updateTime: 'updateTime',
+  isDelete: 'isDelete'
 } as const
 
-export type Chat_sessionScalarFieldEnum = (typeof Chat_sessionScalarFieldEnum)[keyof typeof Chat_sessionScalarFieldEnum]
+export type ChatSessionScalarFieldEnum = (typeof ChatSessionScalarFieldEnum)[keyof typeof ChatSessionScalarFieldEnum]
 
 
-export const Sys_userScalarFieldEnum = {
+export const SysUserScalarFieldEnum = {
   id: 'id',
   username: 'username',
   password: 'password'
 } as const
 
-export type Sys_userScalarFieldEnum = (typeof Sys_userScalarFieldEnum)[keyof typeof Sys_userScalarFieldEnum]
+export type SysUserScalarFieldEnum = (typeof SysUserScalarFieldEnum)[keyof typeof SysUserScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -907,9 +907,9 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
-  chat_message?: Prisma.chat_messageOmit
-  chat_session?: Prisma.chat_sessionOmit
-  sys_user?: Prisma.sys_userOmit
+  chatMessage?: Prisma.ChatMessageOmit
+  chatSession?: Prisma.ChatSessionOmit
+  sysUser?: Prisma.SysUserOmit
 }
 
 /* Types for Logging */

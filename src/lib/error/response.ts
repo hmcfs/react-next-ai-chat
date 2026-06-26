@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { AppError } from './error';
 import { ZodError } from 'zod';
+import { AppError } from './error';
 export function success<T>(data: T, msg = 'success') {
   return NextResponse.json({ data, msg: msg, code: 1 });
 }
@@ -18,7 +18,7 @@ export function fail(e: unknown): NextResponse {
       { status: e.statusCode }
     );
   }
-
+  console.error('处理失败：', e);
   return NextResponse.json(
     { code: 500, msg: '服务器内部错误，请稍后重试', data: null },
     { status: 500 }

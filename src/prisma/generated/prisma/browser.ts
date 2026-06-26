@@ -18,17 +18,17 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
- * Model chat_message
+ * Model ChatMessage
  * 
  */
-export type chat_message = Prisma.chat_messageModel
+export type ChatMessage = Prisma.ChatMessageModel
 /**
- * Model chat_session
+ * Model ChatSession
  * 
  */
-export type chat_session = Prisma.chat_sessionModel
+export type ChatSession = Prisma.ChatSessionModel
 /**
- * Model sys_user
+ * Model SysUser
  * 
  */
-export type sys_user = Prisma.sys_userModel
+export type SysUser = Prisma.SysUserModel

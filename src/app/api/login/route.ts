@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { signToken, verifyToken } from '@/lib/jwt';
 import { pswCrypt } from '@/lib/crypt';
+import { signToken } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json();
 
   if (!username || !password)
     return NextResponse.json({ error: 'Username and password are required' }, { status: 400 });
-  const user = await prisma.sys_user.findUnique({
+  const user = await prisma.sysUser.findUnique({
     where: { username },
     select: { password: true, id: true, username: true },
   });

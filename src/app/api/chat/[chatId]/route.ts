@@ -1,7 +1,7 @@
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { createOpenAI } from '@ai-sdk/openai';
+import { convertToModelMessages, streamText, UIMessage } from 'ai';
+import { NextRequest } from 'next/server';
 const bailian = createOpenAI({
   apiKey: process.env.BAILIAN_API_KEY,
   baseURL: process.env.BAILIAN_BASE_URL,
@@ -18,9 +18,9 @@ export async function POST(req: NextRequest, { params }: { params: { chatId: str
           ?.filter((p) => p.type === 'text')
           .map((p) => p.text)
           .join('') ?? '';
-      await (prisma as any).chat_message.create({
+      await prisma.chatMessage.create({
         data: {
-          chat_id: chatId,
+          chatId,
           role: lastMsg.role,
           content: textContent,
         },
@@ -37,9 +37,9 @@ export async function POST(req: NextRequest, { params }: { params: { chatId: str
       if (!chatId || !text) return;
 
       try {
-        await (prisma as any).chat_message.create({
+        await prisma.chatMessage.create({
           data: {
-            chat_id: chatId,
+            chatId,
             role: 'assistant',
             content: text,
           },

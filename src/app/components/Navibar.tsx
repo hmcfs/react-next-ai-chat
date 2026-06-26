@@ -22,6 +22,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { CustomDialog } from '../chat/components/CustomDialog';
+import { useEffect } from 'react';
 // 模拟数据类型
 interface ChatRecord {
   id: string;
@@ -52,6 +53,9 @@ interface ChatSidebarProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
+  //   useEffect(async()=>{
+  //  const res=await fetch('/api/chat/session')
+  //   },[])
   // 当前选中对话ID
   const [activeChatId, setActiveChatId] = useState<string>('1');
 

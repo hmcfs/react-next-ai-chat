@@ -1,0 +1,12 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+  fieldCase = "camel"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+ 
+ 

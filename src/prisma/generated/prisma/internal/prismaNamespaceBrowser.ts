@@ -51,9 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  chat_message: 'chat_message',
-  chat_session: 'chat_session',
-  sys_user: 'sys_user'
+  ChatMessage: 'ChatMessage',
+  ChatSession: 'ChatSession',
+  SysUser: 'SysUser'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -72,36 +72,36 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const Chat_messageScalarFieldEnum = {
-  msg_id: 'msg_id',
-  chat_id: 'chat_id',
+export const ChatMessageScalarFieldEnum = {
+  msgId: 'msgId',
+  chatId: 'chatId',
   role: 'role',
   content: 'content',
-  create_time: 'create_time'
+  createTime: 'createTime'
 } as const
 
-export type Chat_messageScalarFieldEnum = (typeof Chat_messageScalarFieldEnum)[keyof typeof Chat_messageScalarFieldEnum]
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
-export const Chat_sessionScalarFieldEnum = {
-  chat_id: 'chat_id',
-  user_id: 'user_id',
+export const ChatSessionScalarFieldEnum = {
+  chatId: 'chatId',
+  userId: 'userId',
   title: 'title',
-  create_time: 'create_time',
-  update_time: 'update_time',
-  is_delete: 'is_delete'
+  createTime: 'createTime',
+  updateTime: 'updateTime',
+  isDelete: 'isDelete'
 } as const
 
-export type Chat_sessionScalarFieldEnum = (typeof Chat_sessionScalarFieldEnum)[keyof typeof Chat_sessionScalarFieldEnum]
+export type ChatSessionScalarFieldEnum = (typeof ChatSessionScalarFieldEnum)[keyof typeof ChatSessionScalarFieldEnum]
 
 
-export const Sys_userScalarFieldEnum = {
+export const SysUserScalarFieldEnum = {
   id: 'id',
   username: 'username',
   password: 'password'
 } as const
 
-export type Sys_userScalarFieldEnum = (typeof Sys_userScalarFieldEnum)[keyof typeof Sys_userScalarFieldEnum]
+export type SysUserScalarFieldEnum = (typeof SysUserScalarFieldEnum)[keyof typeof SysUserScalarFieldEnum]
 
 
 export const SortOrder = {

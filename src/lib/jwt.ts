@@ -14,9 +14,9 @@ export function signToken(payload: Record<string, any>, expire?: number) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: expire || 60 * 60 * 24 });
 }
 export function getId(token: string) {
-  return verifyToken(token)?.userId;
+  return Number(verifyToken(token)?.userId);
 }
-export function getAuthContext(req: NextRequest): string | AuthError | number {
+export function getAuthContext(req: NextRequest): number {
   const context = getId(req.cookies.get('token')?.value || '');
   if (!context) throw new AuthError();
   return context;

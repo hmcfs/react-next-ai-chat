@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/chat_message'
-export type * from './models/chat_session'
-export type * from './models/sys_user'
+export type * from './models/ChatMessage'
+export type * from './models/ChatSession'
+export type * from './models/SysUser'
 export type * from './commonInputTypes'
