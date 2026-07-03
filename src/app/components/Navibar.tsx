@@ -15,13 +15,13 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useSidebarVisible } from '@/hooks/useSidebarVisible';
+import { clientApi } from '@/lib/client-request';
 import { MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { CustomDialog } from '../chat/components/CustomDialog';
-// 模拟数据类型
 interface ChatRecord {
   id: string;
   title: string;
@@ -50,12 +50,114 @@ interface ChatSidebarProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
+interface HistoryList {
+  title: string;
+  updateTime: string;
+  isDeleted?: boolean;
+  chatId: string;
+  createTime: string;
+}
+interface PageHistoryResult {
+  page: number;
+  pageSize: number;
+  historyList: HistoryList[];
+}
+interface GroupList {
+  group: string;
+  list: HistoryList[];
+}
+const DATE_TYPE = ['今天', '近一周', '30天内', '更早'];
 export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
-  //   useEffect(async()=>{
-  //  const res=await fetch('/api/chat/session')
-  //   },[])
+  const [list, setList] = useState<GroupList[]>([]);
+  const [page, setPage] = useState(1);
+  const categoryList = (ListArray: HistoryList[]): GroupList[] => {
+    if (!ListArray.length) return [];
+    const start = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+    console.log('standard', start);
+    console.log('curTime:', new Date().getTime());
+    // const start=new Date(cloneList[0].updateTime).getTime();
+    // const end=new Date(cloneList[cloneList.length-1].updateTime).getTime();
+    const day = 24 * 60 * 60 * 1000;
+    const collectList: GroupList[] = Array.from({ length: DATE_TYPE.length }, (item, index) => ({
+      group: DATE_TYPE[index],
+      list: [],
+    }));
+
+    ListArray.sort(
+      (a, b) => new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime()
+    ).forEach((i, _index) => {
+      const date = new Date(i.updateTime).getTime();
+      //console.log('diff', start - date);
+      if (date >= start) {
+        return collectList[0].list.push(i);
+      }
+      if (start - date <= day * 7) {
+        return collectList[1].list.push(i);
+      }
+      if (start - date <= day * 30) {
+        return collectList[2].list.push(i);
+      }
+      return collectList[3].list.push(i);
+    });
+    console.log('collectList', collectList);
+    return collectList;
+  };
+
+  useEffect(() => {
+    const getList = async () => {
+      const data = (
+        await clientApi.get<PageHistoryResult>(`/api/chat/session?page=${page}&pageSize=15`)
+      )?.data;
+
+      setList(categoryList(data?.historyList || []));
+      setPage(data?.page || 1);
+    };
+    getList();
+  }, []);
+  useEffect(() => {
+    console.log('pageList', list);
+  }, [list]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const lastScrollTop = useRef(0);
+  const onLoadMore = async () => {
+    setLoading(true);
+    console.log('加载更多');
+    setPage(page + 1);
+    let data: PageHistoryResult | undefined;
+    try {
+      data = (await clientApi.get<PageHistoryResult>(`/api/chat/session?page=${page}&pageSize=15`))
+        ?.data;
+    } finally {
+      setTimeout(() => {}, 3000);
+      setLoading(false);
+    }
+    if (!data || data.historyList.length === 0) {
+      setHasMore(false);
+      return;
+    }
+  };
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+
+      if (scrollTop <= lastScrollTop.current) {
+        lastScrollTop.current = scrollTop;
+        return;
+      }
+      lastScrollTop.current = scrollTop;
+      if (scrollHeight - scrollTop - clientHeight <= 50) {
+        console.log('到底了');
+        console.log(hasMore, loading);
+        if (hasMore && !loading) {
+          onLoadMore();
+        }
+      }
+    },
+    [onLoadMore]
+  );
   // 当前选中对话ID
-  const [activeChatId, setActiveChatId] = useState<string>('1');
+  const [activeChatId, setActiveChatId] = useState<string>('');
 
   // 按分组归类数据
   const groupData = {
@@ -118,27 +220,41 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
 
         {/* 滚动对话列表区域 */}
         <SidebarContent className="">
-          <ScrollArea className="h-[calc(100vh-200px)]">
-            {/* 分组：昨天 */}
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-gray-400 font-normal">昨天</SidebarGroupLabel>
-              <SidebarMenu>
-                {groupData['昨天'].map((chat) => (
-                  <SidebarMenuItem key={chat.id}>
-                    <SidebarMenuButton
-                      isActive={activeChatId === chat.id}
-                      onClick={() => setActiveChatId(chat.id)}
-                      className="justify-between group-data-[active=true]:bg-blue-50 group-data-[active=true]:text-blue-600"
-                    >
-                      <span className="truncate">{chat.title}</span>
-                      <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100" />
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
+          <ScrollArea onScroll={handleScroll} className="h-[calc(100vh-200px)]">
+            {list?.length > 0 &&
+              list.map((i, index) => (
+                <SidebarGroup key={index}>
+                  {i.list.length > 0 && (
+                    <>
+                      <SidebarGroupLabel className="text-gray-400 font-normal">
+                        {i.group}
+                      </SidebarGroupLabel>
+                      <SidebarMenu>
+                        {i.list.map((chat, index) => (
+                          <SidebarMenuItem key={chat.chatId}>
+                            <SidebarMenuButton
+                              isActive={activeChatId === chat.chatId}
+                              onClick={() => setActiveChatId(chat.chatId)}
+                              className="justify-between"
+                              style={
+                                activeChatId === chat.chatId
+                                  ? { background: '#f5f5f5' }
+                                  : { background: 'transparent' }
+                              }
+                            >
+                              <span className="truncate">{chat.title}</span>
+                              <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100" />
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </>
+                  )}
+                </SidebarGroup>
+              ))}
 
-            {/* 分组：30天内 */}
+            {/*  
+ 
             <SidebarGroup>
               <SidebarGroupLabel className="text-gray-400 font-normal">30天内</SidebarGroupLabel>
               <SidebarMenu>
@@ -155,7 +271,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
-            </SidebarGroup>
+            </SidebarGroup> */}
           </ScrollArea>
         </SidebarContent>
 
