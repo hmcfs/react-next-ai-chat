@@ -1,0 +1,28 @@
+/* 滚动容器相对定位，作为遮罩基准 */
+.scroll-wrap-mask {
+  position: relative;
+}
+/* 底部渐变模糊遮罩 */
+.scroll-wrap-mask::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px; /* 模糊渐变高度，可调整 */
+  background: linear-gradient(to top, white, transparent);
+  pointer-events: none; /* 不拦截鼠标滚动 */
+  z-index: 10;
+}
+/* 可选：顶部渐变模糊遮罩 */
+/* .scroll-wrap-mask::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, white, transparent);
+  pointer-events: none;
+  z-index: 10;
+} */

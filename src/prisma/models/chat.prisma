@@ -1,19 +1,30 @@
+enum MsgType {
+  chat       // 普通对话消息
+  memory     // 长对话压缩出来的记忆
+  document   // PDF、Word拆分出来的文本切片
+  imageOcr   // 图片识别出来的文字内容
+  fileNotice // 系统提示：用户上传了某个文件
+}
 model ChatMessage {
-  msgId       String      @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32) @map("msg_id") // ← 必须加
-  chatId      String      @db.Char(32) @map("chat_id") // ← 必须加
+  msgId       String      @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32) @map("msg_id") 
+  chatId      String      @db.Char(32) @map("chat_id")  
   role        String      @db.VarChar(10)
   content     String
-  createTime  DateTime    @default(now())  @db.Timestamptz  @map("create_time") // ← 必须加
+  createTime  DateTime    @default(now())  @db.Timestamptz  @map("create_time") 
+   type        MsgType     @default(chat) @map("type")
+  fileUrl     String?     @map("file_url")
+  fileName    String?     @map("file_name")
+  fileType    String?     @map("file_type")
   
   chatSession ChatSession @relation(fields: [chatId], references: [chatId], onDelete: Cascade)
-
+ 
   @@index([chatId], map: "idx_chatid")
   
   @@map("chat_message")
 }
 model ChatSession {
   chatId      String   @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32) @map("chat_id")
-  userId      BigInt   @map("user_id")        // ← 关键修复
+  userId      BigInt   @map("user_id")        
   title       String   @default("") @db.VarChar(255)
   createTime  DateTime @default(now())  @db.Timestamptz  @map("create_time")
   updateTime  DateTime @default(now())  @db.Timestamptz @map("update_time")

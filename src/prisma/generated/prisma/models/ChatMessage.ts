@@ -30,6 +30,10 @@ export type ChatMessageMinAggregateOutputType = {
   role: string | null
   content: string | null
   createTime: Date | null
+  type: $Enums.MsgType | null
+  fileUrl: string | null
+  fileName: string | null
+  fileType: string | null
 }
 
 export type ChatMessageMaxAggregateOutputType = {
@@ -38,6 +42,10 @@ export type ChatMessageMaxAggregateOutputType = {
   role: string | null
   content: string | null
   createTime: Date | null
+  type: $Enums.MsgType | null
+  fileUrl: string | null
+  fileName: string | null
+  fileType: string | null
 }
 
 export type ChatMessageCountAggregateOutputType = {
@@ -46,6 +54,10 @@ export type ChatMessageCountAggregateOutputType = {
   role: number
   content: number
   createTime: number
+  type: number
+  fileUrl: number
+  fileName: number
+  fileType: number
   _all: number
 }
 
@@ -56,6 +68,10 @@ export type ChatMessageMinAggregateInputType = {
   role?: true
   content?: true
   createTime?: true
+  type?: true
+  fileUrl?: true
+  fileName?: true
+  fileType?: true
 }
 
 export type ChatMessageMaxAggregateInputType = {
@@ -64,6 +80,10 @@ export type ChatMessageMaxAggregateInputType = {
   role?: true
   content?: true
   createTime?: true
+  type?: true
+  fileUrl?: true
+  fileName?: true
+  fileType?: true
 }
 
 export type ChatMessageCountAggregateInputType = {
@@ -72,6 +92,10 @@ export type ChatMessageCountAggregateInputType = {
   role?: true
   content?: true
   createTime?: true
+  type?: true
+  fileUrl?: true
+  fileName?: true
+  fileType?: true
   _all?: true
 }
 
@@ -153,6 +177,10 @@ export type ChatMessageGroupByOutputType = {
   role: string
   content: string
   createTime: Date
+  type: $Enums.MsgType
+  fileUrl: string | null
+  fileName: string | null
+  fileType: string | null
   _count: ChatMessageCountAggregateOutputType | null
   _min: ChatMessageMinAggregateOutputType | null
   _max: ChatMessageMaxAggregateOutputType | null
@@ -182,6 +210,10 @@ export type ChatMessageWhereInput = {
   role?: Prisma.StringFilter<"ChatMessage"> | string
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
+  type?: Prisma.EnumMsgTypeFilter<"ChatMessage"> | $Enums.MsgType
+  fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
 }
 
@@ -191,6 +223,10 @@ export type ChatMessageOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
   chatSession?: Prisma.ChatSessionOrderByWithRelationInput
 }
 
@@ -203,6 +239,10 @@ export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.StringFilter<"ChatMessage"> | string
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
+  type?: Prisma.EnumMsgTypeFilter<"ChatMessage"> | $Enums.MsgType
+  fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
 }, "msgId">
 
@@ -212,6 +252,10 @@ export type ChatMessageOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ChatMessageCountOrderByAggregateInput
   _max?: Prisma.ChatMessageMaxOrderByAggregateInput
   _min?: Prisma.ChatMessageMinOrderByAggregateInput
@@ -226,6 +270,10 @@ export type ChatMessageScalarWhereWithAggregatesInput = {
   role?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
   content?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
+  type?: Prisma.EnumMsgTypeWithAggregatesFilter<"ChatMessage"> | $Enums.MsgType
+  fileUrl?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
+  fileName?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
+  fileType?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
 }
 
 export type ChatMessageCreateInput = {
@@ -233,6 +281,10 @@ export type ChatMessageCreateInput = {
   role: string
   content: string
   createTime?: Date | string
+  type?: $Enums.MsgType
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
   chatSession: Prisma.ChatSessionCreateNestedOneWithoutChatMessageInput
 }
 
@@ -242,6 +294,10 @@ export type ChatMessageUncheckedCreateInput = {
   role: string
   content: string
   createTime?: Date | string
+  type?: $Enums.MsgType
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
 }
 
 export type ChatMessageUpdateInput = {
@@ -249,6 +305,10 @@ export type ChatMessageUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chatSession?: Prisma.ChatSessionUpdateOneRequiredWithoutChatMessageNestedInput
 }
 
@@ -258,6 +318,10 @@ export type ChatMessageUncheckedUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatMessageCreateManyInput = {
@@ -266,6 +330,10 @@ export type ChatMessageCreateManyInput = {
   role: string
   content: string
   createTime?: Date | string
+  type?: $Enums.MsgType
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
 }
 
 export type ChatMessageUpdateManyMutationInput = {
@@ -273,6 +341,10 @@ export type ChatMessageUpdateManyMutationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatMessageUncheckedUpdateManyInput = {
@@ -281,6 +353,10 @@ export type ChatMessageUncheckedUpdateManyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatMessageCountOrderByAggregateInput = {
@@ -289,6 +365,10 @@ export type ChatMessageCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrder
 }
 
 export type ChatMessageMaxOrderByAggregateInput = {
@@ -297,6 +377,10 @@ export type ChatMessageMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrder
 }
 
 export type ChatMessageMinOrderByAggregateInput = {
@@ -305,6 +389,10 @@ export type ChatMessageMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
+  fileName?: Prisma.SortOrder
+  fileType?: Prisma.SortOrder
 }
 
 export type ChatMessageListRelationFilter = {
@@ -323,6 +411,14 @@ export type StringFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type EnumMsgTypeFieldUpdateOperationsInput = {
+  set?: $Enums.MsgType
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type ChatMessageCreateNestedManyWithoutChatSessionInput = {
@@ -372,6 +468,10 @@ export type ChatMessageCreateWithoutChatSessionInput = {
   role: string
   content: string
   createTime?: Date | string
+  type?: $Enums.MsgType
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
 }
 
 export type ChatMessageUncheckedCreateWithoutChatSessionInput = {
@@ -379,6 +479,10 @@ export type ChatMessageUncheckedCreateWithoutChatSessionInput = {
   role: string
   content: string
   createTime?: Date | string
+  type?: $Enums.MsgType
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
 }
 
 export type ChatMessageCreateOrConnectWithoutChatSessionInput = {
@@ -416,6 +520,10 @@ export type ChatMessageScalarWhereInput = {
   role?: Prisma.StringFilter<"ChatMessage"> | string
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
+  type?: Prisma.EnumMsgTypeFilter<"ChatMessage"> | $Enums.MsgType
+  fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
 }
 
 export type ChatMessageCreateManyChatSessionInput = {
@@ -423,6 +531,10 @@ export type ChatMessageCreateManyChatSessionInput = {
   role: string
   content: string
   createTime?: Date | string
+  type?: $Enums.MsgType
+  fileUrl?: string | null
+  fileName?: string | null
+  fileType?: string | null
 }
 
 export type ChatMessageUpdateWithoutChatSessionInput = {
@@ -430,6 +542,10 @@ export type ChatMessageUpdateWithoutChatSessionInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatMessageUncheckedUpdateWithoutChatSessionInput = {
@@ -437,6 +553,10 @@ export type ChatMessageUncheckedUpdateWithoutChatSessionInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatMessageUncheckedUpdateManyWithoutChatSessionInput = {
@@ -444,6 +564,10 @@ export type ChatMessageUncheckedUpdateManyWithoutChatSessionInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -454,6 +578,10 @@ export type ChatMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   role?: boolean
   content?: boolean
   createTime?: boolean
+  type?: boolean
+  fileUrl?: boolean
+  fileName?: boolean
+  fileType?: boolean
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
@@ -463,6 +591,10 @@ export type ChatMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   role?: boolean
   content?: boolean
   createTime?: boolean
+  type?: boolean
+  fileUrl?: boolean
+  fileName?: boolean
+  fileType?: boolean
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
@@ -472,6 +604,10 @@ export type ChatMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   role?: boolean
   content?: boolean
   createTime?: boolean
+  type?: boolean
+  fileUrl?: boolean
+  fileName?: boolean
+  fileType?: boolean
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
@@ -481,9 +617,13 @@ export type ChatMessageSelectScalar = {
   role?: boolean
   content?: boolean
   createTime?: boolean
+  type?: boolean
+  fileUrl?: boolean
+  fileName?: boolean
+  fileType?: boolean
 }
 
-export type ChatMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"msgId" | "chatId" | "role" | "content" | "createTime", ExtArgs["result"]["chatMessage"]>
+export type ChatMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"msgId" | "chatId" | "role" | "content" | "createTime" | "type" | "fileUrl" | "fileName" | "fileType", ExtArgs["result"]["chatMessage"]>
 export type ChatMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }
@@ -505,6 +645,10 @@ export type $ChatMessagePayload<ExtArgs extends runtime.Types.Extensions.Interna
     role: string
     content: string
     createTime: Date
+    type: $Enums.MsgType
+    fileUrl: string | null
+    fileName: string | null
+    fileType: string | null
   }, ExtArgs["result"]["chatMessage"]>
   composites: {}
 }
@@ -934,6 +1078,10 @@ export interface ChatMessageFieldRefs {
   readonly role: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly content: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly createTime: Prisma.FieldRef<"ChatMessage", 'DateTime'>
+  readonly type: Prisma.FieldRef<"ChatMessage", 'MsgType'>
+  readonly fileUrl: Prisma.FieldRef<"ChatMessage", 'String'>
+  readonly fileName: Prisma.FieldRef<"ChatMessage", 'String'>
+  readonly fileType: Prisma.FieldRef<"ChatMessage", 'String'>
 }
     
 

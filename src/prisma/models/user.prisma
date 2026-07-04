@@ -2,6 +2,7 @@ model SysUser {
   id          BigInt        @id @default(autoincrement())
   username    String        @unique @db.VarChar(50)
   password    String        @db.VarChar(100)
+  
   chatSession ChatSession[]
 
   @@map("sys_user")

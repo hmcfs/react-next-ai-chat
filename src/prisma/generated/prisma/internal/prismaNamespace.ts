@@ -672,7 +672,11 @@ export const ChatMessageScalarFieldEnum = {
   chatId: 'chatId',
   role: 'role',
   content: 'content',
-  createTime: 'createTime'
+  createTime: 'createTime',
+  type: 'type',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  fileType: 'fileType'
 } as const
 
 export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
@@ -715,6 +719,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 
 /**
  * Field references
@@ -746,6 +758,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MsgType'
+ */
+export type EnumMsgTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MsgType'>
+    
+
+
+/**
+ * Reference to a field of type 'MsgType[]'
+ */
+export type ListEnumMsgTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MsgType[]'>
     
 
 

@@ -1,4 +1,5 @@
 'use client';
+import SideBarLoading from '@/app/components/SideBarLoading';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -102,7 +103,28 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
     console.log('collectList', collectList);
     return collectList;
   };
-
+  const mergeGroupList = (arr1: GroupList[], arr2: GroupList[]): GroupList[] => {
+    const map = new Map<string, HistoryList[]>();
+    arr1.forEach((i) => {
+      map.set(i.group, i.list);
+    });
+    arr2.forEach((i) => {
+      const filterMap = new Map();
+      i.list.forEach((j, index) => {
+        if (!filterMap.has(j.chatId)) {
+          filterMap.set(j.chatId, j);
+        } else {
+          i.list.splice(index, 1);
+        }
+      });
+      if (map.has(i.group)) {
+        map.set(i.group, [...map.get(i.group)!, ...i.list]);
+      } else {
+        map.set(i.group, i.list);
+      }
+    });
+    return Array.from(map.entries()).map(([group, list]) => ({ group, list }));
+  };
   useEffect(() => {
     const getList = async () => {
       const data = (
@@ -122,19 +144,24 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
   const lastScrollTop = useRef(0);
   const onLoadMore = async () => {
     setLoading(true);
-    console.log('加载更多');
+
     setPage(page + 1);
+
     let data: PageHistoryResult | undefined;
     try {
-      data = (await clientApi.get<PageHistoryResult>(`/api/chat/session?page=${page}&pageSize=15`))
-        ?.data;
+      data = (
+        await clientApi.get<PageHistoryResult>(`/api/chat/session?page=${page + 1}&pageSize=15`)
+      )?.data;
+      if (!data || data.historyList.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
+      setList(mergeGroupList(list, categoryList(data.historyList)));
     } finally {
-      setTimeout(() => {}, 3000);
-      setLoading(false);
-    }
-    if (!data || data.historyList.length === 0) {
-      setHasMore(false);
-      return;
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
   const handleScroll = useCallback(
@@ -148,7 +175,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
       lastScrollTop.current = scrollTop;
       if (scrollHeight - scrollTop - clientHeight <= 50) {
         console.log('到底了');
-        console.log(hasMore, loading);
+        // console.log(hasMore, loading);
         if (hasMore && !loading) {
           onLoadMore();
         }
@@ -220,30 +247,34 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
 
         {/* 滚动对话列表区域 */}
         <SidebarContent className="">
-          <ScrollArea onScroll={handleScroll} className="h-[calc(100vh-200px)]">
+          <ScrollArea onScroll={handleScroll} className="h-full scroll-wrap-mask">
             {list?.length > 0 &&
               list.map((i, index) => (
-                <SidebarGroup key={index}>
-                  {i.list.length > 0 && (
+                <SidebarGroup key={i.group}>
+                  {i.list.length > 0 && i.group && (
                     <>
-                      <SidebarGroupLabel className="text-gray-400 font-normal">
-                        {i.group}
-                      </SidebarGroupLabel>
+                      {i.group !== '' && (
+                        <SidebarGroupLabel className="text-gray-400 font-normal">
+                          {i.group}
+                        </SidebarGroupLabel>
+                      )}
                       <SidebarMenu>
                         {i.list.map((chat, index) => (
                           <SidebarMenuItem key={chat.chatId}>
                             <SidebarMenuButton
                               isActive={activeChatId === chat.chatId}
                               onClick={() => setActiveChatId(chat.chatId)}
-                              className="justify-between"
+                              className="justify-between group hover:!bg-gray-100 cursor-pointer"
                               style={
                                 activeChatId === chat.chatId
-                                  ? { background: '#f5f5f5' }
+                                  ? { background: '#eff6ff', color: '#76adf5' }
                                   : { background: 'transparent' }
                               }
                             >
                               <span className="truncate">{chat.title}</span>
-                              <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100" />
+                              <MoreHorizontal
+                                className={`w-4 h-4 opacity-0 ${activeChatId === chat.chatId ? 'opacity-100' : 'group-hover:opacity-100'} transition-opacity duration-500 `}
+                              />
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         ))}
@@ -252,7 +283,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
                   )}
                 </SidebarGroup>
               ))}
-
+            <SideBarLoading loading={loading} />
             {/*  
  
             <SidebarGroup>
@@ -276,7 +307,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
         </SidebarContent>
 
         {/* 底部用户栏 */}
-        <SidebarFooter className="p-4 border-t">
+        <SidebarFooter className="px-4 py-2 bg-white  ">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar className="w-10 h-10">
