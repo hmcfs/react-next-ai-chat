@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { MODEL_LIST } from '@/constants/index';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 type Messages = {
@@ -34,16 +35,6 @@ type ChatMessage = {
   content: MessageContent;
   reasoningContent?: string; // 深度思考内容，仅assistant存在
 };
-
-// 后端支持的模型列表，和后端MODEL_PROVIDER_MAP同步
-const MODEL_LIST = [
-  { label: '通义千问', value: 'qwen3.6-flash' },
-  { label: '通义视觉', value: 'qwen3-vl-flash' },
-  { label: 'DeepSeek V3', value: 'deepseek-v3' },
-  { label: 'DeepSeek R1(深度思考)', value: 'deepseek-r1' },
-  { label: '豆包Pro', value: 'doubao-pro' },
-  { label: '豆包视觉', value: 'doubao-vision' },
-];
 
 export default function Draft() {
   // 文件上传
@@ -111,8 +102,8 @@ export default function Draft() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: selectedModel,
-          messages: [...messages, userMsg],
-          messages2: {
+
+          messages: {
             model: selectedModel,
             enableDeepThink,
             messages: [{ role: 'user', text: prompt, attachments: fileList }],
