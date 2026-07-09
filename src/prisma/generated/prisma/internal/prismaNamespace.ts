@@ -676,7 +676,10 @@ export const ChatMessageScalarFieldEnum = {
   type: 'type',
   fileUrl: 'fileUrl',
   fileName: 'fileName',
-  fileType: 'fileType'
+  fileType: 'fileType',
+  reasoningContent: 'reasoningContent',
+  modelName: 'modelName',
+  enableDeepThink: 'enableDeepThink'
 } as const
 
 export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
@@ -776,6 +779,13 @@ export type ListEnumMsgTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'BigInt'
  */
 export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
@@ -786,13 +796,6 @@ export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'BigInt[]'
  */
 export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

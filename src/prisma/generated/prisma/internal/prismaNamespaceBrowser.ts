@@ -81,7 +81,10 @@ export const ChatMessageScalarFieldEnum = {
   type: 'type',
   fileUrl: 'fileUrl',
   fileName: 'fileName',
-  fileType: 'fileType'
+  fileType: 'fileType',
+  reasoningContent: 'reasoningContent',
+  modelName: 'modelName',
+  enableDeepThink: 'enableDeepThink'
 } as const
 
 export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]

@@ -34,6 +34,9 @@ export type ChatMessageMinAggregateOutputType = {
   fileUrl: string | null
   fileName: string | null
   fileType: string | null
+  reasoningContent: string | null
+  modelName: string | null
+  enableDeepThink: boolean | null
 }
 
 export type ChatMessageMaxAggregateOutputType = {
@@ -46,6 +49,9 @@ export type ChatMessageMaxAggregateOutputType = {
   fileUrl: string | null
   fileName: string | null
   fileType: string | null
+  reasoningContent: string | null
+  modelName: string | null
+  enableDeepThink: boolean | null
 }
 
 export type ChatMessageCountAggregateOutputType = {
@@ -58,6 +64,9 @@ export type ChatMessageCountAggregateOutputType = {
   fileUrl: number
   fileName: number
   fileType: number
+  reasoningContent: number
+  modelName: number
+  enableDeepThink: number
   _all: number
 }
 
@@ -72,6 +81,9 @@ export type ChatMessageMinAggregateInputType = {
   fileUrl?: true
   fileName?: true
   fileType?: true
+  reasoningContent?: true
+  modelName?: true
+  enableDeepThink?: true
 }
 
 export type ChatMessageMaxAggregateInputType = {
@@ -84,6 +96,9 @@ export type ChatMessageMaxAggregateInputType = {
   fileUrl?: true
   fileName?: true
   fileType?: true
+  reasoningContent?: true
+  modelName?: true
+  enableDeepThink?: true
 }
 
 export type ChatMessageCountAggregateInputType = {
@@ -96,6 +111,9 @@ export type ChatMessageCountAggregateInputType = {
   fileUrl?: true
   fileName?: true
   fileType?: true
+  reasoningContent?: true
+  modelName?: true
+  enableDeepThink?: true
   _all?: true
 }
 
@@ -181,6 +199,9 @@ export type ChatMessageGroupByOutputType = {
   fileUrl: string | null
   fileName: string | null
   fileType: string | null
+  reasoningContent: string | null
+  modelName: string
+  enableDeepThink: boolean
   _count: ChatMessageCountAggregateOutputType | null
   _min: ChatMessageMinAggregateOutputType | null
   _max: ChatMessageMaxAggregateOutputType | null
@@ -214,6 +235,9 @@ export type ChatMessageWhereInput = {
   fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  reasoningContent?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  modelName?: Prisma.StringFilter<"ChatMessage"> | string
+  enableDeepThink?: Prisma.BoolFilter<"ChatMessage"> | boolean
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
 }
 
@@ -227,6 +251,9 @@ export type ChatMessageOrderByWithRelationInput = {
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
   fileType?: Prisma.SortOrderInput | Prisma.SortOrder
+  reasoningContent?: Prisma.SortOrderInput | Prisma.SortOrder
+  modelName?: Prisma.SortOrder
+  enableDeepThink?: Prisma.SortOrder
   chatSession?: Prisma.ChatSessionOrderByWithRelationInput
 }
 
@@ -243,6 +270,9 @@ export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
   fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  reasoningContent?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  modelName?: Prisma.StringFilter<"ChatMessage"> | string
+  enableDeepThink?: Prisma.BoolFilter<"ChatMessage"> | boolean
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
 }, "msgId">
 
@@ -256,6 +286,9 @@ export type ChatMessageOrderByWithAggregationInput = {
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
   fileType?: Prisma.SortOrderInput | Prisma.SortOrder
+  reasoningContent?: Prisma.SortOrderInput | Prisma.SortOrder
+  modelName?: Prisma.SortOrder
+  enableDeepThink?: Prisma.SortOrder
   _count?: Prisma.ChatMessageCountOrderByAggregateInput
   _max?: Prisma.ChatMessageMaxOrderByAggregateInput
   _min?: Prisma.ChatMessageMinOrderByAggregateInput
@@ -274,6 +307,9 @@ export type ChatMessageScalarWhereWithAggregatesInput = {
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
   fileName?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
   fileType?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
+  reasoningContent?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
+  modelName?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
+  enableDeepThink?: Prisma.BoolWithAggregatesFilter<"ChatMessage"> | boolean
 }
 
 export type ChatMessageCreateInput = {
@@ -285,6 +321,9 @@ export type ChatMessageCreateInput = {
   fileUrl?: string | null
   fileName?: string | null
   fileType?: string | null
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
   chatSession: Prisma.ChatSessionCreateNestedOneWithoutChatMessageInput
 }
 
@@ -298,6 +337,9 @@ export type ChatMessageUncheckedCreateInput = {
   fileUrl?: string | null
   fileName?: string | null
   fileType?: string | null
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
 }
 
 export type ChatMessageUpdateInput = {
@@ -309,6 +351,9 @@ export type ChatMessageUpdateInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
   chatSession?: Prisma.ChatSessionUpdateOneRequiredWithoutChatMessageNestedInput
 }
 
@@ -322,6 +367,9 @@ export type ChatMessageUncheckedUpdateInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ChatMessageCreateManyInput = {
@@ -334,6 +382,9 @@ export type ChatMessageCreateManyInput = {
   fileUrl?: string | null
   fileName?: string | null
   fileType?: string | null
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
 }
 
 export type ChatMessageUpdateManyMutationInput = {
@@ -345,6 +396,9 @@ export type ChatMessageUpdateManyMutationInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ChatMessageUncheckedUpdateManyInput = {
@@ -357,6 +411,9 @@ export type ChatMessageUncheckedUpdateManyInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ChatMessageCountOrderByAggregateInput = {
@@ -369,6 +426,9 @@ export type ChatMessageCountOrderByAggregateInput = {
   fileUrl?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   fileType?: Prisma.SortOrder
+  reasoningContent?: Prisma.SortOrder
+  modelName?: Prisma.SortOrder
+  enableDeepThink?: Prisma.SortOrder
 }
 
 export type ChatMessageMaxOrderByAggregateInput = {
@@ -381,6 +441,9 @@ export type ChatMessageMaxOrderByAggregateInput = {
   fileUrl?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   fileType?: Prisma.SortOrder
+  reasoningContent?: Prisma.SortOrder
+  modelName?: Prisma.SortOrder
+  enableDeepThink?: Prisma.SortOrder
 }
 
 export type ChatMessageMinOrderByAggregateInput = {
@@ -393,6 +456,9 @@ export type ChatMessageMinOrderByAggregateInput = {
   fileUrl?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   fileType?: Prisma.SortOrder
+  reasoningContent?: Prisma.SortOrder
+  modelName?: Prisma.SortOrder
+  enableDeepThink?: Prisma.SortOrder
 }
 
 export type ChatMessageListRelationFilter = {
@@ -419,6 +485,10 @@ export type EnumMsgTypeFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type ChatMessageCreateNestedManyWithoutChatSessionInput = {
@@ -472,6 +542,9 @@ export type ChatMessageCreateWithoutChatSessionInput = {
   fileUrl?: string | null
   fileName?: string | null
   fileType?: string | null
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
 }
 
 export type ChatMessageUncheckedCreateWithoutChatSessionInput = {
@@ -483,6 +556,9 @@ export type ChatMessageUncheckedCreateWithoutChatSessionInput = {
   fileUrl?: string | null
   fileName?: string | null
   fileType?: string | null
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
 }
 
 export type ChatMessageCreateOrConnectWithoutChatSessionInput = {
@@ -524,6 +600,9 @@ export type ChatMessageScalarWhereInput = {
   fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  reasoningContent?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
+  modelName?: Prisma.StringFilter<"ChatMessage"> | string
+  enableDeepThink?: Prisma.BoolFilter<"ChatMessage"> | boolean
 }
 
 export type ChatMessageCreateManyChatSessionInput = {
@@ -535,6 +614,9 @@ export type ChatMessageCreateManyChatSessionInput = {
   fileUrl?: string | null
   fileName?: string | null
   fileType?: string | null
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
 }
 
 export type ChatMessageUpdateWithoutChatSessionInput = {
@@ -546,6 +628,9 @@ export type ChatMessageUpdateWithoutChatSessionInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ChatMessageUncheckedUpdateWithoutChatSessionInput = {
@@ -557,6 +642,9 @@ export type ChatMessageUncheckedUpdateWithoutChatSessionInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ChatMessageUncheckedUpdateManyWithoutChatSessionInput = {
@@ -568,6 +656,9 @@ export type ChatMessageUncheckedUpdateManyWithoutChatSessionInput = {
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -582,6 +673,9 @@ export type ChatMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   fileUrl?: boolean
   fileName?: boolean
   fileType?: boolean
+  reasoningContent?: boolean
+  modelName?: boolean
+  enableDeepThink?: boolean
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
@@ -595,6 +689,9 @@ export type ChatMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   fileUrl?: boolean
   fileName?: boolean
   fileType?: boolean
+  reasoningContent?: boolean
+  modelName?: boolean
+  enableDeepThink?: boolean
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
@@ -608,6 +705,9 @@ export type ChatMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   fileUrl?: boolean
   fileName?: boolean
   fileType?: boolean
+  reasoningContent?: boolean
+  modelName?: boolean
+  enableDeepThink?: boolean
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
@@ -621,9 +721,12 @@ export type ChatMessageSelectScalar = {
   fileUrl?: boolean
   fileName?: boolean
   fileType?: boolean
+  reasoningContent?: boolean
+  modelName?: boolean
+  enableDeepThink?: boolean
 }
 
-export type ChatMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"msgId" | "chatId" | "role" | "content" | "createTime" | "type" | "fileUrl" | "fileName" | "fileType", ExtArgs["result"]["chatMessage"]>
+export type ChatMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"msgId" | "chatId" | "role" | "content" | "createTime" | "type" | "fileUrl" | "fileName" | "fileType" | "reasoningContent" | "modelName" | "enableDeepThink", ExtArgs["result"]["chatMessage"]>
 export type ChatMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
 }
@@ -649,6 +752,9 @@ export type $ChatMessagePayload<ExtArgs extends runtime.Types.Extensions.Interna
     fileUrl: string | null
     fileName: string | null
     fileType: string | null
+    reasoningContent: string | null
+    modelName: string
+    enableDeepThink: boolean
   }, ExtArgs["result"]["chatMessage"]>
   composites: {}
 }
@@ -1082,6 +1188,9 @@ export interface ChatMessageFieldRefs {
   readonly fileUrl: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly fileName: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly fileType: Prisma.FieldRef<"ChatMessage", 'String'>
+  readonly reasoningContent: Prisma.FieldRef<"ChatMessage", 'String'>
+  readonly modelName: Prisma.FieldRef<"ChatMessage", 'String'>
+  readonly enableDeepThink: Prisma.FieldRef<"ChatMessage", 'Boolean'>
 }
     
 

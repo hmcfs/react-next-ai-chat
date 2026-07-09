@@ -409,10 +409,6 @@ export type ChatSessionUpdateOneRequiredWithoutChatMessageNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ChatSessionUpdateToOneWithWhereWithoutChatMessageInput, Prisma.ChatSessionUpdateWithoutChatMessageInput>, Prisma.ChatSessionUncheckedUpdateWithoutChatMessageInput>
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type BigIntFieldUpdateOperationsInput = {
   set?: bigint | number
   increment?: bigint | number

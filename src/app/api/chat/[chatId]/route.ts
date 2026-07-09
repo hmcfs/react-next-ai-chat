@@ -9,27 +9,7 @@ const bailian = createOpenAI({
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ chatId: string }> }) {
   const { messages, chatId }: { messages: UIMessage[]; chatId: string } = await req.json();
-  //console.log('params', await params);
-  // 第一条用户消息已在 createSession 中保存，这里不再重复保存
-  // const lastMsg = messages[messages.length - 1];
-  // if (lastMsg?.role === 'user' && chatId) {
-  //   try {
-  //     const textContent =
-  //       lastMsg.parts
-  //         ?.filter((p) => p.type === 'text')
-  //         .map((p) => p.text)
-  //         .join('') ?? '';
-  //     await prisma.chatMessage.create({
-  //       data: {
-  //         chatId,
-  //         role: lastMsg.role,
-  //         content: textContent,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.error('[DB] Failed to save user message:', error);
-  //   }
-  // }
+
   const result = streamText({
     model: bailian('qwen-plus'),
     messages: await convertToModelMessages(messages),
