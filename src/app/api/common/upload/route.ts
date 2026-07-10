@@ -1,7 +1,9 @@
+import { customError } from '@/lib/error/error';
+import { fail, success } from '@/lib/error/response';
 import { uploadFileToOSS } from '@/lib/oss';
 import { NextRequest } from 'next/server';
 
-export async function POST(req: NextRequest) {
+/* export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
@@ -31,5 +33,40 @@ export async function POST(req: NextRequest) {
       },
       { status: 500 }
     );
+  }
+} */
+export async function POST(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+    console.log('formData:', formData);
+    const fileList = (formData.getAll('file') as File[]).filter((f) => f.size > 0);
+    const imageList = (formData.getAll('image') as File[]).filter((f) => f.size > 0);
+    let fileCollection: { url: string; name: string }[] = [];
+    let imageCollection: { url: string; name: string }[] = [];
+    console.log('上传文件:', fileList.length, imageList.length);
+    if (!fileList.length && !imageList.length) throw new customError('请选择文件或图片');
+    if (fileList.length > 5 || imageList.length > 5) throw new customError('最多上传5个文件或图片');
+    if (fileList.length > 0) {
+      const filePromise = fileList.map(async (file) => {
+        const arrayBuf = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuf);
+        const url = await uploadFileToOSS(buffer, file.name, 'file');
+        return { url, name: file.name };
+      });
+      fileCollection = await Promise.all(filePromise);
+    }
+    if (imageList.length > 0) {
+      const imagePromise = imageList.map(async (image) => {
+        const arrayBuf = await image.arrayBuffer();
+        const buffer = Buffer.from(arrayBuf);
+        const url = await uploadFileToOSS(buffer, image.name, 'image');
+        return { url, name: image.name };
+      });
+      imageCollection = await Promise.all(imagePromise);
+    }
+    return success({ fileCollection, imageCollection });
+  } catch (e) {
+    console.error('上传文件失败', e);
+    return fail(e);
   }
 }

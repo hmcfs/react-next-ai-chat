@@ -87,7 +87,7 @@ export async function outputStreamService(
   let fullAnswer = '';
   let fullReasoning = '';
 
-  // 4. 流转换：统一输出 ai-sdk useChat 识别的 text-delta 流
+  // 4. 流转换：统一输出  text-delta 流
   const streamTransformer = new TransformStream({
     transform(chunk, controller) {
       const rawChunk = decoder.decode(chunk, { stream: true });

@@ -27,3 +27,9 @@ export class NotFoundError extends AppError {
     this.name = 'NotFoundError';
   }
 }
+export class customError extends AppError {
+  constructor(message: string) {
+    super(message, 0, 400);
+    this.name = 'customError';
+  }
+}

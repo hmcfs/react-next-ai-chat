@@ -1,10 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { clientApi } from '../../lib/client-request';
+import ModelCheck from '@/app/chat/components/ModelCheck';
+import { MODEL_LIST } from '@/constants/index';
 import { useRouter } from 'next/navigation';
-import { useChatStore } from '../../lib/store/useChatStore';
+import { useRef, useState } from 'react';
+
+import Tool from '@/app/chat/components/Tool';
 import { toast } from 'sonner';
+import { clientApi } from '../../lib/client-request';
+import { useChatStore } from '../../lib/store/useChatStore';
 export default function Chat() {
   const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
   const [input, setInput] = useState('');
@@ -13,6 +17,17 @@ export default function Chat() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [showTip, setShowTip] = useState(false);
+  const [model, setModel] = useState(() => {
+    if (typeof window === 'undefined') return MODEL_LIST[0].label;
+    const localModel = localStorage.getItem('model');
+    if (localModel) return localModel;
+    localStorage.setItem('model', MODEL_LIST[0].label);
+    return MODEL_LIST[0].label;
+  });
+  const changeModel = (model: string) => {
+    localStorage.setItem('model', model);
+    setModel(model);
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
@@ -37,8 +52,10 @@ export default function Chat() {
       console.log(e);
     }
   };
+
   return (
-    <div className="w-full h-screen min-h-[250px] flex flex-col justify-between items-center">
+    <div className="w-full relative h-screen min-h-[250px] flex flex-col justify-between items-center">
+      <ModelCheck parentModel={model} changeModel={changeModel} className="absolute top-4 left-4" />
       <div></div>
       <div className="w-4/5 flex flex-col justify-around items-center">
         <span className="text-center text-gray-400 mb-10 text-3xl font-bold">
@@ -72,9 +89,7 @@ export default function Chat() {
               rows={2}
             />
             <div className="flex justify-between px-3 pb-2 items-center text-xs text-gray-400">
-              <div>1</div>
-              <div>2</div>
-              <div>3</div>
+              <Tool />
             </div>
           </div>
         </form>

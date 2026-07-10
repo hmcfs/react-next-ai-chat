@@ -20,7 +20,7 @@ export function fail(e: unknown): NextResponse {
   }
   console.error('处理失败：', e);
   return NextResponse.json(
-    { code: 500, msg: '服务器内部错误，请稍后重试', data: null },
+    { code: 500, msg: msg || '服务器内部错误，请稍后重试', data: null },
     { status: 500 }
   );
 }
