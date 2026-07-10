@@ -1,5 +1,5 @@
 import OSS from 'ali-oss';
-
+import mime from 'mime-types';
 const ossClient = new OSS({
   region: process.env.OSS_REGION!,
   accessKeyId: process.env.OSS_ACCESS_KEY_ID!,
@@ -23,7 +23,20 @@ export async function uploadFileToOSS(
   // 生成唯一文件名防止重名
   const ext = filename.split('.').pop();
   const uniqueName = `${dir}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-  const res = await ossClient.put(uniqueName, buffer);
+  const type = mime.lookup(filename) || 'application/octet-stream';
+  const res = await ossClient.put(uniqueName, buffer, {
+    headers: {
+      'Content-Type': type,
+      'content-disposition': `inline;filename=${encodeURIComponent(filename)}`,
+    },
+  });
+  /*   const previewUrl = ossClient.signatureUrl(uniqueName, {
+    expires: 7 * 24 * 3600, // 7天有效期，按需调整
+    response: {
+      'content-disposition': `inline;filename=${encodeURIComponent(filename)}`,
+      'content-type': type,
+    },
+  }); */
+  console.log('oss', res);
   return res.url;
 }

@@ -1,0 +1,2 @@
+浏览器为安全考虑，预览word、excel等（非浏览器原生提供的解析api）文档时，会限制其内容，需要下载后才能查看完整内容。
+所以在上传阿里云oss时，设置请求头Content-Disposition设置为inline，但是阿里云oss为安全考虑，不接受外来请求头设置，会强行将Content-Disposition设置为attachment，导致文档无法预览。

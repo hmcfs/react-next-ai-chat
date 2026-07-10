@@ -5,6 +5,7 @@ import { MODEL_LIST } from '@/constants/index';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
+import PreviewFiles from '@/app/chat/components/PreviewFiles';
 import Tool from '@/app/chat/components/Tool';
 import { toast } from 'sonner';
 import { clientApi } from '../../lib/client-request';
@@ -73,6 +74,9 @@ export default function Chat() {
               isFocus ? 'border-blue-200 ' : 'border-gray-100  '
             }`}
           >
+            <div className="flex justify-between px-3   items-center text-xs text-gray-400">
+              <PreviewFiles />
+            </div>
             <textarea
               className="custom-scrollbar w-full border-0 resize-none overflow-y-auto focus:outline-none p-3 bg-transparent max-h-[200px]"
               value={input}

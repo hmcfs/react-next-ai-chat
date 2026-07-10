@@ -32,7 +32,7 @@ export default function Tool() {
     });
     const data = await res.json();
     console.log('图片上传结果:', data);
-    fileStore.addImage(data.data.imageCollection);
+    fileStore.addImage(data.data.imageCollection.map((i) => ({ url: i.url, name: i.name })));
   };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -48,7 +48,7 @@ export default function Tool() {
     });
     const data = await res.json();
     // console.log('文件上传结果:', data);
-    fileStore.addFile(data.data.fileCollection);
+    fileStore.addFile(data.data.fileCollection.map((i) => ({ url: i.url, name: i.name })));
   };
   return (
     <div className="w-full h-full px-2 flex flex-row items-center justify-between gap-2">
@@ -65,7 +65,7 @@ export default function Tool() {
             onChange={handleFileChange}
             ref={fileInputRef}
             type="file"
-            accept=".pdf,.doc,.docx,.txt"
+            accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
             className="hidden inset-0 cursor-pointer"
           />
         </div>
