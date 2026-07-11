@@ -1,7 +1,15 @@
 import { useFileStore } from '@/lib/store';
 import { X } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 export default function PreviewFiles() {
-  const fileStore = useFileStore((state) => state);
+  const fileStore = useFileStore(
+    useShallow((state) => ({
+      fileList: state.fileList,
+      imageList: state.imageList,
+      removeImage: state.removeImage,
+      removeFile: state.removeFile,
+    }))
+  );
   const { fileList, imageList } = fileStore;
   console.log('imageUrls', fileStore);
   const previewUrl = `https://view.officeapps.live.com/op/embed.aspx?src=`;

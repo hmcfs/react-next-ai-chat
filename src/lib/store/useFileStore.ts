@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 type File1 = { url: string; name: string };
+type Attachment = {
+  url: string;
+  minType: string;
+};
 interface FileStore {
   fileUrls: string[];
   imageUrls: string[];
@@ -13,10 +17,11 @@ interface FileStore {
   setHasHydrated: (hasHydrated: boolean) => void;
   removeFile: (file: File1) => void;
   removeImage: (file: File1) => void;
+  concatFiles: () => Attachment[] | [];
 }
 export const useFileStore = create<FileStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       fileUrls: [],
       imageUrls: [],
       fileList: [],
@@ -30,6 +35,28 @@ export const useFileStore = create<FileStore>()(
         set((state) => ({ fileList: state.fileList.filter((item) => item !== file) })),
       removeImage: (file) =>
         set((state) => ({ imageList: state.imageList.filter((item) => item !== file) })),
+      concatFiles: () => {
+        const { fileList, imageList } = get();
+        const res: Attachment[] = [];
+        if (fileList.length < 0 && imageList.length < 0) return res;
+        if (fileList.length > 0) {
+          fileList.forEach((i) => {
+            res.push({
+              url: i.url,
+              minType: i.name.split('.').pop() || 'file',
+            });
+          });
+        }
+        if (imageList.length > 0) {
+          imageList.forEach((i) => {
+            res.push({
+              url: i.url,
+              minType: i.name.split('.').pop() || 'image',
+            });
+          });
+        }
+        return res;
+      },
     }),
     {
       name: 'file-store',

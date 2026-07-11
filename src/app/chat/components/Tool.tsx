@@ -2,6 +2,7 @@
 import { useFileStore } from '@/lib/store/useFileStore';
 import { Image, ImageUp, Send } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function Tool() {
   // 创建ref绑定两个文件input
@@ -9,7 +10,16 @@ export default function Tool() {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [fileList, setFileList] = useState<File[]>([]);
   const [imageList, setImageList] = useState<File[]>([]);
-  const fileStore = useFileStore((state) => state);
+  const fileStore = useFileStore(
+    useShallow((state) => ({
+      addImage: state.addImage,
+      addFile: state.addFile,
+      removeImage: state.removeImage,
+      removeFile: state.removeFile,
+      fileList: state.fileList,
+      imageList: state.imageList,
+    }))
+  );
   // 点击按钮触发隐藏文件框
   const triggerFileSelect = () => {
     fileInputRef.current?.click();

@@ -21,7 +21,7 @@ export default function Chat() {
   });
   const [isFocus, setIsFocus] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { setIsNewChat } = useChatStore();
+  const setIsNewChat = useChatStore((state) => state.setIsNewChat);
   const content = useChatStore((state) => state.content);
   const isNewChat = useChatStore((state) => state.isNewChat);
   const hasConsume = useRef(false);
@@ -33,7 +33,7 @@ export default function Chat() {
       hasConsume.current = true;
       content.trim() && sendMessage({ text: content }, { body: { chatId } });
     }
-  }, [isNewChat, content]);
+  }, []);
   //  自动滚动到底部
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });

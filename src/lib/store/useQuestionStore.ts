@@ -1,0 +1,54 @@
+import { create } from 'zustand';
+type MessageParams = { model: string; enableDeepThink: boolean; messages: Message[] };
+type Message = {
+  role: string;
+  text: string;
+  attachments?: {
+    url: string;
+    minType?: string;
+  }[];
+};
+
+interface QuestionStore {
+  model: string;
+  enableDeepThink: boolean;
+  messages: Message[];
+  getMessageParams: () => MessageParams;
+  setModel: (model: string) => void;
+  setMessages: (messages: Message[]) => void;
+  setEnableDeepThink: (enableDeepThink: boolean) => void;
+  clearMessages: () => void;
+  clearAll: () => void;
+  chatId: string;
+  setChatId: (id: string) => void;
+  isNewChat: boolean;
+  setIsNewChat: (isNew: boolean) => void;
+  title: string;
+  setTitle: (title: string) => void;
+}
+export const useQuestionStore = create<QuestionStore>((set, get) => ({
+  model: '',
+  setModel: (model) => set(() => ({ model: model })),
+  enableDeepThink: false,
+  setEnableDeepThink: (enableDeepThink) => set(() => ({ enableDeepThink: enableDeepThink })),
+  messages: [],
+  getMessageParams: () => {
+    const { model, enableDeepThink, messages } = get();
+    return { model, enableDeepThink, messages };
+  },
+  setMessages: (messages) => set(() => ({ messages: messages })),
+  clearMessages: () => set(() => ({ messages: [], chatId: '', isNewChat: false, title: '' })),
+  clearAll: () => {
+    get().clearMessages();
+    set(() => ({
+      model: '',
+      enableDeepThink: false,
+    }));
+  },
+  chatId: '',
+  setChatId: (id) => set(() => ({ chatId: id })),
+  isNewChat: false,
+  setIsNewChat: (isNew) => set(() => ({ isNewChat: isNew })),
+  title: '',
+  setTitle: (title) => set(() => ({ title: title })),
+}));

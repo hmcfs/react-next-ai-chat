@@ -7,11 +7,35 @@ import { useRef, useState } from 'react';
 
 import PreviewFiles from '@/app/chat/components/PreviewFiles';
 import Tool from '@/app/chat/components/Tool';
+import { useFileStore, useQuestionStore } from '@/lib/store';
 import { toast } from 'sonner';
+import { useShallow } from 'zustand/react/shallow';
 import { clientApi } from '../../lib/client-request';
-import { useChatStore } from '../../lib/store/useChatStore';
 export default function Chat() {
-  const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
+  //const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
+  const {
+    title,
+    setTitle,
+    setIsNewChat,
+    setMessages,
+    getMessageParams,
+    setModel: setQuestionModel,
+  } = useQuestionStore(
+    useShallow((state) => ({
+      title: state.title,
+      setTitle: state.setTitle,
+      setIsNewChat: state.setIsNewChat,
+      setMessages: state.setMessages,
+      getMessageParams: state.getMessageParams,
+      setModel: state.setModel,
+    }))
+  );
+  const { concatFiles, clear } = useFileStore(
+    useShallow((state) => ({
+      concatFiles: state.concatFiles,
+      clear: state.clear,
+    }))
+  );
   const [input, setInput] = useState('');
 
   const [isFocus, setIsFocus] = useState(false);
@@ -44,9 +68,19 @@ export default function Chat() {
         return;
       }
       setTitle(title || '');
-      setContent(input || '');
+      setQuestionModel(model);
       setIsNewChat(true);
-      router.push(`/chat/${chatId}`);
+
+      setMessages([
+        {
+          role: 'user',
+          text: input,
+          attachments: concatFiles().length > 0 ? concatFiles() : undefined,
+        },
+      ]);
+      console.log('拼装后的消息', getMessageParams());
+      //clear()
+      //router.push(`/chat/${chatId}`);
 
       setInput('');
     } catch (e) {
