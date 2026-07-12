@@ -11,7 +11,7 @@ export default function PreviewFiles() {
     }))
   );
   const { fileList, imageList } = fileStore;
-  console.log('imageUrls', fileStore);
+  // console.log('imageUrls', fileStore);
   const previewUrl = `https://view.officeapps.live.com/op/embed.aspx?src=`;
   return (
     (fileList.length > 0 || imageList.length > 0) && (

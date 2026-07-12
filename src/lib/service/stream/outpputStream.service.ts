@@ -1,25 +1,22 @@
-import { MODEL_PROVIDER_MAP } from '@/constants/index';
+import { MODEL_LIST, MODEL_PROVIDER_MAP } from '@/constants/index';
+import { NextResponse } from 'next/server';
 
-type Messages = {
-  model: string;
-  enableDeepThink: boolean;
-  messages: {
-    role: string;
-    text: string;
-    attachments?: {
-      url: string;
-      minType?: string;
-    }[];
+type Message = {
+  role: string;
+  text: string;
+  attachments?: {
+    url: string;
+    minType?: string;
   }[];
 };
-
-export async function outputStreamService(
-  messages: Messages,
-  model: string,
-  id?: string,
-  enableDeepThink?: boolean
-) {
-  function pickMessages(messages: Messages['messages']) {
+type MessageProps = {
+  messages: Message[];
+  enableDeepThink: boolean;
+  model: string;
+};
+export async function outputStreamService(messagesProps: MessageProps, id?: string) {
+  const { messages, enableDeepThink, model } = messagesProps;
+  function pickMessages(messages: Message[]) {
     return messages.map((i) => {
       const contentItems: Array<
         { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }
@@ -47,25 +44,27 @@ export async function outputStreamService(
       };
     });
   }
-
+  console.log('outputStream');
   // 校验模型是否存在配置
-  const providerConfig = MODEL_PROVIDER_MAP[model] as Record<string, any>;
-  if (!providerConfig) {
-    return Response.json({ error: '不支持的模型' }, { status: 400 });
+  const modelName = MODEL_LIST.find((i) => i.label === model);
+  if (!modelName) {
+    return NextResponse.json({ msg: '不支持的模型', code: 0 }, { status: 400 });
   }
+  const providerConfig = MODEL_PROVIDER_MAP[modelName.value] as Record<string, any>;
+
   const { baseURL, apiKey } = providerConfig;
-  const msg = pickMessages(messages.messages);
+  const msg = pickMessages(messages);
   // 2. 组装大模型请求体（自动兼容纯文本/多模态图片）
   const requestBody = {
-    model,
+    model: modelName.value,
     messages: msg || [],
     stream: true,
     enable_thinking: enableDeepThink || false, // DeepSeek-R1、通义深度思考等模型专属字段
     // reasoning_effort: 'medium',
   };
-  console.log('api:');
-  console.log('messages', messages);
-  console.log('messages:', msg[0].content);
+
+  console.log('outputStream: requestBody:', requestBody);
+
   // 3. 请求对应厂商流式接口
   const modelResp = await fetch(`${baseURL}/chat/completions`, {
     method: 'POST',
@@ -78,7 +77,11 @@ export async function outputStreamService(
 
   if (!modelResp.ok || !modelResp.body) {
     const errText = await modelResp.text();
-    return Response.json({ error: `模型调用失败: ${errText}` }, { status: modelResp.status });
+    console.error('模型调用失败:', errText);
+    return NextResponse.json(
+      { msg: `模型调用失败: ${errText}`, code: 0 },
+      { status: modelResp.status }
+    );
   }
 
   const encoder = new TextEncoder();
@@ -130,6 +133,7 @@ export async function outputStreamService(
             );
           }
         } catch (parseErr) {
+          console.error('解析模型响应失败:', parseErr);
           continue;
         }
       }

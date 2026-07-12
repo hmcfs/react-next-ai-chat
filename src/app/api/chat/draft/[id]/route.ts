@@ -1,32 +1,30 @@
 import { outputStreamService } from '@/lib/service/stream/outpputStream.service';
 import { NextRequest, NextResponse } from 'next/server';
 
-type Messages = {
-  model: string;
-  enableDeepThink: boolean;
-  messages: {
-    role: string;
-    text: string;
-    attachments?: {
-      url: string;
-      minType?: string;
-    }[];
+type Message = {
+  role: string;
+  text: string;
+  attachments?: {
+    url: string;
+    minType?: string;
   }[];
 };
 // 接口入参
 type RequestBody = {
   model: string;
-  messages: Messages;
+  messages: Message[];
   enableDeepThink?: boolean;
 };
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return NextResponse.json({ success: true });
 }
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  console.log('123');
   const { id } = await params;
   const body = (await req.json()) as RequestBody;
+  console.log('streamBody', body);
   const { model, enableDeepThink = false, messages } = body;
-  const outputStream = await outputStreamService(messages, model, id, enableDeepThink);
+  const outputStream = await outputStreamService({ messages, model, enableDeepThink }, id);
   return new Response(outputStream as unknown as ReadableStream<any>, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',

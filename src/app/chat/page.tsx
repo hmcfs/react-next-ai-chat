@@ -1,12 +1,12 @@
 'use client';
 
-import ModelCheck from '@/app/chat/components/ModelCheck';
+import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import { MODEL_LIST } from '@/constants/index';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
-import PreviewFiles from '@/app/chat/components/PreviewFiles';
-import Tool from '@/app/chat/components/Tool';
+import PreviewFiles from '@/app/chat/chat-components/PreviewFiles';
+import Tool from '@/app/chat/chat-components/Tool';
 import { useFileStore, useQuestionStore } from '@/lib/store';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
@@ -18,11 +18,13 @@ export default function Chat() {
     setTitle,
     setIsNewChat,
     setMessages,
+    messages,
     getMessageParams,
     setModel: setQuestionModel,
   } = useQuestionStore(
     useShallow((state) => ({
       title: state.title,
+      messages: state.messages,
       setTitle: state.setTitle,
       setIsNewChat: state.setIsNewChat,
       setMessages: state.setMessages,
@@ -70,17 +72,18 @@ export default function Chat() {
       setTitle(title || '');
       setQuestionModel(model);
       setIsNewChat(true);
-
+      const fs = concatFiles();
       setMessages([
         {
           role: 'user',
           text: input,
-          attachments: concatFiles().length > 0 ? concatFiles() : undefined,
+          attachments: fs.length > 0 ? fs : undefined,
         },
       ]);
+      console.log('拼装前的消息', messages);
       console.log('拼装后的消息', getMessageParams());
-      //clear()
-      //router.push(`/chat/${chatId}`);
+
+      router.push(`/chat/${chatId}`);
 
       setInput('');
     } catch (e) {

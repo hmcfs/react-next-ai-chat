@@ -37,12 +37,14 @@ export const useQuestionStore = create<QuestionStore>((set, get) => ({
     return { model, enableDeepThink, messages };
   },
   setMessages: (messages) => set(() => ({ messages: messages })),
-  clearMessages: () => set(() => ({ messages: [], chatId: '', isNewChat: false, title: '' })),
+  clearMessages: () => set(() => ({ messages: [], isNewChat: false })),
   clearAll: () => {
     get().clearMessages();
     set(() => ({
       model: '',
       enableDeepThink: false,
+      chatId: '',
+      title: '',
     }));
   },
   chatId: '',

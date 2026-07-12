@@ -1,5 +1,5 @@
 'use client';
-import SideBarLoading from '@/app/components/SideBarLoading';
+import SideBarLoading from '@/components/my/SideBarLoading';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { CustomDialog } from '../chat/components/CustomDialog';
+import { CustomDialog } from '../../app/chat/chat-components/CustomDialog';
 interface ChatRecord {
   id: string;
   title: string;
