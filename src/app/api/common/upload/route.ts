@@ -41,8 +41,8 @@ export async function POST(req: NextRequest) {
     console.log('formData:', formData);
     const fileList = (formData.getAll('file') as File[]).filter((f) => f.size > 0);
     const imageList = (formData.getAll('image') as File[]).filter((f) => f.size > 0);
-    let fileCollection: { url: string; name: string }[] = [];
-    let imageCollection: { url: string; name: string }[] = [];
+    let fileCollection: { url: string; fileType: string; fileName: string }[] = [];
+    let imageCollection: { url: string; fileType: string; fileName: string }[] = [];
     console.log('上传文件:', fileList.length, imageList.length);
     if (!fileList.length && !imageList.length) throw new customError('请选择文件或图片');
     if (fileList.length > 5 || imageList.length > 5) throw new customError('最多上传5个文件或图片');
@@ -50,8 +50,8 @@ export async function POST(req: NextRequest) {
       const filePromise = fileList.map(async (file) => {
         const arrayBuf = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuf);
-        const url = await uploadFileToOSS(buffer, file.name, 'file');
-        return { url, name: file.name };
+        const { url, fileType, fileName } = await uploadFileToOSS(buffer, file.name, 'file');
+        return { url, fileType, fileName };
       });
       fileCollection = await Promise.all(filePromise);
     }
@@ -59,8 +59,8 @@ export async function POST(req: NextRequest) {
       const imagePromise = imageList.map(async (image) => {
         const arrayBuf = await image.arrayBuffer();
         const buffer = Buffer.from(arrayBuf);
-        const url = await uploadFileToOSS(buffer, image.name, 'image');
-        return { url, name: image.name };
+        const { url, fileType, fileName } = await uploadFileToOSS(buffer, image.name, 'image');
+        return { url, fileType, fileName };
       });
       imageCollection = await Promise.all(imagePromise);
     }

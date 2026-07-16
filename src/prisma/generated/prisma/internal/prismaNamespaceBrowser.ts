@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Attachment: 'Attachment',
   ChatMessage: 'ChatMessage',
   ChatSession: 'ChatSession',
   SysUser: 'SysUser'
@@ -72,6 +73,19 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AttachmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  url: 'url',
+  size: 'size',
+  msgId: 'msgId',
+  createdAt: 'createdAt'
+} as const
+
+export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
+
+
 export const ChatMessageScalarFieldEnum = {
   msgId: 'msgId',
   chatId: 'chatId',
@@ -79,9 +93,6 @@ export const ChatMessageScalarFieldEnum = {
   content: 'content',
   createTime: 'createTime',
   type: 'type',
-  fileUrl: 'fileUrl',
-  fileName: 'fileName',
-  fileType: 'fileType',
   reasoningContent: 'reasoningContent',
   modelName: 'modelName',
   enableDeepThink: 'enableDeepThink'

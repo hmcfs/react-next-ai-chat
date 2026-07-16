@@ -1,0 +1,15 @@
+model Attachment {
+  id        String      @id @default(dbgenerated("replace((gen_random_uuid())::text, '-'::text, ''::text)")) @db.Char(32)
+  name      String      @db.VarChar(255)
+  type      String      @db.VarChar(50)       // MIME type，如 image/png, application/pdf
+  url       String      @db.Text              // URL 可能较长，建议用 Text
+  size      Int?                              // 文件大小（字节），可选但强烈推荐
+  msgId     String      @db.Char(32) @map("msg_id")
+  createdAt DateTime    @default(now()) @db.Timestamptz @map("created_at")
+
+  //  反向关联到消息
+  message   ChatMessage @relation(fields: [msgId], references: [msgId], onDelete: Cascade)
+
+  @@index([msgId], map: "idx_attachment_msg_id")
+  @@map("attachment")
+}

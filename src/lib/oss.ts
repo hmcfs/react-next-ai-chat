@@ -19,7 +19,7 @@ export async function uploadFileToOSS(
   buffer: Buffer,
   filename: string,
   dir: 'image' | 'file'
-): Promise<string> {
+): Promise<{ url: string; fileType: string; fileName: string }> {
   // 生成唯一文件名防止重名
   const ext = filename.split('.').pop();
   const uniqueName = `${dir}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -38,5 +38,5 @@ export async function uploadFileToOSS(
     },
   }); */
   console.log('oss', res);
-  return res.url;
+  return { url: res.url, fileType: ext, fileName: filename };
 }

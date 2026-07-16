@@ -1,4 +1,5 @@
 import { MODEL_LIST, MODEL_PROVIDER_MAP } from '@/constants/index';
+import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 type Message = {
@@ -6,7 +7,8 @@ type Message = {
   text: string;
   attachments?: {
     url: string;
-    minType?: string;
+    fileType?: string;
+    fileName?: string;
   }[];
 };
 type MessageProps = {
@@ -14,8 +16,14 @@ type MessageProps = {
   enableDeepThink: boolean;
   model: string;
 };
+type Attachment = {
+  url: string;
+  fileType: string;
+  fileName: string;
+};
 export async function outputStreamService(messagesProps: MessageProps, id?: string) {
   const { messages, enableDeepThink, model } = messagesProps;
+  const files: Attachment[] = [];
   function pickMessages(messages: Message[]) {
     return messages.map((i) => {
       const contentItems: Array<
@@ -24,15 +32,21 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
 
       if (i.attachments && i.attachments.length > 0) {
         for (const item of i.attachments) {
-          if (item.minType?.startsWith('image')) {
+          files.push({
+            url: item.url,
+            fileType: item.fileType || 'file',
+            fileName: item.fileName || item.url.split('/').pop() || item.url,
+          });
+          if (item.fileType?.startsWith('image')) {
             contentItems.push({
               type: 'image_url',
               image_url: { url: item.url },
             });
-          } else if (item.minType?.startsWith('pdf')) {
+          } //其他文件应该提取文本内容
+          else if (item.fileType?.startsWith('pdf')) {
             contentItems.push({
               type: 'text',
-              text: `[系统提示: 用户上传了PDF文件 ${item.url}，请使用RAG工具提取内容]`,
+              text: `[系统提示: 用户上传了PDF文件 ${item.fileName}，请使用RAG工具提取内容]`,
             });
           }
         }
@@ -54,6 +68,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
 
   const { baseURL, apiKey } = providerConfig;
   const msg = pickMessages(messages);
+  console.log('files', files);
   // 2. 组装大模型请求体（自动兼容纯文本/多模态图片）
   const requestBody = {
     model: modelName.value,
@@ -140,18 +155,26 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
     },
     // 流结束：入库保存消息（区分思考内容与回答）
     async flush() {
+      console.log('model', model);
       if (!id || !fullAnswer) return;
       try {
-        /*   await prisma.chatMessage.create({
+        await prisma.chatMessage.create({
           data: {
-            chatId:id,
-            role: "assistant",
+            chatId: id,
+            role: 'assistant',
             content: fullAnswer,
             reasoningContent: fullReasoning || null, // 深度思考内容单独字段
-            modelName: model, // 记录当前使用的模型
+            modelName: MODEL_LIST.find((i) => i.label === model)?.label || model, // 记录当前使用的模型
             enableDeepThink,
+            attachments: {
+              create: files.map((file) => ({
+                name: file.fileName,
+                type: file.fileType,
+                url: file.url,
+              })),
+            },
           },
-        }); */
+        });
         console.log('[DB] 保存消息成功');
       } catch (dbErr) {
         console.error('[DB] 保存消息失败', dbErr);

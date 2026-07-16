@@ -42,7 +42,13 @@ export default function Tool() {
     });
     const data = await res.json();
     console.log('图片上传结果:', data);
-    fileStore.addImage(data.data.imageCollection.map((i) => ({ url: i.url, name: i.name })));
+    fileStore.addImage(
+      data.data.imageCollection.map((i) => ({
+        url: i.url,
+        fileType: i.fileType,
+        fileName: i.fileName,
+      }))
+    );
   };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -58,7 +64,13 @@ export default function Tool() {
     });
     const data = await res.json();
     // console.log('文件上传结果:', data);
-    fileStore.addFile(data.data.fileCollection.map((i) => ({ url: i.url, name: i.name })));
+    fileStore.addFile(
+      data.data.fileCollection.map((i) => ({
+        url: i.url,
+        fileType: i.fileType,
+        fileName: i.fileName,
+      }))
+    );
   };
   return (
     <div className="w-full h-full px-2 flex flex-row items-center justify-between gap-2">

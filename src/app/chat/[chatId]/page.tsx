@@ -1,5 +1,6 @@
 'use client';
 
+import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import Markdown from '@/components/my/ReactMarkdown';
 import { useFileStore, useQuestionStore } from '@/lib/store';
 import { useParams } from 'next/navigation';
@@ -35,6 +36,7 @@ export default function Chat() {
     setStoreMsgs,
     clearMessages,
     setModel,
+    model,
   } = useQuestionStore(
     useShallow((state) => ({
       getMessageParams: state.getMessageParams,
@@ -44,9 +46,13 @@ export default function Chat() {
       clearMessages: state.clearMessages,
       setModel: state.setModel,
       setStoreMsgs: state.setMessages,
+      model: state.model,
     }))
   );
-
+  const changeModel = (model: string) => {
+    setModel(model);
+    localStorage.setItem('model', model);
+  };
   const { clearFiles, concatFiles } = useFileStore(
     useShallow((state) => ({
       clearFiles: state.clear,
@@ -179,7 +185,9 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-white">
+    <div className="flex relative flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-white">
+      <ModelCheck parentModel={model} changeModel={changeModel} className="absolute top-4 left-4" />
+
       {/* ==================== 消息列表区域 ==================== */}
       <div className="flex-1 py-6 pt-20 px-4 pb-40">
         {/* ---------- 空状态 ---------- */}

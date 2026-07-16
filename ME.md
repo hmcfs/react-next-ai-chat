@@ -1,6 +1,6 @@
-图片文件预览，对话
+保存图片、文件，新建表，关联messages表(基本完成)
+bug：massage 表的model不统一
 
-draft切换到正式代码
 保存到数据库
 
 sse，上下文存储

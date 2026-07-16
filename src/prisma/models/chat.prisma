@@ -12,12 +12,12 @@ model ChatMessage {
   content     String
   createTime  DateTime    @default(now())  @db.Timestamptz  @map("create_time") 
   type        MsgType     @default(chat) @map("type")
-  fileUrl     String?     @map("file_url")
-  fileName    String?     @map("file_name")
-  fileType    String?     @map("file_type")
+   
   reasoningContent String? @map("reasoning_content") // 深度思考内容，无思考则为null
   modelName String @db.Char(32) @map("model_name") @default("qwen") // 当前对话使用的模型名
   enableDeepThink Boolean @default(false) @map("enable_deep_think")
+
+    attachments      Attachment[]
   chatSession ChatSession @relation(fields: [chatId], references: [chatId], onDelete: Cascade)
  
   @@index([chatId], map: "idx_chatid")

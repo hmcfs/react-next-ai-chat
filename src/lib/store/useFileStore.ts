@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-type File1 = { url: string; name: string };
+type File1 = { url: string; fileType: string; fileName: string };
 type Attachment = {
   url: string;
-  minType: string;
+  fileType: string;
+  fileName: string;
 };
 interface FileStore {
   fileUrls: string[];
@@ -43,7 +44,8 @@ export const useFileStore = create<FileStore>()(
           fileList.forEach((i) => {
             res.push({
               url: i.url,
-              minType: i.name.split('.').pop() || 'file',
+              fileType: i.fileType || 'file',
+              fileName: i.fileName,
             });
           });
         }
@@ -51,7 +53,8 @@ export const useFileStore = create<FileStore>()(
           imageList.forEach((i) => {
             res.push({
               url: i.url,
-              minType: i.name.split('.').pop() || 'image',
+              fileType: i.fileType || 'image',
+              fileName: i.fileName,
             });
           });
         }

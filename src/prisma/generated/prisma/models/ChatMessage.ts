@@ -31,9 +31,6 @@ export type ChatMessageMinAggregateOutputType = {
   content: string | null
   createTime: Date | null
   type: $Enums.MsgType | null
-  fileUrl: string | null
-  fileName: string | null
-  fileType: string | null
   reasoningContent: string | null
   modelName: string | null
   enableDeepThink: boolean | null
@@ -46,9 +43,6 @@ export type ChatMessageMaxAggregateOutputType = {
   content: string | null
   createTime: Date | null
   type: $Enums.MsgType | null
-  fileUrl: string | null
-  fileName: string | null
-  fileType: string | null
   reasoningContent: string | null
   modelName: string | null
   enableDeepThink: boolean | null
@@ -61,9 +55,6 @@ export type ChatMessageCountAggregateOutputType = {
   content: number
   createTime: number
   type: number
-  fileUrl: number
-  fileName: number
-  fileType: number
   reasoningContent: number
   modelName: number
   enableDeepThink: number
@@ -78,9 +69,6 @@ export type ChatMessageMinAggregateInputType = {
   content?: true
   createTime?: true
   type?: true
-  fileUrl?: true
-  fileName?: true
-  fileType?: true
   reasoningContent?: true
   modelName?: true
   enableDeepThink?: true
@@ -93,9 +81,6 @@ export type ChatMessageMaxAggregateInputType = {
   content?: true
   createTime?: true
   type?: true
-  fileUrl?: true
-  fileName?: true
-  fileType?: true
   reasoningContent?: true
   modelName?: true
   enableDeepThink?: true
@@ -108,9 +93,6 @@ export type ChatMessageCountAggregateInputType = {
   content?: true
   createTime?: true
   type?: true
-  fileUrl?: true
-  fileName?: true
-  fileType?: true
   reasoningContent?: true
   modelName?: true
   enableDeepThink?: true
@@ -196,9 +178,6 @@ export type ChatMessageGroupByOutputType = {
   content: string
   createTime: Date
   type: $Enums.MsgType
-  fileUrl: string | null
-  fileName: string | null
-  fileType: string | null
   reasoningContent: string | null
   modelName: string
   enableDeepThink: boolean
@@ -232,12 +211,10 @@ export type ChatMessageWhereInput = {
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   type?: Prisma.EnumMsgTypeFilter<"ChatMessage"> | $Enums.MsgType
-  fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
-  fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
-  fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   reasoningContent?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   modelName?: Prisma.StringFilter<"ChatMessage"> | string
   enableDeepThink?: Prisma.BoolFilter<"ChatMessage"> | boolean
+  attachments?: Prisma.AttachmentListRelationFilter
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
 }
 
@@ -248,12 +225,10 @@ export type ChatMessageOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  fileName?: Prisma.SortOrderInput | Prisma.SortOrder
-  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
   reasoningContent?: Prisma.SortOrderInput | Prisma.SortOrder
   modelName?: Prisma.SortOrder
   enableDeepThink?: Prisma.SortOrder
+  attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   chatSession?: Prisma.ChatSessionOrderByWithRelationInput
 }
 
@@ -267,12 +242,10 @@ export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   type?: Prisma.EnumMsgTypeFilter<"ChatMessage"> | $Enums.MsgType
-  fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
-  fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
-  fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   reasoningContent?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   modelName?: Prisma.StringFilter<"ChatMessage"> | string
   enableDeepThink?: Prisma.BoolFilter<"ChatMessage"> | boolean
+  attachments?: Prisma.AttachmentListRelationFilter
   chatSession?: Prisma.XOR<Prisma.ChatSessionScalarRelationFilter, Prisma.ChatSessionWhereInput>
 }, "msgId">
 
@@ -283,9 +256,6 @@ export type ChatMessageOrderByWithAggregationInput = {
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  fileName?: Prisma.SortOrderInput | Prisma.SortOrder
-  fileType?: Prisma.SortOrderInput | Prisma.SortOrder
   reasoningContent?: Prisma.SortOrderInput | Prisma.SortOrder
   modelName?: Prisma.SortOrder
   enableDeepThink?: Prisma.SortOrder
@@ -304,9 +274,6 @@ export type ChatMessageScalarWhereWithAggregatesInput = {
   content?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
   type?: Prisma.EnumMsgTypeWithAggregatesFilter<"ChatMessage"> | $Enums.MsgType
-  fileUrl?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
-  fileName?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
-  fileType?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
   reasoningContent?: Prisma.StringNullableWithAggregatesFilter<"ChatMessage"> | string | null
   modelName?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
   enableDeepThink?: Prisma.BoolWithAggregatesFilter<"ChatMessage"> | boolean
@@ -318,12 +285,10 @@ export type ChatMessageCreateInput = {
   content: string
   createTime?: Date | string
   type?: $Enums.MsgType
-  fileUrl?: string | null
-  fileName?: string | null
-  fileType?: string | null
   reasoningContent?: string | null
   modelName?: string
   enableDeepThink?: boolean
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutMessageInput
   chatSession: Prisma.ChatSessionCreateNestedOneWithoutChatMessageInput
 }
 
@@ -334,12 +299,10 @@ export type ChatMessageUncheckedCreateInput = {
   content: string
   createTime?: Date | string
   type?: $Enums.MsgType
-  fileUrl?: string | null
-  fileName?: string | null
-  fileType?: string | null
   reasoningContent?: string | null
   modelName?: string
   enableDeepThink?: boolean
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutMessageInput
 }
 
 export type ChatMessageUpdateInput = {
@@ -348,12 +311,10 @@ export type ChatMessageUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachments?: Prisma.AttachmentUpdateManyWithoutMessageNestedInput
   chatSession?: Prisma.ChatSessionUpdateOneRequiredWithoutChatMessageNestedInput
 }
 
@@ -364,12 +325,10 @@ export type ChatMessageUncheckedUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutMessageNestedInput
 }
 
 export type ChatMessageCreateManyInput = {
@@ -379,9 +338,6 @@ export type ChatMessageCreateManyInput = {
   content: string
   createTime?: Date | string
   type?: $Enums.MsgType
-  fileUrl?: string | null
-  fileName?: string | null
-  fileType?: string | null
   reasoningContent?: string | null
   modelName?: string
   enableDeepThink?: boolean
@@ -393,9 +349,6 @@ export type ChatMessageUpdateManyMutationInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -408,12 +361,14 @@ export type ChatMessageUncheckedUpdateManyInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type ChatMessageScalarRelationFilter = {
+  is?: Prisma.ChatMessageWhereInput
+  isNot?: Prisma.ChatMessageWhereInput
 }
 
 export type ChatMessageCountOrderByAggregateInput = {
@@ -423,9 +378,6 @@ export type ChatMessageCountOrderByAggregateInput = {
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileType?: Prisma.SortOrder
   reasoningContent?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
   enableDeepThink?: Prisma.SortOrder
@@ -438,9 +390,6 @@ export type ChatMessageMaxOrderByAggregateInput = {
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileType?: Prisma.SortOrder
   reasoningContent?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
   enableDeepThink?: Prisma.SortOrder
@@ -453,9 +402,6 @@ export type ChatMessageMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   createTime?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  fileUrl?: Prisma.SortOrder
-  fileName?: Prisma.SortOrder
-  fileType?: Prisma.SortOrder
   reasoningContent?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
   enableDeepThink?: Prisma.SortOrder
@@ -471,12 +417,18 @@ export type ChatMessageOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type ChatMessageCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.ChatMessageCreateWithoutAttachmentsInput, Prisma.ChatMessageUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.ChatMessageCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.ChatMessageWhereUniqueInput
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type ChatMessageUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChatMessageCreateWithoutAttachmentsInput, Prisma.ChatMessageUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.ChatMessageCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.ChatMessageUpsertWithoutAttachmentsInput
+  connect?: Prisma.ChatMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChatMessageUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.ChatMessageUpdateWithoutAttachmentsInput>, Prisma.ChatMessageUncheckedUpdateWithoutAttachmentsInput>
 }
 
 export type EnumMsgTypeFieldUpdateOperationsInput = {
@@ -533,18 +485,80 @@ export type ChatMessageUncheckedUpdateManyWithoutChatSessionNestedInput = {
   deleteMany?: Prisma.ChatMessageScalarWhereInput | Prisma.ChatMessageScalarWhereInput[]
 }
 
+export type ChatMessageCreateWithoutAttachmentsInput = {
+  msgId?: string
+  role: string
+  content: string
+  createTime?: Date | string
+  type?: $Enums.MsgType
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
+  chatSession: Prisma.ChatSessionCreateNestedOneWithoutChatMessageInput
+}
+
+export type ChatMessageUncheckedCreateWithoutAttachmentsInput = {
+  msgId?: string
+  chatId: string
+  role: string
+  content: string
+  createTime?: Date | string
+  type?: $Enums.MsgType
+  reasoningContent?: string | null
+  modelName?: string
+  enableDeepThink?: boolean
+}
+
+export type ChatMessageCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.ChatMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChatMessageCreateWithoutAttachmentsInput, Prisma.ChatMessageUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type ChatMessageUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.ChatMessageUpdateWithoutAttachmentsInput, Prisma.ChatMessageUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.ChatMessageCreateWithoutAttachmentsInput, Prisma.ChatMessageUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.ChatMessageWhereInput
+}
+
+export type ChatMessageUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.ChatMessageWhereInput
+  data: Prisma.XOR<Prisma.ChatMessageUpdateWithoutAttachmentsInput, Prisma.ChatMessageUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type ChatMessageUpdateWithoutAttachmentsInput = {
+  msgId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  chatSession?: Prisma.ChatSessionUpdateOneRequiredWithoutChatMessageNestedInput
+}
+
+export type ChatMessageUncheckedUpdateWithoutAttachmentsInput = {
+  msgId?: Prisma.StringFieldUpdateOperationsInput | string
+  chatId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
+  reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.StringFieldUpdateOperationsInput | string
+  enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
 export type ChatMessageCreateWithoutChatSessionInput = {
   msgId?: string
   role: string
   content: string
   createTime?: Date | string
   type?: $Enums.MsgType
-  fileUrl?: string | null
-  fileName?: string | null
-  fileType?: string | null
   reasoningContent?: string | null
   modelName?: string
   enableDeepThink?: boolean
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutMessageInput
 }
 
 export type ChatMessageUncheckedCreateWithoutChatSessionInput = {
@@ -553,12 +567,10 @@ export type ChatMessageUncheckedCreateWithoutChatSessionInput = {
   content: string
   createTime?: Date | string
   type?: $Enums.MsgType
-  fileUrl?: string | null
-  fileName?: string | null
-  fileType?: string | null
   reasoningContent?: string | null
   modelName?: string
   enableDeepThink?: boolean
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutMessageInput
 }
 
 export type ChatMessageCreateOrConnectWithoutChatSessionInput = {
@@ -597,9 +609,6 @@ export type ChatMessageScalarWhereInput = {
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createTime?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   type?: Prisma.EnumMsgTypeFilter<"ChatMessage"> | $Enums.MsgType
-  fileUrl?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
-  fileName?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
-  fileType?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   reasoningContent?: Prisma.StringNullableFilter<"ChatMessage"> | string | null
   modelName?: Prisma.StringFilter<"ChatMessage"> | string
   enableDeepThink?: Prisma.BoolFilter<"ChatMessage"> | boolean
@@ -611,9 +620,6 @@ export type ChatMessageCreateManyChatSessionInput = {
   content: string
   createTime?: Date | string
   type?: $Enums.MsgType
-  fileUrl?: string | null
-  fileName?: string | null
-  fileType?: string | null
   reasoningContent?: string | null
   modelName?: string
   enableDeepThink?: boolean
@@ -625,12 +631,10 @@ export type ChatMessageUpdateWithoutChatSessionInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachments?: Prisma.AttachmentUpdateManyWithoutMessageNestedInput
 }
 
 export type ChatMessageUncheckedUpdateWithoutChatSessionInput = {
@@ -639,12 +643,10 @@ export type ChatMessageUncheckedUpdateWithoutChatSessionInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutMessageNestedInput
 }
 
 export type ChatMessageUncheckedUpdateManyWithoutChatSessionInput = {
@@ -653,14 +655,40 @@ export type ChatMessageUncheckedUpdateManyWithoutChatSessionInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.EnumMsgTypeFieldUpdateOperationsInput | $Enums.MsgType
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reasoningContent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.StringFieldUpdateOperationsInput | string
   enableDeepThink?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
+
+/**
+ * Count Type ChatMessageCountOutputType
+ */
+
+export type ChatMessageCountOutputType = {
+  attachments: number
+}
+
+export type ChatMessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  attachments?: boolean | ChatMessageCountOutputTypeCountAttachmentsArgs
+}
+
+/**
+ * ChatMessageCountOutputType without action
+ */
+export type ChatMessageCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChatMessageCountOutputType
+   */
+  select?: Prisma.ChatMessageCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ChatMessageCountOutputType without action
+ */
+export type ChatMessageCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttachmentWhereInput
+}
 
 
 export type ChatMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -670,13 +698,12 @@ export type ChatMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   content?: boolean
   createTime?: boolean
   type?: boolean
-  fileUrl?: boolean
-  fileName?: boolean
-  fileType?: boolean
   reasoningContent?: boolean
   modelName?: boolean
   enableDeepThink?: boolean
+  attachments?: boolean | Prisma.ChatMessage$attachmentsArgs<ExtArgs>
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.ChatMessageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatMessage"]>
 
 export type ChatMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -686,9 +713,6 @@ export type ChatMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   content?: boolean
   createTime?: boolean
   type?: boolean
-  fileUrl?: boolean
-  fileName?: boolean
-  fileType?: boolean
   reasoningContent?: boolean
   modelName?: boolean
   enableDeepThink?: boolean
@@ -702,9 +726,6 @@ export type ChatMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   content?: boolean
   createTime?: boolean
   type?: boolean
-  fileUrl?: boolean
-  fileName?: boolean
-  fileType?: boolean
   reasoningContent?: boolean
   modelName?: boolean
   enableDeepThink?: boolean
@@ -718,17 +739,16 @@ export type ChatMessageSelectScalar = {
   content?: boolean
   createTime?: boolean
   type?: boolean
-  fileUrl?: boolean
-  fileName?: boolean
-  fileType?: boolean
   reasoningContent?: boolean
   modelName?: boolean
   enableDeepThink?: boolean
 }
 
-export type ChatMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"msgId" | "chatId" | "role" | "content" | "createTime" | "type" | "fileUrl" | "fileName" | "fileType" | "reasoningContent" | "modelName" | "enableDeepThink", ExtArgs["result"]["chatMessage"]>
+export type ChatMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"msgId" | "chatId" | "role" | "content" | "createTime" | "type" | "reasoningContent" | "modelName" | "enableDeepThink", ExtArgs["result"]["chatMessage"]>
 export type ChatMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  attachments?: boolean | Prisma.ChatMessage$attachmentsArgs<ExtArgs>
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.ChatMessageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ChatMessageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chatSession?: boolean | Prisma.ChatSessionDefaultArgs<ExtArgs>
@@ -740,6 +760,7 @@ export type ChatMessageIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $ChatMessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ChatMessage"
   objects: {
+    attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     chatSession: Prisma.$ChatSessionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -749,9 +770,6 @@ export type $ChatMessagePayload<ExtArgs extends runtime.Types.Extensions.Interna
     content: string
     createTime: Date
     type: $Enums.MsgType
-    fileUrl: string | null
-    fileName: string | null
-    fileType: string | null
     reasoningContent: string | null
     modelName: string
     enableDeepThink: boolean
@@ -1149,6 +1167,7 @@ readonly fields: ChatMessageFieldRefs;
  */
 export interface Prisma__ChatMessageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  attachments<T extends Prisma.ChatMessage$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatMessage$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatSession<T extends Prisma.ChatSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__ChatSessionClient<runtime.Types.Result.GetResult<Prisma.$ChatSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1185,9 +1204,6 @@ export interface ChatMessageFieldRefs {
   readonly content: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly createTime: Prisma.FieldRef<"ChatMessage", 'DateTime'>
   readonly type: Prisma.FieldRef<"ChatMessage", 'MsgType'>
-  readonly fileUrl: Prisma.FieldRef<"ChatMessage", 'String'>
-  readonly fileName: Prisma.FieldRef<"ChatMessage", 'String'>
-  readonly fileType: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly reasoningContent: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly modelName: Prisma.FieldRef<"ChatMessage", 'String'>
   readonly enableDeepThink: Prisma.FieldRef<"ChatMessage", 'Boolean'>
@@ -1589,6 +1605,30 @@ export type ChatMessageDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many ChatMessages to delete.
    */
   limit?: number
+}
+
+/**
+ * ChatMessage.attachments
+ */
+export type ChatMessage$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Attachment
+   */
+  select?: Prisma.AttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Attachment
+   */
+  omit?: Prisma.AttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttachmentInclude<ExtArgs> | null
+  where?: Prisma.AttachmentWhereInput
+  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.AttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
 }
 
 /**
