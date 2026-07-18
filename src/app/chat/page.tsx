@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 
 import PreviewFiles from '@/app/chat/chat-components/PreviewFiles';
 import Tool from '@/app/chat/chat-components/Tool';
-import { useFileStore, useQuestionStore } from '@/lib/store';
+import { Model, useFileStore, useQuestionStore } from '@/lib/store';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { clientApi } from '../../lib/client-request';
@@ -48,10 +48,10 @@ export default function Chat() {
     if (typeof window === 'undefined') return MODEL_LIST[0].label;
     const localModel = localStorage.getItem('model');
     if (localModel) return localModel;
-    localStorage.setItem('model', MODEL_LIST[0].label);
-    return MODEL_LIST[0].label;
+    localStorage.setItem('model', MODEL_LIST[0].value);
+    return MODEL_LIST[0].value;
   });
-  const changeModel = (model: string) => {
+  const changeModel = (model: Model) => {
     localStorage.setItem('model', model);
     setModel(model);
   };
@@ -70,7 +70,7 @@ export default function Chat() {
         return;
       }
       setTitle(title || '');
-      setQuestionModel(model);
+      setQuestionModel(model as Model);
       setIsNewChat(true);
       const fs = concatFiles();
       setMessages([
@@ -93,7 +93,11 @@ export default function Chat() {
 
   return (
     <div className="w-full relative h-screen min-h-[250px] flex flex-col justify-between items-center">
-      <ModelCheck parentModel={model} changeModel={changeModel} className="absolute top-4 left-4" />
+      <ModelCheck
+        parentModel={model as Model}
+        changeModel={changeModel}
+        className="absolute top-4 left-4"
+      />
       <div></div>
       <div className="w-4/5 flex flex-col justify-around items-center">
         <span className="text-center text-gray-400 mb-10 text-3xl font-bold">

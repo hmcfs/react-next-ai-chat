@@ -8,13 +8,18 @@ type Message = {
     minType?: string;
   }[];
 };
-
+export type Model =
+  | 'qwen3.6-flash'
+  | 'qwen3-vl-flash'
+  | 'deepseek-v3'
+  | 'deepseek-r1'
+  | 'z-image-turbo';
 interface QuestionStore {
-  model: string;
+  model: Model;
   enableDeepThink: boolean;
   messages: Message[];
   getMessageParams: () => MessageParams;
-  setModel: (model: string) => void;
+  setModel: (model: Model) => void;
   setMessages: (messages: Message[]) => void;
   setEnableDeepThink: (enableDeepThink: boolean) => void;
   clearMessages: () => void;
@@ -27,7 +32,7 @@ interface QuestionStore {
   setTitle: (title: string) => void;
 }
 export const useQuestionStore = create<QuestionStore>((set, get) => ({
-  model: '',
+  model: 'qwen3.6-flash',
   setModel: (model) => set(() => ({ model: model })),
   enableDeepThink: false,
   setEnableDeepThink: (enableDeepThink) => set(() => ({ enableDeepThink: enableDeepThink })),
@@ -41,7 +46,7 @@ export const useQuestionStore = create<QuestionStore>((set, get) => ({
   clearAll: () => {
     get().clearMessages();
     set(() => ({
-      model: '',
+      model: 'qwen3.6-flash',
       enableDeepThink: false,
       chatId: '',
       title: '',

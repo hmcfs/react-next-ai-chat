@@ -1,4 +1,6 @@
 import { outputStreamService } from '@/lib/service/stream/outpputStream.service';
+import { Model } from '@/lib/store';
+import { normalizeModel } from '@/lib/validModel';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Message = {
@@ -11,7 +13,7 @@ type Message = {
 };
 // 接口入参
 type RequestBody = {
-  model: string;
+  model: Model;
   messages: Message[];
   enableDeepThink?: boolean;
 };
@@ -24,7 +26,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = (await req.json()) as RequestBody;
   console.log('streamBody', body);
   const { model, enableDeepThink = false, messages } = body;
-  const outputStream = await outputStreamService({ messages, model, enableDeepThink }, id);
+  const validModel = normalizeModel(model);
+  const outputStream = await outputStreamService(
+    { messages, model: validModel, enableDeepThink },
+    id
+  );
   return new Response(outputStream as unknown as ReadableStream<any>, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',

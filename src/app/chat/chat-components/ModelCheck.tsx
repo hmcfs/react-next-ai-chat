@@ -6,11 +6,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MODEL_LIST } from '@/constants/index';
-import { useQuestionStore } from '@/lib/store';
+import { Model, useQuestionStore } from '@/lib/store';
 type Props = {
   className?: string;
-  changeModel: (model: string) => void;
-  parentModel: string;
+  changeModel: (model: Model) => void;
+  parentModel: Model;
 };
 export default function ModelCheck({ className = '', changeModel, parentModel }: Props) {
   const setModel = useQuestionStore((state) => state.setModel);
@@ -18,10 +18,10 @@ export default function ModelCheck({ className = '', changeModel, parentModel }:
   return (
     <div className={className}>
       <Select
-        value={parentModel || MODEL_LIST[0].label}
+        value={parentModel || MODEL_LIST[0].value}
         onValueChange={(value) => {
-          setModel(value);
-          changeModel(value);
+          setModel(value as Model);
+          changeModel(value as Model);
         }}
       >
         <SelectTrigger className="w-full max-w-48">

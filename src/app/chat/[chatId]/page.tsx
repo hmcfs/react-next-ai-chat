@@ -2,7 +2,7 @@
 
 import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import Markdown from '@/components/my/ReactMarkdown';
-import { useFileStore, useQuestionStore } from '@/lib/store';
+import { Model, useFileStore, useQuestionStore } from '@/lib/store';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -49,7 +49,7 @@ export default function Chat() {
       model: state.model,
     }))
   );
-  const changeModel = (model: string) => {
+  const changeModel = (model: Model) => {
     setModel(model);
     localStorage.setItem('model', model);
   };
