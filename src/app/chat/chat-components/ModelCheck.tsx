@@ -9,11 +9,22 @@ import { MODEL_LIST } from '@/constants/index';
 import { Model, useQuestionStore } from '@/lib/store';
 type Props = {
   className?: string;
-  changeModel: (model: Model) => void;
-  parentModel: Model;
+  changeModel: (model: string) => void;
+  parentModel: string;
 };
 export default function ModelCheck({ className = '', changeModel, parentModel }: Props) {
   const setModel = useQuestionStore((state) => state.setModel);
+  // function validModel() {
+  //   return MODEL_LIST.find((item) => item.value === parentModel || item.label === parentModel);
+  // }
+  // const [m, setM] = useState((pre) => {
+  //   const a = validModel();
+  //   if (!a) {
+  //     setModel(MODEL_LIST[0].value);
+  //     return MODEL_LIST[0].label;
+  //   }
+  //   return a.label;
+  // });
 
   return (
     <div className={className}>

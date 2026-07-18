@@ -1,10 +1,13 @@
 'use client';
 
+import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import { debounce } from '@/lib/debounce';
+import { Model, useQuestionStore } from '@/lib/store';
 import { clsx } from 'clsx';
 import { PanelLeft } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { useShallow } from 'zustand/react/shallow';
 import ChatSidebar from '../../components/my/Navibar';
 
 //   封装 cn 工具函数，自动合并 & 去重 Tailwind class
@@ -18,7 +21,13 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const [open, setOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
   const prevIsMobileRef = useRef(false);
-
+  const { model, setModel } = useQuestionStore(
+    useShallow((s) => ({ model: s.model, setModel: s.setModel }))
+  );
+  const changeModel = (model: Model) => {
+    setModel(model);
+    localStorage.setItem('model', model);
+  };
   useEffect(() => {
     setMounted(true);
 
@@ -79,6 +88,12 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 
       {/*  Main area */}
       <div className="relative flex-1 h-screen min-w-0 overflow-y-auto">
+        <ModelCheck
+          parentModel={model}
+          changeModel={changeModel}
+          className="absolute top-4 left-4"
+        />
+
         {/* 桌面端收起按钮 */}
         {mounted && !isMobile && !open && (
           <button

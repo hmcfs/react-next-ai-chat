@@ -1,4 +1,5 @@
 import { MODEL_LIST, MODEL_PROVIDER_MAP } from '@/constants/index';
+import { markdownToText } from '@/lib/markdown';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
@@ -26,39 +27,44 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
   const { messages, enableDeepThink, model } = messagesProps;
   const files: Attachment[] = [];
   function pickMessages(messages: Message[]) {
-    return messages.map((i) => {
-      const contentItems: Array<
-        { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }
-      > = [{ type: 'text', text: i.text }];
-      if (!i.text.trim()) return;
-      contentItems.push({ type: 'text', text: i.text });
-      if (i.attachments && i.attachments.length > 0) {
-        for (const item of i.attachments) {
-          files.push({
-            url: item.url,
-            fileType: item.fileType || 'file',
-            fileName: item.fileName || item.url.split('/').pop() || item.url,
+    if (messages.length === 0) return [];
+
+    const result = [...messages];
+    const lastIndex = result.length - 1;
+    const lastMsg = result[lastIndex];
+
+    const contentItems: Array<
+      { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }
+    > = [{ type: 'text', text: lastMsg.text?.trim() || '' }];
+
+    if (lastMsg.attachments && lastMsg.attachments.length > 0) {
+      for (const item of lastMsg.attachments) {
+        files.push({
+          url: item.url,
+          fileType: item.fileType || 'file',
+          fileName: item.fileName || item.url.split('/').pop() || item.url,
+        });
+
+        if (IMAGE_TYPES.includes(item.fileType?.toLowerCase() || '')) {
+          contentItems.push({
+            type: 'image_url',
+            image_url: { url: item.url },
           });
-          if (IMAGE_TYPES.includes(item.fileType?.toLowerCase() || '')) {
-            contentItems.push({
-              type: 'image_url',
-              image_url: { url: item.url },
-            });
-          } //其他文件应该提取文本内容
-          else if (item.fileType?.startsWith('pdf')) {
-            contentItems.push({
-              type: 'text',
-              text: `[系统提示: 用户上传了PDF文件 ${item.fileName}，请使用RAG工具提取内容]`,
-            });
-          }
+        } else if (item.fileType?.startsWith('pdf')) {
+          contentItems.push({
+            type: 'text',
+            text: `[系统提示: 用户上传了PDF文件 ${item.fileName}，请使用RAG工具提取内容]`,
+          });
         }
       }
+    }
 
-      return {
-        role: i.role,
-        content: contentItems,
-      };
-    });
+    result[lastIndex] = {
+      role: lastMsg.role,
+      content: contentItems,
+    };
+
+    return result;
   }
   console.log('outputStream');
   // 校验模型是否存在配置
@@ -70,7 +76,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
 
   const { baseURL, apiKey } = providerConfig;
   const msg = pickMessages(messages);
-  //console.log('files', files);
+  console.log('pickMessages', msg[msg.length - 1].content);
   // 2. 组装大模型请求体（自动兼容纯文本/多模态图片）
   const requestBody = {
     model: modelName.value,
@@ -129,6 +135,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
           // 深度思考内容（DeepSeek-R1、通义深度思考等模型专属字段）
           if (delta.reasoning_content) {
             fullReasoning += delta.reasoning_content;
+
             // 前端区分思考流，自定义type
             controller.enqueue(
               encoder.encode(
@@ -167,7 +174,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
             chatId: id,
             role: 'assistant',
             content: fullAnswer,
-            reasoningContent: fullReasoning || null, // 深度思考内容单独字段
+            reasoningContent: markdownToText(fullReasoning || '') || '', // 深度思考内容单独字段
             modelName: MODEL_LIST.find((i) => i.label === model)?.label || model, // 记录当前使用的模型
             enableDeepThink,
             attachments: {

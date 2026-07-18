@@ -1,4 +1,6 @@
 'use client';
+import { Button } from '@/components/ui/button';
+import { useQuestionStore } from '@/lib/store';
 import { useFileStore } from '@/lib/store/useFileStore';
 import { Image, ImageUp, Send } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -20,6 +22,13 @@ export default function Tool() {
       imageList: state.imageList,
     }))
   );
+  const { setEnableDeepThink, enableDeepThink } = useQuestionStore(
+    useShallow((state) => ({
+      setEnableDeepThink: state.setEnableDeepThink,
+      enableDeepThink: state.enableDeepThink,
+    }))
+  );
+  const [isFocusThink, setIsFocusThink] = useState(enableDeepThink);
   // 点击按钮触发隐藏文件框
   const triggerFileSelect = () => {
     fileInputRef.current?.click();
@@ -107,13 +116,27 @@ export default function Tool() {
             className="hidden inset-0 cursor-pointer"
           />
         </div>
+        <div
+          className={` flex flex-row items-center gap-1.5 py-1.5 px-3 hover:bg-gray-100 rounded-md cursor-pointer text-black transition-colors 
+            ${isFocusThink ? 'bg-white   hover:bg-gray-50  ring-blue-400' : 'text-black'}
+            `}
+          onClick={(e) => {
+            e.stopPropagation();
+            setEnableDeepThink(true);
+            setIsFocusThink(!isFocusThink);
+          }}
+        >
+          <span className={`text-[14px] ${isFocusThink ? 'text-blue-400   ' : 'text-black'}`}>
+            深度思考
+          </span>
+        </div>
       </div>
 
       {/* 右侧发送按钮 */}
-      <div className="flex flex-row items-center gap-1.5 py-1.5 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer transition-colors">
+      <Button className="flex flex-row items-center gap-1.5 py-1.5 px-4   cursor-pointer transition-colors">
         <Send size={18} />
         <span className="text-[14px]">发送</span>
-      </div>
+      </Button>
     </div>
   );
 }
