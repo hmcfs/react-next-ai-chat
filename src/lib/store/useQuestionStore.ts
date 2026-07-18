@@ -13,7 +13,8 @@ export type Model =
   | 'qwen3-vl-flash'
   | 'deepseek-v3'
   | 'deepseek-r1'
-  | 'z-image-turbo';
+  | 'z-image-turbo'
+  | 'qwen3-vl-plus';
 interface QuestionStore {
   model: Model;
   enableDeepThink: boolean;

@@ -8,6 +8,10 @@ export const MODEL_PROVIDER_MAP: Record<string, { baseURL: string; apiKey: strin
     baseURL: process.env.BAILIAN_BASE_URL!,
     apiKey: process.env.BAILIAN_API_KEY!,
   },
+  'qwen3-vl-plus': {
+    baseURL: process.env.BAILIAN_BASE_URL!,
+    apiKey: process.env.BAILIAN_API_KEY!,
+  },
   // DeepSeek
   'deepseek-v3': {
     baseURL: process.env.DEEPSEEK_BASE_URL!,
@@ -25,6 +29,7 @@ export const MODEL_PROVIDER_MAP: Record<string, { baseURL: string; apiKey: strin
 export const MODEL_LIST = [
   { label: '通义千问', value: 'qwen3.6-flash' },
   { label: '通义视觉', value: 'qwen3-vl-flash' },
+  { label: '通义视觉plus', value: 'qwen3-vl-plus' },
   { label: 'DeepSeek V3', value: 'deepseek-v3' },
   { label: 'DeepSeek R1(深度思考)', value: 'deepseek-r1' },
   { label: 'ZSeek Image Turbo', value: 'z-image-turbo' },

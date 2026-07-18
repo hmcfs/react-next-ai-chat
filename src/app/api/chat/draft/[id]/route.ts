@@ -26,6 +26,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = (await req.json()) as RequestBody;
   console.log('streamBody', body);
   const { model, enableDeepThink = false, messages } = body;
+
   const validModel = normalizeModel(model);
   const outputStream = await outputStreamService(
     { messages, model: validModel, enableDeepThink },

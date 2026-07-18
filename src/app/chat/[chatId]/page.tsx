@@ -1,6 +1,8 @@
 'use client';
 
 import ModelCheck from '@/app/chat/chat-components/ModelCheck';
+import PreviewFiles from '@/app/chat/chat-components/PreviewFiles';
+import Tool from '@/app/chat/chat-components/Tool';
 import Markdown from '@/components/my/ReactMarkdown';
 import { Model, useFileStore, useQuestionStore } from '@/lib/store';
 import { useParams } from 'next/navigation';
@@ -329,6 +331,9 @@ export default function Chat() {
                           : 'border-gray-200 bg-gray-50/80 shadow-sm hover:border-gray-300'
                       }`}
         >
+          <div className="flex justify-between px-3   items-center text-xs text-gray-400">
+            <PreviewFiles />
+          </div>
           <textarea
             className="custom-scrollbar w-full border-0 resize-none overflow-y-auto 
                        focus:outline-none px-4 pt-3 pb-1 bg-transparent max-h-[200px] 
@@ -339,10 +344,13 @@ export default function Chat() {
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onKeyDown={handleKeyDown}
-            rows={1}
+            rows={2}
           />
+          <div className="flex justify-between px-3 pb-2 items-center text-xs text-gray-400">
+            <Tool />
+          </div>
           {/* 底部工具栏 */}
-          <div className="flex justify-between items-center px-3 pb-2">
+          {/*  <div className="flex justify-between items-center px-3 pb-2">
             <span className="text-[11px] text-gray-300 select-none">
               Enter 发送 · Shift+Enter 换行
             </span>
@@ -383,7 +391,7 @@ export default function Chat() {
                 </svg>
               )}
             </button>
-          </div>
+          </div> */}
         </div>
       </form>
     </div>

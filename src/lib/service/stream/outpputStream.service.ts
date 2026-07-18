@@ -21,6 +21,7 @@ type Attachment = {
   fileType: string;
   fileName: string;
 };
+const IMAGE_TYPES = ['jpeg', 'png', 'jpg', 'webp', 'gif'];
 export async function outputStreamService(messagesProps: MessageProps, id?: string) {
   const { messages, enableDeepThink, model } = messagesProps;
   const files: Attachment[] = [];
@@ -29,7 +30,8 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
       const contentItems: Array<
         { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }
       > = [{ type: 'text', text: i.text }];
-
+      if (!i.text.trim()) return null;
+      contentItems.push({ type: 'text', text: i.text });
       if (i.attachments && i.attachments.length > 0) {
         for (const item of i.attachments) {
           files.push({
@@ -37,7 +39,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
             fileType: item.fileType || 'file',
             fileName: item.fileName || item.url.split('/').pop() || item.url,
           });
-          if (item.fileType?.startsWith('image')) {
+          if (IMAGE_TYPES.includes(item.fileType?.toLowerCase() || '')) {
             contentItems.push({
               type: 'image_url',
               image_url: { url: item.url },
@@ -60,7 +62,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
   }
   console.log('outputStream');
   // 校验模型是否存在配置
-  const modelName = MODEL_LIST.find((i) => i.label === model);
+  const modelName = MODEL_LIST.find((i) => i.value === model);
   if (!modelName) {
     return NextResponse.json({ msg: '不支持的模型', code: 0 }, { status: 400 });
   }
@@ -68,18 +70,19 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
 
   const { baseURL, apiKey } = providerConfig;
   const msg = pickMessages(messages);
-  console.log('files', files);
+  //console.log('files', files);
   // 2. 组装大模型请求体（自动兼容纯文本/多模态图片）
   const requestBody = {
     model: modelName.value,
+
     messages: msg || [],
     stream: true,
     enable_thinking: enableDeepThink || false, // DeepSeek-R1、通义深度思考等模型专属字段
     // reasoning_effort: 'medium',
   };
 
-  console.log('outputStream: requestBody:', requestBody);
-
+  //console.log('outputStream: requestBody:', requestBody);
+  console.log('outputStream: messages', requestBody.messages);
   // 3. 请求对应厂商流式接口
   const modelResp = await fetch(`${baseURL}/chat/completions`, {
     method: 'POST',
