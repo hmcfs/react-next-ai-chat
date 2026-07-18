@@ -21,7 +21,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   return NextResponse.json({ success: true });
 }
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  console.log('123');
   const { id } = await params;
   const body = (await req.json()) as RequestBody;
   console.log('streamBody', body);

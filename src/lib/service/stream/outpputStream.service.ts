@@ -30,7 +30,7 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
       const contentItems: Array<
         { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }
       > = [{ type: 'text', text: i.text }];
-      if (!i.text.trim()) return null;
+      if (!i.text.trim()) return;
       contentItems.push({ type: 'text', text: i.text });
       if (i.attachments && i.attachments.length > 0) {
         for (const item of i.attachments) {
@@ -77,12 +77,13 @@ export async function outputStreamService(messagesProps: MessageProps, id?: stri
 
     messages: msg || [],
     stream: true,
+    //enable_thinking: true,
     enable_thinking: enableDeepThink || false, // DeepSeek-R1、通义深度思考等模型专属字段
     // reasoning_effort: 'medium',
   };
 
   //console.log('outputStream: requestBody:', requestBody);
-  console.log('outputStream: messages', requestBody.messages);
+  console.log('outputStream: messages', msg);
   // 3. 请求对应厂商流式接口
   const modelResp = await fetch(`${baseURL}/chat/completions`, {
     method: 'POST',

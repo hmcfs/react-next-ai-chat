@@ -6,9 +6,11 @@ export const isValidModel = (model: Model) => {
 };
 //校正模型
 export const normalizeModel = (model: Model): Model => {
-  const hasModel = MODEL_LIST.find((item) => item.value === model)?.value || MODEL_LIST[0].value;
+  const hasModel = MODEL_LIST.find((item) => item.value === model)?.value;
   if (!hasModel) {
-    localStorage.setItem('model', MODEL_LIST[0].value);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('model', MODEL_LIST[0].value);
+    }
     return MODEL_LIST[0].value as Model;
   }
   return model;
