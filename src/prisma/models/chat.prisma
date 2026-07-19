@@ -31,7 +31,8 @@ model ChatSession {
   createTime  DateTime @default(now())  @db.Timestamptz  @map("create_time")
   updateTime  DateTime @default(now())  @db.Timestamptz @map("update_time")
   isDelete    Boolean  @default(false) @map("is_delete")
-
+  summary     String?  @db.VarChar(1500) @map("summary")
+  summaryUpdateTime DateTime? @map("summary_update_time")
   chatMessage ChatMessage[]
   sysUser     SysUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
