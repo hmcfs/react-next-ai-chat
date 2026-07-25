@@ -1,5 +1,5 @@
-import { outputStreamService } from '@/lib/service/stream/outpputStream.service';
 import { Model } from '@/lib/store';
+import { outputStreamService } from '@/lib/stream/outpputStream.service';
 import { normalizeModel } from '@/lib/validModel';
 import { NextRequest, NextResponse } from 'next/server';
 

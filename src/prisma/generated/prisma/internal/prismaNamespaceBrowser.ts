@@ -109,7 +109,8 @@ export const ChatSessionScalarFieldEnum = {
   updateTime: 'updateTime',
   isDelete: 'isDelete',
   summary: 'summary',
-  summaryUpdateTime: 'summaryUpdateTime'
+  summaryUpdateTime: 'summaryUpdateTime',
+  lastCompressedMsgId: 'lastCompressedMsgId'
 } as const
 
 export type ChatSessionScalarFieldEnum = (typeof ChatSessionScalarFieldEnum)[keyof typeof ChatSessionScalarFieldEnum]

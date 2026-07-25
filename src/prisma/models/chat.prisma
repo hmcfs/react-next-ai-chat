@@ -33,6 +33,7 @@ model ChatSession {
   isDelete    Boolean  @default(false) @map("is_delete")
   summary     String?  @db.VarChar(1500) @map("summary")
   summaryUpdateTime DateTime? @map("summary_update_time")
+   lastCompressedMsgId String?   @db.Char(32) @map("last_compressed_msg_id")
   chatMessage ChatMessage[]
   sysUser     SysUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

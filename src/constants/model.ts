@@ -34,6 +34,8 @@ export const MODEL_LIST = [
   { label: 'DeepSeek R1(深度思考)', value: 'deepseek-r1' },
   { label: 'ZSeek Image Turbo', value: 'z-image-turbo' },
 ];
+export const TOKEN_LIMIT = 8192;
+export const COUNT_THRESHOLD = 1;
 export const MODEL_CAPABILITIES = {
   'o3-mini': { reasoningEffort: true },
   'deepseek-r1': { reasoningEffort: false, defaultThinking: true },

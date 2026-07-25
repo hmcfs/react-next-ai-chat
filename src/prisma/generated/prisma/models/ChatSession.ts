@@ -43,6 +43,7 @@ export type ChatSessionMinAggregateOutputType = {
   isDelete: boolean | null
   summary: string | null
   summaryUpdateTime: Date | null
+  lastCompressedMsgId: string | null
 }
 
 export type ChatSessionMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type ChatSessionMaxAggregateOutputType = {
   isDelete: boolean | null
   summary: string | null
   summaryUpdateTime: Date | null
+  lastCompressedMsgId: string | null
 }
 
 export type ChatSessionCountAggregateOutputType = {
@@ -65,6 +67,7 @@ export type ChatSessionCountAggregateOutputType = {
   isDelete: number
   summary: number
   summaryUpdateTime: number
+  lastCompressedMsgId: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type ChatSessionMinAggregateInputType = {
   isDelete?: true
   summary?: true
   summaryUpdateTime?: true
+  lastCompressedMsgId?: true
 }
 
 export type ChatSessionMaxAggregateInputType = {
@@ -97,6 +101,7 @@ export type ChatSessionMaxAggregateInputType = {
   isDelete?: true
   summary?: true
   summaryUpdateTime?: true
+  lastCompressedMsgId?: true
 }
 
 export type ChatSessionCountAggregateInputType = {
@@ -108,6 +113,7 @@ export type ChatSessionCountAggregateInputType = {
   isDelete?: true
   summary?: true
   summaryUpdateTime?: true
+  lastCompressedMsgId?: true
   _all?: true
 }
 
@@ -206,6 +212,7 @@ export type ChatSessionGroupByOutputType = {
   isDelete: boolean
   summary: string | null
   summaryUpdateTime: Date | null
+  lastCompressedMsgId: string | null
   _count: ChatSessionCountAggregateOutputType | null
   _avg: ChatSessionAvgAggregateOutputType | null
   _sum: ChatSessionSumAggregateOutputType | null
@@ -240,6 +247,7 @@ export type ChatSessionWhereInput = {
   isDelete?: Prisma.BoolFilter<"ChatSession"> | boolean
   summary?: Prisma.StringNullableFilter<"ChatSession"> | string | null
   summaryUpdateTime?: Prisma.DateTimeNullableFilter<"ChatSession"> | Date | string | null
+  lastCompressedMsgId?: Prisma.StringNullableFilter<"ChatSession"> | string | null
   chatMessage?: Prisma.ChatMessageListRelationFilter
   sysUser?: Prisma.XOR<Prisma.SysUserScalarRelationFilter, Prisma.SysUserWhereInput>
 }
@@ -253,6 +261,7 @@ export type ChatSessionOrderByWithRelationInput = {
   isDelete?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   summaryUpdateTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastCompressedMsgId?: Prisma.SortOrderInput | Prisma.SortOrder
   chatMessage?: Prisma.ChatMessageOrderByRelationAggregateInput
   sysUser?: Prisma.SysUserOrderByWithRelationInput
 }
@@ -269,6 +278,7 @@ export type ChatSessionWhereUniqueInput = Prisma.AtLeast<{
   isDelete?: Prisma.BoolFilter<"ChatSession"> | boolean
   summary?: Prisma.StringNullableFilter<"ChatSession"> | string | null
   summaryUpdateTime?: Prisma.DateTimeNullableFilter<"ChatSession"> | Date | string | null
+  lastCompressedMsgId?: Prisma.StringNullableFilter<"ChatSession"> | string | null
   chatMessage?: Prisma.ChatMessageListRelationFilter
   sysUser?: Prisma.XOR<Prisma.SysUserScalarRelationFilter, Prisma.SysUserWhereInput>
 }, "chatId">
@@ -282,6 +292,7 @@ export type ChatSessionOrderByWithAggregationInput = {
   isDelete?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   summaryUpdateTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastCompressedMsgId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ChatSessionCountOrderByAggregateInput
   _avg?: Prisma.ChatSessionAvgOrderByAggregateInput
   _max?: Prisma.ChatSessionMaxOrderByAggregateInput
@@ -301,6 +312,7 @@ export type ChatSessionScalarWhereWithAggregatesInput = {
   isDelete?: Prisma.BoolWithAggregatesFilter<"ChatSession"> | boolean
   summary?: Prisma.StringNullableWithAggregatesFilter<"ChatSession"> | string | null
   summaryUpdateTime?: Prisma.DateTimeNullableWithAggregatesFilter<"ChatSession"> | Date | string | null
+  lastCompressedMsgId?: Prisma.StringNullableWithAggregatesFilter<"ChatSession"> | string | null
 }
 
 export type ChatSessionCreateInput = {
@@ -311,6 +323,7 @@ export type ChatSessionCreateInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
   chatMessage?: Prisma.ChatMessageCreateNestedManyWithoutChatSessionInput
   sysUser: Prisma.SysUserCreateNestedOneWithoutChatSessionInput
 }
@@ -324,6 +337,7 @@ export type ChatSessionUncheckedCreateInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
   chatMessage?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutChatSessionInput
 }
 
@@ -335,6 +349,7 @@ export type ChatSessionUpdateInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chatMessage?: Prisma.ChatMessageUpdateManyWithoutChatSessionNestedInput
   sysUser?: Prisma.SysUserUpdateOneRequiredWithoutChatSessionNestedInput
 }
@@ -348,6 +363,7 @@ export type ChatSessionUncheckedUpdateInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chatMessage?: Prisma.ChatMessageUncheckedUpdateManyWithoutChatSessionNestedInput
 }
 
@@ -360,6 +376,7 @@ export type ChatSessionCreateManyInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
 }
 
 export type ChatSessionUpdateManyMutationInput = {
@@ -370,6 +387,7 @@ export type ChatSessionUpdateManyMutationInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatSessionUncheckedUpdateManyInput = {
@@ -381,6 +399,7 @@ export type ChatSessionUncheckedUpdateManyInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatSessionScalarRelationFilter = {
@@ -397,6 +416,7 @@ export type ChatSessionCountOrderByAggregateInput = {
   isDelete?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   summaryUpdateTime?: Prisma.SortOrder
+  lastCompressedMsgId?: Prisma.SortOrder
 }
 
 export type ChatSessionAvgOrderByAggregateInput = {
@@ -412,6 +432,7 @@ export type ChatSessionMaxOrderByAggregateInput = {
   isDelete?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   summaryUpdateTime?: Prisma.SortOrder
+  lastCompressedMsgId?: Prisma.SortOrder
 }
 
 export type ChatSessionMinOrderByAggregateInput = {
@@ -423,6 +444,7 @@ export type ChatSessionMinOrderByAggregateInput = {
   isDelete?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   summaryUpdateTime?: Prisma.SortOrder
+  lastCompressedMsgId?: Prisma.SortOrder
 }
 
 export type ChatSessionSumOrderByAggregateInput = {
@@ -515,6 +537,7 @@ export type ChatSessionCreateWithoutChatMessageInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
   sysUser: Prisma.SysUserCreateNestedOneWithoutChatSessionInput
 }
 
@@ -527,6 +550,7 @@ export type ChatSessionUncheckedCreateWithoutChatMessageInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
 }
 
 export type ChatSessionCreateOrConnectWithoutChatMessageInput = {
@@ -553,6 +577,7 @@ export type ChatSessionUpdateWithoutChatMessageInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sysUser?: Prisma.SysUserUpdateOneRequiredWithoutChatSessionNestedInput
 }
 
@@ -565,6 +590,7 @@ export type ChatSessionUncheckedUpdateWithoutChatMessageInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ChatSessionCreateWithoutSysUserInput = {
@@ -575,6 +601,7 @@ export type ChatSessionCreateWithoutSysUserInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
   chatMessage?: Prisma.ChatMessageCreateNestedManyWithoutChatSessionInput
 }
 
@@ -586,6 +613,7 @@ export type ChatSessionUncheckedCreateWithoutSysUserInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
   chatMessage?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutChatSessionInput
 }
 
@@ -627,6 +655,7 @@ export type ChatSessionScalarWhereInput = {
   isDelete?: Prisma.BoolFilter<"ChatSession"> | boolean
   summary?: Prisma.StringNullableFilter<"ChatSession"> | string | null
   summaryUpdateTime?: Prisma.DateTimeNullableFilter<"ChatSession"> | Date | string | null
+  lastCompressedMsgId?: Prisma.StringNullableFilter<"ChatSession"> | string | null
 }
 
 export type ChatSessionCreateManySysUserInput = {
@@ -637,6 +666,7 @@ export type ChatSessionCreateManySysUserInput = {
   isDelete?: boolean
   summary?: string | null
   summaryUpdateTime?: Date | string | null
+  lastCompressedMsgId?: string | null
 }
 
 export type ChatSessionUpdateWithoutSysUserInput = {
@@ -647,6 +677,7 @@ export type ChatSessionUpdateWithoutSysUserInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chatMessage?: Prisma.ChatMessageUpdateManyWithoutChatSessionNestedInput
 }
 
@@ -658,6 +689,7 @@ export type ChatSessionUncheckedUpdateWithoutSysUserInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chatMessage?: Prisma.ChatMessageUncheckedUpdateManyWithoutChatSessionNestedInput
 }
 
@@ -669,6 +701,7 @@ export type ChatSessionUncheckedUpdateManyWithoutSysUserInput = {
   isDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summaryUpdateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastCompressedMsgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -711,6 +744,7 @@ export type ChatSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   isDelete?: boolean
   summary?: boolean
   summaryUpdateTime?: boolean
+  lastCompressedMsgId?: boolean
   chatMessage?: boolean | Prisma.ChatSession$chatMessageArgs<ExtArgs>
   sysUser?: boolean | Prisma.SysUserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ChatSessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -725,6 +759,7 @@ export type ChatSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   isDelete?: boolean
   summary?: boolean
   summaryUpdateTime?: boolean
+  lastCompressedMsgId?: boolean
   sysUser?: boolean | Prisma.SysUserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatSession"]>
 
@@ -737,6 +772,7 @@ export type ChatSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   isDelete?: boolean
   summary?: boolean
   summaryUpdateTime?: boolean
+  lastCompressedMsgId?: boolean
   sysUser?: boolean | Prisma.SysUserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chatSession"]>
 
@@ -749,9 +785,10 @@ export type ChatSessionSelectScalar = {
   isDelete?: boolean
   summary?: boolean
   summaryUpdateTime?: boolean
+  lastCompressedMsgId?: boolean
 }
 
-export type ChatSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"chatId" | "userId" | "title" | "createTime" | "updateTime" | "isDelete" | "summary" | "summaryUpdateTime", ExtArgs["result"]["chatSession"]>
+export type ChatSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"chatId" | "userId" | "title" | "createTime" | "updateTime" | "isDelete" | "summary" | "summaryUpdateTime" | "lastCompressedMsgId", ExtArgs["result"]["chatSession"]>
 export type ChatSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chatMessage?: boolean | Prisma.ChatSession$chatMessageArgs<ExtArgs>
   sysUser?: boolean | Prisma.SysUserDefaultArgs<ExtArgs>
@@ -779,6 +816,7 @@ export type $ChatSessionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     isDelete: boolean
     summary: string | null
     summaryUpdateTime: Date | null
+    lastCompressedMsgId: string | null
   }, ExtArgs["result"]["chatSession"]>
   composites: {}
 }
@@ -1212,6 +1250,7 @@ export interface ChatSessionFieldRefs {
   readonly isDelete: Prisma.FieldRef<"ChatSession", 'Boolean'>
   readonly summary: Prisma.FieldRef<"ChatSession", 'String'>
   readonly summaryUpdateTime: Prisma.FieldRef<"ChatSession", 'DateTime'>
+  readonly lastCompressedMsgId: Prisma.FieldRef<"ChatSession", 'String'>
 }
     
 
