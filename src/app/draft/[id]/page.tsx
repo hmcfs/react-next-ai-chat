@@ -65,7 +65,7 @@ export default function Draft() {
     const formData = new FormData();
     formData.append('file', targetFile);
     try {
-      const res = await fetch('/api/common/upload', {
+      const res = await fetch('/api/bbf/storage/upload', {
         method: 'POST',
         body: formData,
       });
@@ -97,7 +97,7 @@ export default function Draft() {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/chat/draft/${id}`, {
+      const res = await fetch(`/api/bbf/chat/draft/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

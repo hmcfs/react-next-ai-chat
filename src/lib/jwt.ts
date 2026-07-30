@@ -1,23 +1,17 @@
+// BBF 代理层 JWT 验证工具（仅验证，不签名）
 import jwt from 'jsonwebtoken';
-import { NextRequest } from 'next/server';
-import { AuthError } from './error/error';
+
 const JWT_SECRET = process.env.JWT_SECRET as string;
-export function verifyToken(token: string): null | any {
+
+export function verifyToken(token: string): Record<string, any> | null {
   try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch (err) {
+    return jwt.verify(token, JWT_SECRET) as Record<string, any>;
+  } catch {
     return null;
   }
 }
 
-export function signToken(payload: Record<string, any>, expire?: number) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: expire || 60 * 60 * 24 });
-}
-export function getId(token: string) {
-  return Number(verifyToken(token)?.userId);
-}
-export function getAuthContext(req: NextRequest): number {
-  const context = getId(req.cookies.get('token')?.value || '');
-  if (!context) throw new AuthError();
-  return context;
+export function getUserIdFromToken(token: string): number | null {
+  const payload = verifyToken(token);
+  return payload?.userId ? Number(payload.userId) : null;
 }

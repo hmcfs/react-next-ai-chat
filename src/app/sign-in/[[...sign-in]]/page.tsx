@@ -1,6 +1,6 @@
 'use client';
 
-import { clientApi } from '@/lib/client-request';
+import { clientApi } from '@/lib/http/client-api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -20,7 +20,7 @@ export default function SignInPage() {
 
       message: string;
     }>(
-      '/api/login',
+      '/api/bbf/auth/login',
 
       {
         username: email,

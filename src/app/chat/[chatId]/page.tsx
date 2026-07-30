@@ -119,7 +119,7 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/chat/draft/${chatId}`, {
+      const res = await fetch(`/api/bbf/chat/draft/${chatId}`, {
         method: 'POST',
         body: JSON.stringify(messageBodyRef.current),
         headers: { 'Content-Type': 'application/json' },
