@@ -18,6 +18,7 @@ export async function authProxy(req: NextRequest) {
   if (user) {
     const reqHeaders = new Headers(req.headers);
     reqHeaders.set('user', JSON.stringify(user));
+    reqHeaders.set('x-user-id', String(user.userId));
     return NextResponse.next({ request: { headers: reqHeaders } });
   }
   return NextResponse.next();

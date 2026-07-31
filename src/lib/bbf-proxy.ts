@@ -19,27 +19,29 @@ export async function proxyToBackend(req: NextRequest, path: string): Promise<Ne
       const url = new URL(path, BACKEND_URL);
       const headers = new Headers(req.headers);
       headers.set('Host', url.host);
+      console.log('转发目标 URL:', url.toString()); // 添加这行
 
       // 转发用户身份：从 JWT Cookie 中提取 userId，透传给后端
       const token = req.cookies.get('token')?.value;
       if (token) {
         const payload = verifyToken(token);
         if (payload?.userId) {
-          headers.set('x-user-id', String(payload.userId));
+          headers.set('x-user-id', String(payload.userId) || '');
         }
       }
+      headers.set('x-internal-secret', process.env.INTERNAL_SECRET || '');
 
       const res = await fetch(url.toString(), {
         method: req.method,
         headers,
         body: req.body,
+        duplex: 'half',
         redirect: 'manual',
-      });
+      } as RequestInit);
 
       if (!res.ok) {
         throw new Error(`Backend error: ${res.status}`);
       }
-
       return new NextResponse(res.body, {
         status: res.status,
         headers: res.headers,

@@ -20,7 +20,7 @@ export default function SignInPage() {
 
       message: string;
     }>(
-      '/api/bbf/auth/login',
+      '/api/bbf/login',
 
       {
         username: email,
