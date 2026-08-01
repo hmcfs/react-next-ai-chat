@@ -1,12 +1,17 @@
+import { getRedis } from '@/lib/redis';
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '../lib/jwt';
-import { isProtected, isPublic } from './route';
+import { isProtected } from './route';
 export async function authProxy(req: NextRequest) {
+  const redis = getRedis();
   const { pathname } = req.nextUrl;
   const token = req.cookies.get('token')?.value;
-  const user = token ? verifyToken(token) : null;
-
-  if (!user && isProtected(pathname)) {
+  const payload = token ? verifyToken(token) : null;
+  if (payload && payload.userId) {
+    const cache = await redis.get(`${process.env.REDIS_KEY_PREFIX}user:token:${payload.userId}`);
+    if (!cache) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!payload && isProtected(pathname)) {
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -15,10 +20,9 @@ export async function authProxy(req: NextRequest) {
     return NextResponse.redirect(url.toString());
   }
 
-  if (user) {
+  if (payload) {
     const reqHeaders = new Headers(req.headers);
-    reqHeaders.set('user', JSON.stringify(user));
-    reqHeaders.set('x-user-id', String(user.userId));
+    reqHeaders.set('x-user-id', String(payload.userId));
     return NextResponse.next({ request: { headers: reqHeaders } });
   }
   return NextResponse.next();
