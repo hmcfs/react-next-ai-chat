@@ -66,9 +66,9 @@ export async function proxyToBackend(req: NextRequest, path: string): Promise<Ne
 
 export function createBBFRoute() {
   return async function handler(req: NextRequest) {
-    // 去掉 /api/bbf 前缀，保留服务名 + 路径
-    // e.g. /api/bbf/chat/session → chat/session → http://backend:3000/api/v1/chat/session
-    const path = req.nextUrl.pathname.replace(/^\/api\/bbf\//, '') || '';
+    // 去掉 /api/bff 前缀，保留服务名 + 路径
+    // e.g. /api/bff/chat/session → chat/session → http://backend:3000/api/v1/chat/session
+    const path = req.nextUrl.pathname.replace(/^\/api\/bff\//, '') || '';
     const query = req.nextUrl.search;
     return proxyToBackend(req, path + query);
   };

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createBBFRoute } from '@/lib/bbf-proxy';
+import { createBBFRoute } from '@/lib/bff-proxy';
+import { NextRequest } from 'next/server';
 
 const handler = createBBFRoute();
 

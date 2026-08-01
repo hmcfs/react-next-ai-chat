@@ -128,7 +128,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
   useEffect(() => {
     const getList = async () => {
       const data = (
-        await clientApi.get<PageHistoryResult>(`/api/bbf/chat/session?page=${page}&pageSize=15`)
+        await clientApi.get<PageHistoryResult>(`/api/bff/chat/session?page=${page}&pageSize=15`)
       )?.data;
 
       setList(categoryList(data?.historyList || []));
@@ -150,7 +150,7 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
     let data: PageHistoryResult | undefined;
     try {
       data = (
-        await clientApi.get<PageHistoryResult>(`/api/bbf/chat/session?page=${page + 1}&pageSize=15`)
+        await clientApi.get<PageHistoryResult>(`/api/bff/chat/session?page=${page + 1}&pageSize=15`)
       )?.data;
       if (!data || data.historyList.length === 0) {
         setHasMore(false);
