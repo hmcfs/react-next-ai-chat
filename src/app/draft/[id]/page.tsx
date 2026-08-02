@@ -97,7 +97,7 @@ export default function Draft() {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/bff/chat/draft/${id}`, {
+      const res = await fetch(`/api/bff/chat/stream/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
