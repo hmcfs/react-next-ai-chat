@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   //console.log('登录响应:', data);
 
   const newRes = NextResponse.json(data);
-  newRes.cookies.set('token', data.data.token, {
+  newRes.cookies.set('token', data.data?.token || '', {
     httpOnly: true,
     //secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
