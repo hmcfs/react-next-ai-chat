@@ -91,6 +91,8 @@ export default function Chat() {
     }
   };
 
+  
+
   return (
     <div className="w-full relative h-screen min-h-[250px] flex flex-col justify-between items-center">
       <ModelCheck

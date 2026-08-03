@@ -50,6 +50,7 @@ const mockChatList: ChatRecord[] = [
 interface ChatSidebarProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  onSelectChat: (chatId: string) => void;
 }
 interface HistoryList {
   title: string;
@@ -67,8 +68,8 @@ interface GroupList {
   group: string;
   list: HistoryList[];
 }
-const DATE_TYPE = ['今天', '近一周', '30天内', '更早'];
-export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
+const DATE_TYPE = ['今天', '最近', '30天内', '更早'];
+export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebarProps) {
   const [list, setList] = useState<GroupList[]>([]);
   const [page, setPage] = useState(1);
   const categoryList = (ListArray: HistoryList[]): GroupList[] => {
@@ -263,7 +264,10 @@ export default function ChatSidebar({ open, setOpen }: ChatSidebarProps) {
                           <SidebarMenuItem key={chat.chatId}>
                             <SidebarMenuButton
                               isActive={activeChatId === chat.chatId}
-                              onClick={() => setActiveChatId(chat.chatId)}
+                              onClick={() => {
+                                setActiveChatId(chat.chatId);
+                                onSelectChat(chat.chatId);
+                              }}
                               className="justify-between group hover:!bg-gray-100 cursor-pointer"
                               style={
                                 activeChatId === chat.chatId
