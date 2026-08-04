@@ -6,19 +6,24 @@ import Markdown from '@/components/my/ReactMarkdown';
 import { markdownToText } from '@/lib/markdown';
 import { Model, useFileStore, useQuestionStore } from '@/lib/store';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import './style.css';
+import { useRouter } from 'next/navigation';
+import { clientApi } from '@/lib/http/client-api';
 
 type TextContentItem = { type: 'text'; text: string };
 type ImageContentItem = { type: 'image_url'; image_url: { url: string } };
 type MessageContent = string | Array<TextContentItem | ImageContentItem>;
 
 type ChatMessage = {
+  id?: string;
   role: 'user' | 'assistant' | 'system';
   content: MessageContent;
   reasoningContent?: string;
+  createTime?: string;
+  modelName?: string;
 };
 
 export default function Chat() {
@@ -29,6 +34,7 @@ export default function Chat() {
   const [isFocus, setIsFocus] = useState(false);
   const [thinkingOpen, setThinkingOpen] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const {
     getMessageParams,
@@ -63,8 +69,6 @@ export default function Chat() {
   );
 
   const hasConsume = useRef(false);
-  console.log('getMessageParams', getMessageParams());
-  console.log('storeMessages', storeMessages);
   const messageBodyRef = useRef<ReturnType<typeof getMessageParams>>(getMessageParams());
 
   const text = messageBodyRef.current?.messages?.[0]?.text || '';
@@ -119,7 +123,7 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/chat/draft/${chatId}`, {
+      const res = await fetch(`/api/bff/chat/stream/${chatId}`, {
         method: 'POST',
         body: JSON.stringify(messageBodyRef.current),
         headers: { 'Content-Type': 'application/json' },
@@ -166,7 +170,6 @@ export default function Chat() {
         }
       }
       clearContent();
-      console.log('输出消息', messages);
     } catch (e) {
       console.error('AI生成失败:', e);
       toast.error('AI生成失败');
@@ -182,18 +185,58 @@ export default function Chat() {
     }
   };
 
+ 
+
+  useEffect(() => {
+     const getHistoryMsg =   async () => {
+    try {
+      const res = await clientApi.get(`/api/bff/chat/history/${chatId}`, {
+        page: 1,
+        pageSize: 6,
+      });
+      if (res.code && res.data?.messages) {
+        const historyMessages: ChatMessage[] = res.data.messages.map((msg: any) => ({
+          id: msg.msgId,
+          role: msg.role as 'user' | 'assistant' | 'system',
+          content: msg.content,
+          reasoningContent: msg.reasoningContent || undefined,
+          createTime: msg.createTime,
+          modelName: msg.modelName?.trim(),
+        })).reverse();
+        setMessages(historyMessages);
+      } else {
+        toast.error(res.msg || '获取历史消息失败');
+      }
+    } catch (error) {
+      console.error('加载历史消息异常:', error);
+      toast.error('加载历史消息异常');
+    }
+  }  
+    if (chatId && chatId.length === 32) {
+      
+      getHistoryMsg();
+    } else {
+      router.replace('/chat');
+    }
+  }, [chatId, router]);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // 格式化时间显示
+  const formatTime = (timeStr?: string) => {
+    if (!timeStr) return '';
+    const date = new Date(timeStr);
+    return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
     <div className="flex relative flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-white">
-      {/* <ModelCheck parentModel={model} changeModel={changeModel} className="absolute top-4 left-4" /> */}
-
       {/* ==================== 消息列表区域 ==================== */}
       <div className="flex-1 py-6 pt-20 px-4 pb-40">
         {/* ---------- 空状态 ---------- */}
-        {messages.length === 0 && (
+        {messages.length === 0 && !loading && (
           <div className="flex flex-col items-center justify-center mt-24 select-none">
             <div
               className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-violet-500 
@@ -218,11 +261,23 @@ export default function Chat() {
           </div>
         )}
 
+        {/* ---------- 加载状态 ---------- */}
+        {messages.length === 0 && loading && (
+          <div className="flex items-center justify-center mt-24">
+            <div className="flex items-center gap-2 text-gray-400">
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:0ms]" />
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:150ms]" />
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:300ms]" />
+              <span className="ml-2">加载历史消息...</span>
+            </div>
+          </div>
+        )}
+
         {/* ---------- 消息列表 ---------- */}
         <div className="space-y-6">
           {messages.map((msg, idx) => (
             <div
-              key={idx}
+              key={msg.id || idx}
               className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
             >
               {/* 头像 */}
@@ -304,6 +359,16 @@ export default function Chat() {
                     loading &&
                     idx === messages.length - 1 &&
                     !(msg.content as string) && <TypingIndicator />}
+                </div>
+
+                {/* 消息时间和模型信息 */}
+                <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 px-1">
+                  {msg.createTime && <span>{formatTime(msg.createTime)}</span>}
+                  {msg.modelName && msg.role === 'assistant' && (
+                    <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-500">
+                      {msg.modelName}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -405,7 +470,7 @@ function CollapsibleThinking({
         {/* 内容区 - 折叠动画 */}
         <div
           className={`transition-all duration-300 ease-in-out overflow-hidden ${
-            isOpen ? ' opacity-100' : 'max-h-0 opacity-0'
+            isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="px-4 pb-3 text-sm text-amber-900/80 whitespace-pre-wrap leading-relaxed border-t border-amber-200/50 pt-2">

@@ -1,6 +1,6 @@
 'use client';
 
-import { clientApi } from '@/lib/client-request';
+import { clientApi } from '@/lib/http/client-api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -15,12 +15,16 @@ export default function SignInPage() {
     setError('');
     setIsLoading(true);
 
-    const res = await clientApi.post<{
+    await clientApi.post<{
       code: number;
 
-      message: string;
+      msg: string;
+      data: {
+        token: string;
+        userId: string;
+      };
     }>(
-      '/api/login',
+      '/api/bff/login',
 
       {
         username: email,
@@ -28,18 +32,12 @@ export default function SignInPage() {
       }
     );
 
-    if (!res.code) {
-      setError(res?.msg || '用户名或密码错误');
-      setIsLoading(false);
-      return;
-    }
     /*    let chatId = localStorage.getItem('chatId');
     if (chatId === null) {
       chatId = v4().replace(/-/g, '');
 
       localStorage.setItem('chatId', chatId);
     } */
-    router.push('/chat');
 
     //router.refresh();
   };
@@ -53,6 +51,7 @@ export default function SignInPage() {
 
     try {
       await login();
+      router.push('/chat');
     } catch (error) {
       console.error('登录请求异常：', error);
       setIsLoading(false);

@@ -18,7 +18,7 @@ export default function Draft() {
     console.log('上传文件:', targetFile);
     const formData = new FormData();
     formData.append('file', targetFile);
-    const res = await fetch('/api/common/upload', {
+    const res = await fetch('/api/bff/common/upload', {
       method: 'POST',
       body: formData,
     });

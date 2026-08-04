@@ -45,7 +45,7 @@ export default function Tool() {
     });
     /* console.log('图片列表:', files);
     console.log('formData:', ...formData); */
-    const res = await fetch('/api/common/upload', {
+    const res = await fetch('/api/bff/common/upload', {
       method: 'POST',
       body: formData,
     });
@@ -67,7 +67,7 @@ export default function Tool() {
       formData.append('file', i);
     });
     console.log('文件列表:', files);
-    const res = await fetch('/api/common/upload', {
+    const res = await fetch('/api/bff/common/upload', {
       method: 'POST',
       body: formData,
     });

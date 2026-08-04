@@ -59,7 +59,8 @@ async function clientBaseRequest<T>(
   }
 
   if (!res.ok) {
-    throw new Error(data?.msg || res.statusText || '接口请求失败');
+    console.error('接口请求失败', data?.msg || res.statusText || '接口请求失败');
+    //throw new Error(data?.msg || res.statusText || '接口请求失败');
   }
 
   return data as ClientResult<T>;

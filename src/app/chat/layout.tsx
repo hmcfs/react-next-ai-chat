@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useShallow } from 'zustand/react/shallow';
 import ChatSidebar from '../../components/my/Navibar';
+import { useRouter } from 'next/navigation';
 
 //   封装 cn 工具函数，自动合并 & 去重 Tailwind class
 function cn(...inputs: (string | undefined | null | false)[]) {
@@ -21,6 +22,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const [open, setOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
   const prevIsMobileRef = useRef(false);
+  const [chatId, setChatId] = useState<string | null>(null);
   const { model, setModel } = useQuestionStore(
     useShallow((s) => ({ model: s.model, setModel: s.setModel }))
   );
@@ -68,13 +70,19 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
     'w-[240px] h-full',
     !open && !(mounted && isMobile) && 'opacity-0 pointer-events-none'
   );
-
+  const router = useRouter();
+const handleSelectChat = (id: string) => {
+    
+    setChatId(id);
+    console.log('Selected chat ID:', id);
+    router.push(`/chat/${id}`);
+  }
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/*  侧边栏容器 */}
       <div className={sidebarContainerClass}>
         <div className={sidebarInnerClass}>
-          <ChatSidebar open={open} setOpen={setOpen} />
+          <ChatSidebar open={open} setOpen={setOpen} onSelectChat={handleSelectChat} />
         </div>
       </div>
 
@@ -117,7 +125,8 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
           </button>
         )}
 
-        {children}
+        {children }
+        
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { authProxy } from '@/proxy/auth';
 import { rateLimit } from '@/proxy/rateLimit';
+import { NextRequest, NextResponse } from 'next/server';
 export default async function proxy(req: NextRequest) {
   const rateLimitResult = rateLimit(req);
   if (rateLimitResult) return rateLimitResult;

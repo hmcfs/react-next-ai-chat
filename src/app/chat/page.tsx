@@ -7,10 +7,10 @@ import { useRef, useState } from 'react';
 
 import PreviewFiles from '@/app/chat/chat-components/PreviewFiles';
 import Tool from '@/app/chat/chat-components/Tool';
+import { clientApi } from '@/lib/http/client-api';
 import { Model, useFileStore, useQuestionStore } from '@/lib/store';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import { clientApi } from '../../lib/client-request';
 export default function Chat() {
   //const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
   const {
@@ -59,7 +59,7 @@ export default function Chat() {
     try {
       e.preventDefault();
       if (!input.trim()) return;
-      const res = await clientApi.post<{ chatId: string; title: string }>('/api/chat/session', {
+      const res = await clientApi.post<{ chatId: string; title: string }>('/api/bff/chat/session', {
         content: input,
       });
       const { chatId, title } = res.data || {};
@@ -90,6 +90,8 @@ export default function Chat() {
       console.log(e);
     }
   };
+
+  
 
   return (
     <div className="w-full relative h-screen min-h-[250px] flex flex-col justify-between items-center">
