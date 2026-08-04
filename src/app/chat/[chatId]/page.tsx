@@ -192,7 +192,7 @@ export default function Chat() {
     try {
       const res = await clientApi.get(`/api/bff/chat/history/${chatId}`, {
         page: 1,
-        pageSize: 5,
+        pageSize: 6,
       });
       if (res.code && res.data?.messages) {
         const historyMessages: ChatMessage[] = res.data.messages.map((msg: any) => ({
@@ -202,7 +202,7 @@ export default function Chat() {
           reasoningContent: msg.reasoningContent || undefined,
           createTime: msg.createTime,
           modelName: msg.modelName?.trim(),
-        }));
+        })).reverse();
         setMessages(historyMessages);
       } else {
         toast.error(res.msg || '获取历史消息失败');
