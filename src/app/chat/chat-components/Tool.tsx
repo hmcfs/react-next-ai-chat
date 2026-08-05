@@ -52,7 +52,7 @@ export default function Tool() {
     const data = await res.json();
     console.log('图片上传结果:', data);
     fileStore.addImage(
-      data.data.imageCollection.map((i) => ({
+      data.data.imageCollection.map((i: any) => ({
         url: i.url,
         fileType: i.fileType,
         fileName: i.fileName,
@@ -74,7 +74,7 @@ export default function Tool() {
     const data = await res.json();
     // console.log('文件上传结果:', data);
     fileStore.addFile(
-      data.data.fileCollection.map((i) => ({
+      data.data.fileCollection.map((i: any) => ({
         url: i.url,
         fileType: i.fileType,
         fileName: i.fileName,

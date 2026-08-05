@@ -190,7 +190,7 @@ export default function Chat() {
   useEffect(() => {
      const getHistoryMsg =   async () => {
     try {
-      const res = await clientApi.get(`/api/bff/chat/history/${chatId}`, {
+      const res = await clientApi.get<{ messages: any[] }>(`/api/bff/chat/history/${chatId}`, {
         page: 1,
         pageSize: 6,
       });

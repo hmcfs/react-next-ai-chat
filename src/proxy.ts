@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export default async function proxy(req: NextRequest) {
   const rateLimitResult = rateLimit(req);
   if (rateLimitResult) return rateLimitResult;
-  //console.log('当前环境:', process.env.NODE_ENV);
+  console.log('当前环境:', process.env.NODE_ENV);
   const authResult = await authProxy(req);
   if (authResult) return authResult;
   return NextResponse.next();

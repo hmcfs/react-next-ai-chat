@@ -9,7 +9,7 @@ import { MODEL_LIST } from '@/constants/index';
 import { Model, useQuestionStore } from '@/lib/store';
 type Props = {
   className?: string;
-  changeModel: (model: string) => void;
+  changeModel: (model: Model) => void;
   parentModel: string;
 };
 export default function ModelCheck({ className = '', changeModel, parentModel }: Props) {

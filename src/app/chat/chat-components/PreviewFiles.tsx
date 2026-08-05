@@ -24,7 +24,7 @@ export default function PreviewFiles() {
             >
               <img
                 src={file.url}
-                alt={file.name}
+                alt={file.fileName}
                 className="w-full rounded-md h-full object-cover"
               />
               <div
@@ -63,7 +63,7 @@ export default function PreviewFiles() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {file.name}
+            {file.fileName}
           </a>
         ))}
       </div>
