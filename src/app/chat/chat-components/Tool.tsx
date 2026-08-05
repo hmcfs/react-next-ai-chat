@@ -51,6 +51,10 @@ export default function Tool() {
     });
     const data = await res.json();
     console.log('图片上传结果:', data);
+    if (!res.ok || !data?.data?.imageCollection) {
+      console.error('图片上传失败:', data);
+      return;
+    }
     fileStore.addImage(
       data.data.imageCollection.map((i: any) => ({
         url: i.url,
@@ -73,6 +77,10 @@ export default function Tool() {
     });
     const data = await res.json();
     // console.log('文件上传结果:', data);
+    if (!res.ok || !data?.data?.fileCollection) {
+      console.error('文件上传失败:', data);
+      return;
+    }
     fileStore.addFile(
       data.data.fileCollection.map((i: any) => ({
         url: i.url,
