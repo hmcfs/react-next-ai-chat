@@ -5,7 +5,7 @@ import { debounce } from '@/lib/debounce';
 import { Model, useQuestionStore } from '@/lib/store';
 import { clsx } from 'clsx';
 import { PanelLeft } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useShallow } from 'zustand/react/shallow';
 import ChatSidebar from '../../components/my/Navibar';
@@ -20,7 +20,12 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   //   初始值固定为桌面端状态，SSR/CSR 首次渲染完全一致
   const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(true);
-  const [mounted, setMounted] = useState(false);
+  // 服务端/水合期间为 false，水合后为 true（SSR 安全，无需在 effect 里 setState）
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const prevIsMobileRef = useRef(false);
   const [chatId, setChatId] = useState<string | null>(null);
   const { model, setModel } = useQuestionStore(
@@ -31,8 +36,6 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
     localStorage.setItem('model', model);
   };
   useEffect(() => {
-    setMounted(true);
-
     const syncState = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
@@ -60,7 +63,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 
   //  用 cn() 替代模板字符串，彻底消除空白字符差异
   const sidebarContainerClass = cn(
-    'h-screen z-[9999] bg-gray-50 box-border transition-all duration-300 ease-in-out',
+    'h-screen z-[9999] bg-sidebar box-border transition-all duration-300 ease-in-out',
     mounted && isMobile
       ? cn('fixed left-0 top-0 w-[240px]', open ? 'translate-x-0' : '-translate-x-full')
       : cn('relative flex-shrink-0 overflow-hidden', open ? 'w-[240px]' : 'w-0')
@@ -107,7 +110,7 @@ const handleSelectChat = (id: string) => {
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            className="absolute top-3 left-3 z-50 cursor-pointer rounded-md bg-white p-1.5 shadow-md hover:bg-gray-100"
+            className="fixed top-4 left-4 z-50 cursor-pointer rounded-md bg-card p-1.5 shadow-md hover:bg-accent"
             title="展开侧边栏"
           >
             <PanelLeft className="h-5 w-5 rotate-180 transition-transform duration-300" />
@@ -119,7 +122,7 @@ const handleSelectChat = (id: string) => {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="fixed top-3 left-3 z-50 cursor-pointer rounded-md bg-white p-1.5 shadow-md hover:bg-gray-100"
+            className="fixed top-4 left-4 z-50 cursor-pointer rounded-md bg-card p-1.5 shadow-md hover:bg-accent"
           >
             <PanelLeft className="h-5 w-5" />
           </button>

@@ -5,6 +5,7 @@ import './globals.css';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         'h-full',
         'antialiased',
@@ -41,14 +43,15 @@ export default function RootLayout({
         inter.variable
       )}
     >
-      <body className="min-h-full flex  ">
-        <TooltipProvider>
-          {' '}
-          <SidebarProvider>
-            {children}
-            <Toaster position="top-center" />
-          </SidebarProvider>
-        </TooltipProvider>
+      <body className="min-h-full flex">
+        <ThemeProvider>
+          <TooltipProvider>
+            <SidebarProvider>
+              {children}
+              <Toaster position="top-center" />
+            </SidebarProvider>
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

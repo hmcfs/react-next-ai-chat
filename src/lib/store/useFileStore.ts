@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-type File1 = { url: string; fileType: string; fileName: string };
+type File1 = { url: string; fileType: string; fileName: string; size?: number };
 type Attachment = {
   url: string;
   fileType: string;
   fileName: string;
+  size?: number;
 };
 interface FileStore {
   fileUrls: string[];
