@@ -19,6 +19,12 @@ export async function proxyToBackend(req: NextRequest, path: string): Promise<Ne
       const url = new URL(path, BACKEND_URL);
       const headers = new Headers(req.headers);
       headers.set('Host', url.host);
+      // 浏览器对 >1MB 请求体会自动加 Expect: 100-continue；undici fetch 不支持该头
+      // （抛 UND_ERR_NOT_SUPPORTED），转发前删除。连接级 hop-by-hop 头同样移除，
+      // content-length 保留（我们读满了 body，长度一致）。
+      headers.delete('expect');
+      headers.delete('connection');
+      headers.delete('transfer-encoding');
       console.log('转发目标 URL:', url.toString());
 
       // 转发用户身份：从 JWT Cookie 中提取 userId，透传给后端
