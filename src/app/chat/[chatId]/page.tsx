@@ -369,7 +369,7 @@ function CollapsibleThinking({
           className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 transition-colors duration-200"
         >
           <div className="flex items-center gap-2">
-            <Brain className="w-4 h-4 text-amber-500" />
+            {/* <Brain className="w-4 h-4 text-amber-500" /> */}
             <span className="font-medium">深度思考</span>
           </div>
           <svg
@@ -382,9 +382,9 @@ function CollapsibleThinking({
           </svg>
         </button>
 
-        {/* 内容区 - 折叠动画 */}
+        {/* 内容区 - 折叠动画（用自定义细滚动条） */}
         <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`custom-scrollbar transition-all duration-300 ease-in-out overflow-y-auto ${
             isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
