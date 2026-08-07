@@ -262,48 +262,13 @@ export default function Chat() {
           {messages.map((msg, idx) => (
             <div
               key={msg.id || idx}
-              className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : ''}`}
             >
-              {/* 头像 */}
-              <div className="shrink-0 pt-0.5">
-                {msg.role === 'user' ? (
-                  <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </div>
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
-
-              {/* 消息主体 */}
+              {/* 消息主体：用户靠右限宽，AI 占满全宽 */}
               <div
-                className={`flex flex-col min-w-0 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                className={`flex flex-col min-w-0 ${
+                  msg.role === 'user' ? 'max-w-[80%] items-end' : 'w-full items-start'
+                }`}
               >
                 {/* 深度思考区块 */}
                 {msg.role === 'assistant' && msg.reasoningContent && (
@@ -316,10 +281,10 @@ export default function Chat() {
 
                 {/* 消息气泡 */}
                 <div
-                  className={`px-4 py-3 leading-relaxed text-[0.95rem] ${
+                  className={`leading-relaxed text-[0.95rem] ${
                     msg.role === 'user'
-                      ? 'bg-blue-500 text-white rounded-2xl rounded-tr-sm shadow-sm'
-                      : 'bg-muted text-foreground rounded-2xl rounded-tl-sm border border-border/60 shadow-sm'
+                      ? 'px-4 py-3 bg-blue-500 text-white rounded-2xl rounded-tr-sm shadow-sm'
+                      : 'py-2 text-foreground'
                   }`}
                 >
                   {msg.role === 'user' ? (
@@ -339,10 +304,12 @@ export default function Chat() {
                     !(msg.content as string) && <TypingIndicator />}
                 </div>
 
-                {/* 消息时间和模型信息 */}
+                {/* 时间：仅用户显示；模型名：仅 AI 显示 */}
                 <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground px-1">
-                  {msg.createTime && <span>{formatTime(msg.createTime)}</span>}
-                  {msg.modelName && msg.role === 'assistant' && (
+                  {msg.role === 'user' && msg.createTime && (
+                    <span>{formatTime(msg.createTime)}</span>
+                  )}
+                  {msg.role === 'assistant' && msg.modelName && (
                     <span className="bg-muted px-2 py-0.5 rounded text-muted-foreground">
                       {msg.modelName}
                     </span>
