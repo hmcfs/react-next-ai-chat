@@ -1,10 +1,13 @@
 'use client';
 
+import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import { debounce } from '@/lib/debounce';
+import { Model, useQuestionStore } from '@/lib/store';
 import { clsx } from 'clsx';
 import { PanelLeft } from 'lucide-react';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { useShallow } from 'zustand/react/shallow';
 import ChatSidebar from '../../components/my/Navibar';
 import { useRouter } from 'next/navigation';
 
@@ -25,6 +28,19 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   );
   const prevIsMobileRef = useRef(false);
   const [chatId, setChatId] = useState<string | null>(null);
+  const { model, setModel } = useQuestionStore(
+    useShallow((s) => ({ model: s.model, setModel: s.setModel }))
+  );
+  const changeModel = (model: Model) => {
+    setModel(model);
+    localStorage.setItem('model', model);
+  };
+  // 恢复上次选择的模型
+  useEffect(() => {
+    const saved = localStorage.getItem('model');
+    if (saved) setModel(saved as Model);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     const syncState = () => {
       const mobile = window.innerWidth < 768;
@@ -89,6 +105,15 @@ const handleSelectChat = (id: string) => {
 
       {/*  Main area */}
       <div className="relative flex-1 h-screen min-w-0 overflow-y-auto">
+        {/* 顶部模型选择栏：始终在侧边栏右侧；侧边栏收缩时避让展开图标 */}
+        <div
+          className={`sticky top-0 z-30 flex items-center bg-background/90 py-3 pr-4 backdrop-blur-sm ${
+            !open ? 'pl-16' : 'pl-4'
+          }`}
+        >
+          <ModelCheck parentModel={model} changeModel={changeModel} />
+        </div>
+
         {/* 桌面端收起按钮 */}
         {mounted && !isMobile && !open && (
           <button

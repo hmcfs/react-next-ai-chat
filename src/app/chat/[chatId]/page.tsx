@@ -1,10 +1,9 @@
 'use client';
 
 import ChatInput from '@/app/chat/chat-components/ChatInput';
-import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import Markdown from '@/components/my/ReactMarkdown';
 import { markdownToText } from '@/lib/markdown';
-import { Model, useFileStore, useQuestionStore } from '@/lib/store';
+import { useFileStore, useQuestionStore } from '@/lib/store';
 import { Brain } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -40,8 +39,6 @@ export default function Chat() {
     isNewChat,
     clearMessages,
     setStoreMsgs,
-    model,
-    setModel,
   } = useQuestionStore(
     useShallow((state) => ({
       getMessageParams: state.getMessageParams,
@@ -49,14 +46,8 @@ export default function Chat() {
       isNewChat: state.isNewChat,
       clearMessages: state.clearMessages,
       setStoreMsgs: state.setMessages,
-      model: state.model,
-      setModel: state.setModel,
     }))
   );
-  const changeModel = (model: Model) => {
-    setModel(model);
-    localStorage.setItem('model', model);
-  };
   const { clearFiles, concatFiles } = useFileStore(
     useShallow((state) => ({
       clearFiles: state.clear,
@@ -228,16 +219,11 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex relative flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-background">
-      {/* 顶部模型选择栏 */}
-      <div className="sticky top-0 left-0 z-30 flex items-center bg-background/90 px-4 pt-3 pb-2 backdrop-blur-sm">
-        <ModelCheck parentModel={model} changeModel={changeModel} />
-      </div>
-
+    <div className="flex relative flex-col max-w-[800px] w-[80%] mx-auto min-h-screen bg-background">
       {/* ==================== 消息列表区域 ==================== */}
       <div className="flex-1 py-6 px-4 pb-40">
         {/* ---------- 空状态 ---------- */}
-        {messages.length === 0 && !loading && (
+        {/* {messages.length === 0 && !loading && (
           <div className="flex flex-col items-center justify-center mt-24 select-none">
             <div className="w-20 h-20 rounded-3xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6">
               <svg
@@ -257,7 +243,7 @@ export default function Chat() {
             <h2 className="text-2xl font-semibold text-foreground mb-2">开始新的对话</h2>
             <p className="text-muted-foreground text-sm">输入你的问题，我来为你解答</p>
           </div>
-        )}
+        )} */}
 
         {/* ---------- 加载状态 ---------- */}
         {messages.length === 0 && loading && (
