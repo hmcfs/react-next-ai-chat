@@ -1,16 +1,14 @@
 'use client';
 
-import PreviewFiles from '@/app/chat/chat-components/PreviewFiles';
-import Tool from '@/app/chat/chat-components/Tool';
+import ChatInput from '@/app/chat/chat-components/ChatInput';
 import Markdown from '@/components/my/ReactMarkdown';
 import { markdownToText } from '@/lib/markdown';
-import { Model, useFileStore, useQuestionStore } from '@/lib/store';
-import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFileStore, useQuestionStore } from '@/lib/store';
+import { Brain } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import './style.css';
-import { useRouter } from 'next/navigation';
 import { clientApi } from '@/lib/http/client-api';
 
 type TextContentItem = { type: 'text'; text: string };
@@ -31,7 +29,6 @@ export default function Chat() {
   const params = useParams();
   const chatId = params.chatId as string;
 
-  const [isFocus, setIsFocus] = useState(false);
   const [thinkingOpen, setThinkingOpen] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -40,27 +37,17 @@ export default function Chat() {
     getMessageParams,
     setIsNewChat,
     isNewChat,
-    storeMessages,
-    setStoreMsgs,
     clearMessages,
-    setModel,
-    model,
+    setStoreMsgs,
   } = useQuestionStore(
     useShallow((state) => ({
       getMessageParams: state.getMessageParams,
       setIsNewChat: state.setIsNewChat,
       isNewChat: state.isNewChat,
-      storeMessages: state.messages,
       clearMessages: state.clearMessages,
-      setModel: state.setModel,
       setStoreMsgs: state.setMessages,
-      model: state.model,
     }))
   );
-  const changeModel = (model: Model) => {
-    setModel(model);
-    localStorage.setItem('model', model);
-  };
   const { clearFiles, concatFiles } = useFileStore(
     useShallow((state) => ({
       clearFiles: state.clear,
@@ -78,20 +65,23 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isNewChat && !hasConsume.current && text) {
-      setIsNewChat(false);
-      setInput(text);
+    if (isNewChat && !hasConsume.current) {
       hasConsume.current = true;
-      sendMessage();
+      // 从 store 读取待发送的首条消息（由落地页 setMessages 写入），交给 sendMessage 处理
+      const pending = getMessageParams().messages?.[0]?.text;
+      if (pending) {
+        sendMessage(pending);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initMsg = () => {
+  const initMsg = (prompt: string) => {
     const attachments = concatFiles();
     setStoreMsgs([
       {
         role: 'user',
-        text: input || text,
+        text: prompt,
         attachments: attachments.length > 0 ? attachments : undefined,
       },
     ]);
@@ -104,11 +94,13 @@ export default function Chat() {
     clearFiles();
   };
 
-  async function sendMessage() {
-    const prompt = input.trim() || text;
+  async function sendMessage(overridePrompt?: string) {
+    const prompt = (overridePrompt ?? input).trim() || text;
     if (loading || !prompt) return;
 
-    initMsg();
+    setInput(prompt); // 让输入框显示待发送内容（contentEditable 同步）
+    setIsNewChat(false); // 消费「新会话」标记
+    initMsg(prompt);
     contentRef.current = '';
     reasoningRef.current = '';
     setThinkingOpen(true);
@@ -164,7 +156,7 @@ export default function Chat() {
                 return list;
               });
             });
-          } catch (e) {
+          } catch {
             continue;
           }
         }
@@ -178,46 +170,41 @@ export default function Chat() {
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
- 
-
   useEffect(() => {
-     const getHistoryMsg =   async () => {
-    try {
-      const res = await clientApi.get(`/api/bff/chat/history/${chatId}`, {
-        page: 1,
-        pageSize: 6,
-      });
-      if (res.code && res.data?.messages) {
-        const historyMessages: ChatMessage[] = res.data.messages.map((msg: any) => ({
-          id: msg.msgId,
-          role: msg.role as 'user' | 'assistant' | 'system',
-          content: msg.content,
-          reasoningContent: msg.reasoningContent || undefined,
-          createTime: msg.createTime,
-          modelName: msg.modelName?.trim(),
-        })).reverse();
-        setMessages(historyMessages);
-      } else {
-        toast.error(res.msg || '获取历史消息失败');
+    const getHistoryMsg = async () => {
+      try {
+        const res = await clientApi.get<{ messages: any[] }>(`/api/bff/chat/history/${chatId}`, {
+          page: 1,
+          pageSize: 6,
+        });
+        if (res.code && res.data?.messages) {
+          const historyMessages: ChatMessage[] = res.data.messages
+            .map((msg: any) => ({
+              id: msg.msgId,
+              role: msg.role as 'user' | 'assistant' | 'system',
+              content: msg.content,
+              reasoningContent: msg.reasoningContent || undefined,
+              createTime: msg.createTime,
+              modelName: msg.modelName?.trim(),
+            }))
+            .reverse();
+          setMessages(historyMessages);
+        } else {
+          toast.error(res.msg || '获取历史消息失败');
+        }
+      } catch (error) {
+        console.error('加载历史消息异常:', error);
+        toast.error('加载历史消息异常');
       }
-    } catch (error) {
-      console.error('加载历史消息异常:', error);
-      toast.error('加载历史消息异常');
-    }
-  }  
-    if (chatId && chatId.length === 32) {
-      
+    };
+    if (chatId && chatId.length === 32 && !isNewChat) {
       getHistoryMsg();
-    } else {
+    } else if (chatId && chatId.length !== 32) {
       router.replace('/chat');
     }
+    // isNewChat 为 true：新会话，跳过历史加载，避免覆盖自动发送的首条消息
+    // 注意：isNewChat 不能加入依赖，否则消费标记后会导致历史被重复加载
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId, router]);
 
   useEffect(() => {
@@ -232,18 +219,15 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex relative flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-white">
+    <div className="flex relative flex-col max-w-[800px] w-[80%] mx-auto min-h-screen bg-background">
       {/* ==================== 消息列表区域 ==================== */}
-      <div className="flex-1 py-6 pt-20 px-4 pb-40">
+      <div className="flex-1 py-6 px-4 pb-40">
         {/* ---------- 空状态 ---------- */}
-        {messages.length === 0 && !loading && (
+        {/* {messages.length === 0 && !loading && (
           <div className="flex flex-col items-center justify-center mt-24 select-none">
-            <div
-              className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-violet-500 
-                            flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20"
-            >
+            <div className="w-20 h-20 rounded-3xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6">
               <svg
-                className="w-10 h-10 text-white"
+                className="w-10 h-10"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -256,15 +240,15 @@ export default function Chat() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">开始新的对话</h2>
-            <p className="text-gray-400 text-sm">输入你的问题，我来为你解答 ✨</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">开始新的对话</h2>
+            <p className="text-muted-foreground text-sm">输入你的问题，我来为你解答</p>
           </div>
-        )}
+        )} */}
 
         {/* ---------- 加载状态 ---------- */}
         {messages.length === 0 && loading && (
           <div className="flex items-center justify-center mt-24">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2 text-muted-foreground">
               <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:0ms]" />
               <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:150ms]" />
               <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:300ms]" />
@@ -283,12 +267,9 @@ export default function Chat() {
               {/* 头像 */}
               <div className="shrink-0 pt-0.5">
                 {msg.role === 'user' ? (
-                  <div
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 
-                                  flex items-center justify-center shadow-sm"
-                  >
+                  <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
                     <svg
-                      className="w-4 h-4 text-white"
+                      className="w-4 h-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -302,12 +283,9 @@ export default function Chat() {
                     </svg>
                   </div>
                 ) : (
-                  <div
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 
-                                  flex items-center justify-center shadow-sm"
-                  >
+                  <div className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center">
                     <svg
-                      className="w-4 h-4 text-white"
+                      className="w-4 h-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -340,8 +318,8 @@ export default function Chat() {
                 <div
                   className={`px-4 py-3 leading-relaxed text-[0.95rem] ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl rounded-tr-sm shadow-md shadow-blue-500/10'
-                      : 'bg-gray-50 text-gray-800 rounded-2xl rounded-tl-sm border border-gray-100 shadow-sm'
+                      ? 'bg-blue-500 text-white rounded-2xl rounded-tr-sm shadow-sm'
+                      : 'bg-muted text-foreground rounded-2xl rounded-tl-sm border border-border/60 shadow-sm'
                   }`}
                 >
                   {msg.role === 'user' ? (
@@ -362,10 +340,10 @@ export default function Chat() {
                 </div>
 
                 {/* 消息时间和模型信息 */}
-                <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 px-1">
+                <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground px-1">
                   {msg.createTime && <span>{formatTime(msg.createTime)}</span>}
                   {msg.modelName && msg.role === 'assistant' && (
-                    <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-500">
+                    <span className="bg-muted px-2 py-0.5 rounded text-muted-foreground">
                       {msg.modelName}
                     </span>
                   )}
@@ -381,40 +359,11 @@ export default function Chat() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (!input.trim()) return;
           sendMessage();
-          setInput('');
         }}
-        className="sticky bottom-0 z-50 bg-gradient-to-t from-white via-white/95 to-white/80 
-                   backdrop-blur-xl border-t border-gray-100/80 py-4 px-4 flex justify-center"
+        className="sticky bottom-0 z-50 bg-background/80 backdrop-blur-lg border-t border-border/60 py-4 px-4 flex justify-center"
       >
-        <div
-          className={`w-full min-w-[300px] rounded-2xl border-2 bg-white  transition-all duration-300 
-                      ${
-                        isFocus
-                          ? 'border-blue-300/80 shadow-lg shadow-blue-500/5'
-                          : 'border-gray-200 bg-gray-50/80 shadow-sm hover:border-gray-300'
-                      }`}
-        >
-          <div className="flex justify-between px-3   items-center text-xs text-gray-400">
-            <PreviewFiles />
-          </div>
-          <textarea
-            className="custom-scrollbar w-full border-0 resize-none overflow-y-auto 
-                       focus:outline-none px-4 pt-3 pb-1 bg-transparent max-h-[200px] 
-                       text-gray-800 placeholder-gray-400 text-[0.95rem] leading-relaxed"
-            value={input}
-            placeholder="请输入您的问题..."
-            onChange={(e) => setInput(e.target.value)}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onKeyDown={handleKeyDown}
-            rows={2}
-          />
-          <div className="flex justify-between px-3 pb-2 items-center text-xs text-gray-400">
-            <Tool />
-          </div>
-        </div>
+        <ChatInput value={input} onChange={setInput} onSend={sendMessage} />
       </form>
     </div>
   );
@@ -425,11 +374,11 @@ function TypingIndicator() {
   return (
     <div className="flex items-center gap-1.5 py-2 px-1">
       <div className="flex gap-1">
-        <span className="w-2 h-2 rounded-full bg-gray-400 animate-bounce [animation-delay:0ms]" />
-        <span className="w-2 h-2 rounded-full bg-gray-400 animate-bounce [animation-delay:150ms]" />
-        <span className="w-2 h-2 rounded-full bg-gray-400 animate-bounce [animation-delay:300ms]" />
+        <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:0ms]" />
+        <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:150ms]" />
+        <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:300ms]" />
       </div>
-      <span className="text-xs text-gray-400 ml-1">思考中</span>
+      <span className="text-xs text-muted-foreground ml-1">思考中</span>
     </div>
   );
 }
@@ -446,15 +395,14 @@ function CollapsibleThinking({
 }) {
   return (
     <div className="mb-2 w-full">
-      <div className="rounded-xl border border-amber-200/80 bg-amber-50/80 overflow-hidden shadow-sm">
+      <div className="rounded-xl border border-amber-200/80 bg-amber-50/80 dark:border-amber-500/20 dark:bg-amber-500/10 overflow-hidden shadow-sm">
         {/* 标题栏 - 可点击折叠 */}
         <button
           onClick={onToggle}
-          className="w-full flex items-center justify-between px-4 py-2.5 text-sm 
-                     text-amber-800 hover:bg-amber-100/60 transition-colors duration-200"
+          className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 transition-colors duration-200"
         >
           <div className="flex items-center gap-2">
-            <span className="text-base">💭</span>
+            <Brain className="w-4 h-4 text-amber-500" />
             <span className="font-medium">深度思考</span>
           </div>
           <svg
@@ -473,7 +421,7 @@ function CollapsibleThinking({
             isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="px-4 pb-3 text-sm text-amber-900/80 whitespace-pre-wrap leading-relaxed border-t border-amber-200/50 pt-2">
+          <div className="px-4 pb-3 text-sm text-amber-800/90 dark:text-amber-200/80 whitespace-pre-wrap leading-relaxed border-t border-amber-500/20 pt-2">
             <span>{markdownToText(content)}</span>
           </div>
         </div>

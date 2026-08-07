@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useSidebarVisible } from '@/hooks/useSidebarVisible';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { clientApi } from '@/lib/http/client-api';
 import { MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
@@ -229,7 +230,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
             <div className="flex gap-3">
               <Search
                 onClick={() => setShowDialog(true)}
-                className="w-5 h-5 text-gray-500 cursor-pointer"
+                className="w-5 h-5 text-muted-foreground cursor-pointer"
               />
               <div className="w-5 h-5 relative cursor-pointer" onClick={() => setOpen(!open)}>
                 <Image src="/hidden.svg" fill alt="hidden" className="w-full  h-full " />
@@ -240,7 +241,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
           {/* 开启新对话按钮 */}
           <Button
             onClick={newSession}
-            className="w-full cursor-pointer gap-2 rounded-full bg-white border text-black hover:shadow-md hover:translate-y-[-1px] hover:bg-white shadow-sm"
+            className="w-full cursor-pointer gap-2 rounded-full bg-card border text-foreground hover:shadow-md hover:translate-y-[-1px] hover:bg-card shadow-sm"
           >
             开启新对话
           </Button>
@@ -255,7 +256,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                   {i.list.length > 0 && i.group && (
                     <>
                       {i.group !== '' && (
-                        <SidebarGroupLabel className="text-gray-400 font-normal">
+                        <SidebarGroupLabel className="text-muted-foreground font-normal">
                           {i.group}
                         </SidebarGroupLabel>
                       )}
@@ -268,12 +269,11 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                                 setActiveChatId(chat.chatId);
                                 onSelectChat(chat.chatId);
                               }}
-                              className="justify-between group hover:!bg-gray-100 cursor-pointer"
-                              style={
+                              className={`justify-between group hover:!bg-accent cursor-pointer ${
                                 activeChatId === chat.chatId
-                                  ? { background: '#eff6ff', color: '#76adf5' }
-                                  : { background: 'transparent' }
-                              }
+                                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-300'
+                                  : ''
+                              }`}
                             >
                               <span className="truncate">{chat.title}</span>
                               <MoreHorizontal
@@ -311,7 +311,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
         </SidebarContent>
 
         {/* 底部用户栏 */}
-        <SidebarFooter className="px-4 py-2 bg-white  ">
+        <SidebarFooter className="px-4 py-2 bg-sidebar">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar className="w-10 h-10">
@@ -319,7 +319,10 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
               </Avatar>
               <span>hh</span>
             </div>
-            <MoreHorizontal className="w-4 h-4 text-gray-500" />
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
+            </div>
           </div>
         </SidebarFooter>
       </Sidebar>

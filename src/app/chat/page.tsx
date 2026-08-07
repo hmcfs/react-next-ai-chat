@@ -1,63 +1,31 @@
 'use client';
 
-import ModelCheck from '@/app/chat/chat-components/ModelCheck';
-import { MODEL_LIST } from '@/constants/index';
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
-
-import PreviewFiles from '@/app/chat/chat-components/PreviewFiles';
-import Tool from '@/app/chat/chat-components/Tool';
+import ChatInput from '@/app/chat/chat-components/ChatInput';
 import { clientApi } from '@/lib/http/client-api';
-import { Model, useFileStore, useQuestionStore } from '@/lib/store';
+import { useFileStore, useQuestionStore } from '@/lib/store';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
+
 export default function Chat() {
-  //const { title, setTitle, setIsNewChat, setContent } = useChatStore((state) => state);
-  const {
-    title,
-    setTitle,
-    setIsNewChat,
-    setMessages,
-    messages,
-    getMessageParams,
-    setModel: setQuestionModel,
-  } = useQuestionStore(
+  const { setTitle, setIsNewChat, setMessages } = useQuestionStore(
     useShallow((state) => ({
-      title: state.title,
-      messages: state.messages,
       setTitle: state.setTitle,
       setIsNewChat: state.setIsNewChat,
       setMessages: state.setMessages,
-      getMessageParams: state.getMessageParams,
-      setModel: state.setModel,
     }))
   );
-  const { concatFiles, clear } = useFileStore(
+  const { concatFiles } = useFileStore(
     useShallow((state) => ({
       concatFiles: state.concatFiles,
-      clear: state.clear,
     }))
   );
   const [input, setInput] = useState('');
 
-  const [isFocus, setIsFocus] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [showTip, setShowTip] = useState(false);
-  const [model, setModel] = useState(() => {
-    if (typeof window === 'undefined') return MODEL_LIST[0].label;
-    const localModel = localStorage.getItem('model');
-    if (localModel) return localModel;
-    localStorage.setItem('model', MODEL_LIST[0].value);
-    return MODEL_LIST[0].value;
-  });
-  const changeModel = (model: Model) => {
-    localStorage.setItem('model', model);
-    setModel(model);
-  };
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async () => {
     try {
-      e.preventDefault();
       if (!input.trim()) return;
       const res = await clientApi.post<{ chatId: string; title: string }>('/api/bff/chat/session', {
         content: input,
@@ -70,7 +38,6 @@ export default function Chat() {
         return;
       }
       setTitle(title || '');
-      setQuestionModel(model as Model);
       setIsNewChat(true);
       const fs = concatFiles();
       setMessages([
@@ -80,8 +47,6 @@ export default function Chat() {
           attachments: fs.length > 0 ? fs : undefined,
         },
       ]);
-      console.log('拼装前的消息', messages);
-      console.log('拼装后的消息', getMessageParams());
 
       router.push(`/chat/${chatId}`);
 
@@ -91,54 +56,25 @@ export default function Chat() {
     }
   };
 
-  
-
   return (
     <div className="w-full relative h-screen min-h-[250px] flex flex-col justify-between items-center">
-      <ModelCheck
-        parentModel={model as Model}
-        changeModel={changeModel}
-        className="absolute top-4 left-4"
-      />
       <div></div>
       <div className="w-4/5 flex flex-col justify-around items-center">
-        <span className="text-center text-gray-400 mb-10 text-3xl font-bold">
+            <span className="text-center text-gray-400 mb-10 text-3xl font-bold">
           <span className=" bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            开始新的对话吧
-          </span>
-          ✨
-        </span>
+      开始新的对话吧 
+        </span>✨
+               </span>  
+         
+
         <form
-          onSubmit={handleSubmit}
-          className="  z-50 w-4/5  backdrop-blur-sm  border-gray-100 py-3 px-4 flex justify-center"
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit();
+          }}
+          className="z-50 w-full py-3 px-4 flex justify-center"
         >
-          <div
-            className={`w-full  min-w-[300px] shadow-xl rounded-2xl border-2  bg-white transition-colors duration-200 ${
-              isFocus ? 'border-blue-200 ' : 'border-gray-100  '
-            }`}
-          >
-            <div className="flex justify-between px-3   items-center text-xs text-gray-400">
-              <PreviewFiles />
-            </div>
-            <textarea
-              className="custom-scrollbar w-full border-0 resize-none overflow-y-auto focus:outline-none p-3 bg-transparent max-h-[200px]"
-              value={input}
-              placeholder="请输入您的问题..."
-              onChange={(e) => setInput(e.target.value)}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  e.currentTarget.form?.requestSubmit();
-                }
-              }}
-              rows={2}
-            />
-            <div className="flex justify-between px-3 pb-2 items-center text-xs text-gray-400">
-              <Tool />
-            </div>
-          </div>
+          <ChatInput value={input} onChange={setInput} onSend={submit} />
         </form>
       </div>
       <div className="h-1/10"></div>

@@ -10,7 +10,7 @@
   right: 0;
   bottom: 0;
   height: 100px; /* 模糊渐变高度，可调整 */
-  background: linear-gradient(to top, white, transparent);
+  background: linear-gradient(to top, var(--sidebar), transparent);
   pointer-events: none; /* 不拦截鼠标滚动 */
   z-index: 10;
 }

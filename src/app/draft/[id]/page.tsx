@@ -256,7 +256,11 @@ export default function Draft() {
                     msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-900'
                   }`}
                 >
-                  {msg.content || (loading && idx === messages.length - 1 ? '思考中...' : '')}
+                  {typeof msg.content === 'string' 
+                    ? (msg.content || (loading && idx === messages.length - 1 ? '思考中...' : ''))
+                    : (Array.isArray(msg.content) 
+                      ? msg.content.map(item => item.type === 'text' ? item.text : '').join('')
+                      : '')}
                 </div>
               </div>
             ))}
