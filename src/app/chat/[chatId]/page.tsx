@@ -1,9 +1,10 @@
 'use client';
 
 import ChatInput from '@/app/chat/chat-components/ChatInput';
+import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import Markdown from '@/components/my/ReactMarkdown';
 import { markdownToText } from '@/lib/markdown';
-import { useFileStore, useQuestionStore } from '@/lib/store';
+import { Model, useFileStore, useQuestionStore } from '@/lib/store';
 import { Brain } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -39,6 +40,8 @@ export default function Chat() {
     isNewChat,
     clearMessages,
     setStoreMsgs,
+    model,
+    setModel,
   } = useQuestionStore(
     useShallow((state) => ({
       getMessageParams: state.getMessageParams,
@@ -46,8 +49,14 @@ export default function Chat() {
       isNewChat: state.isNewChat,
       clearMessages: state.clearMessages,
       setStoreMsgs: state.setMessages,
+      model: state.model,
+      setModel: state.setModel,
     }))
   );
+  const changeModel = (model: Model) => {
+    setModel(model);
+    localStorage.setItem('model', model);
+  };
   const { clearFiles, concatFiles } = useFileStore(
     useShallow((state) => ({
       clearFiles: state.clear,
@@ -65,21 +74,23 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isNewChat && !hasConsume.current && text) {
-      setIsNewChat(false);
-      setInput(text);
+    if (isNewChat && !hasConsume.current) {
       hasConsume.current = true;
-      sendMessage();
+      // 从 store 读取待发送的首条消息（由落地页 setMessages 写入），交给 sendMessage 处理
+      const pending = getMessageParams().messages?.[0]?.text;
+      if (pending) {
+        sendMessage(pending);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initMsg = () => {
+  const initMsg = (prompt: string) => {
     const attachments = concatFiles();
     setStoreMsgs([
       {
         role: 'user',
-        text: input || text,
+        text: prompt,
         attachments: attachments.length > 0 ? attachments : undefined,
       },
     ]);
@@ -92,11 +103,13 @@ export default function Chat() {
     clearFiles();
   };
 
-  async function sendMessage() {
-    const prompt = input.trim() || text;
+  async function sendMessage(overridePrompt?: string) {
+    const prompt = (overridePrompt ?? input).trim() || text;
     if (loading || !prompt) return;
 
-    initMsg();
+    setInput(prompt); // 让输入框显示待发送内容（contentEditable 同步）
+    setIsNewChat(false); // 消费「新会话」标记
+    initMsg(prompt);
     contentRef.current = '';
     reasoningRef.current = '';
     setThinkingOpen(true);
@@ -193,11 +206,14 @@ export default function Chat() {
         toast.error('加载历史消息异常');
       }
     };
-    if (chatId && chatId.length === 32) {
+    if (chatId && chatId.length === 32 && !isNewChat) {
       getHistoryMsg();
-    } else {
+    } else if (chatId && chatId.length !== 32) {
       router.replace('/chat');
     }
+    // isNewChat 为 true：新会话，跳过历史加载，避免覆盖自动发送的首条消息
+    // 注意：isNewChat 不能加入依赖，否则消费标记后会导致历史被重复加载
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId, router]);
 
   useEffect(() => {
@@ -213,8 +229,13 @@ export default function Chat() {
 
   return (
     <div className="flex relative flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-background">
+      {/* 顶部模型选择栏 */}
+      <div className="sticky top-0 left-0 z-30 flex items-center bg-background/90 px-4 pt-3 pb-2 backdrop-blur-sm">
+        <ModelCheck parentModel={model} changeModel={changeModel} />
+      </div>
+
       {/* ==================== 消息列表区域 ==================== */}
-      <div className="flex-1 py-6 pt-20 px-4 pb-40">
+      <div className="flex-1 py-6 px-4 pb-40">
         {/* ---------- 空状态 ---------- */}
         {messages.length === 0 && !loading && (
           <div className="flex flex-col items-center justify-center mt-24 select-none">

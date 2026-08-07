@@ -92,7 +92,7 @@ export default function Chat() {
             e.preventDefault();
             submit();
           }}
-          className="z-50 w-4/5 py-3 px-4 flex justify-center"
+          className="z-50 w-full py-3 px-4 flex justify-center"
         >
           <ChatInput value={input} onChange={setInput} onSend={submit} />
         </form>

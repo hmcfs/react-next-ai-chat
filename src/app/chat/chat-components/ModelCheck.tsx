@@ -40,7 +40,7 @@ export default function ModelCheck({ className = '', changeModel, parentModel }:
         </SelectTrigger>
         <SelectContent>
           {MODEL_LIST.map((item) => (
-            <SelectItem key={item.label} value={item.label}>
+            <SelectItem key={item.value} value={item.value}>
               {item.label}
             </SelectItem>
           ))}
