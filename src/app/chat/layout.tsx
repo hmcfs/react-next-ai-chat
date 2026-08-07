@@ -1,13 +1,10 @@
 'use client';
 
-import ModelCheck from '@/app/chat/chat-components/ModelCheck';
 import { debounce } from '@/lib/debounce';
-import { Model, useQuestionStore } from '@/lib/store';
 import { clsx } from 'clsx';
 import { PanelLeft } from 'lucide-react';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useShallow } from 'zustand/react/shallow';
 import ChatSidebar from '../../components/my/Navibar';
 import { useRouter } from 'next/navigation';
 
@@ -28,13 +25,6 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   );
   const prevIsMobileRef = useRef(false);
   const [chatId, setChatId] = useState<string | null>(null);
-  const { model, setModel } = useQuestionStore(
-    useShallow((s) => ({ model: s.model, setModel: s.setModel }))
-  );
-  const changeModel = (model: Model) => {
-    setModel(model);
-    localStorage.setItem('model', model);
-  };
   useEffect(() => {
     const syncState = () => {
       const mobile = window.innerWidth < 768;
@@ -99,12 +89,6 @@ const handleSelectChat = (id: string) => {
 
       {/*  Main area */}
       <div className="relative flex-1 h-screen min-w-0 overflow-y-auto">
-        <ModelCheck
-          parentModel={model}
-          changeModel={changeModel}
-          className="absolute top-4 left-4"
-        />
-
         {/* 桌面端收起按钮 */}
         {mounted && !isMobile && !open && (
           <button
