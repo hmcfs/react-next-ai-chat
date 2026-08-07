@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PreviewFiles from './PreviewFiles';
 import Tool from './Tool';
 import { useFilePaste } from './useFilePaste';
@@ -19,6 +19,15 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
   const contentRef = useRef<HTMLDivElement>(null);
   const handlePaste = useFilePaste();
   const isComposingRef = useRef(false);
+
+  // contentEditable 不受控：外部 value 变化（发送后清空 / 自动发送预填）时同步到 DOM
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el || isComposingRef.current) return;
+    if (el.innerText !== value) {
+      el.innerText = value;
+    }
+  }, [value]);
 
   const handleInput = () => {
     const el = contentRef.current;
@@ -74,21 +83,25 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
 
   return (
     <div
-      className={`w-full min-w-[300px] max-h-[80%] rounded-2xl border bg-card transition-all duration-300 ${
+      className={`w-full min-w-[300px] rounded-2xl border bg-card transition-all duration-300 ${
         isFocus
           ? 'border-blue-400/70 ring-2 ring-blue-400/10 shadow-md'
           : 'border-border shadow-sm'
       }`}
     >
       <PreviewFiles />
-      <div className="relative flex-1 min-h-[60px] mt-4">
+      <div className="relative min-h-[60px] mt-4">
+        {/* 占位符：用普通 span 代替 :empty 伪元素，避免 SSR/客户端 className 不一致 */}
+        {!value && (
+          <span className="pointer-events-none absolute left-4 top-3 text-[0.95rem] text-muted-foreground">
+            {placeholder || '请输入您的问题...'}
+          </span>
+        )}
         <div
           ref={contentRef}
           contentEditable
           suppressContentEditableWarning
-          className="custom-scrollbar w-full border-0 resize-none overflow-y-auto focus:outline-none px-4 pt-3 pb-1 bg-transparent max-h-[300px] min-h-[40px] 
-          text-foreground text-[0.95rem] leading-relaxed [&:empty]:before:content-[attr(data-placeholder)] [&:empty]:before:text-muted-foreground"
-          data-placeholder={placeholder || '请输入您的问题...'}
+          className="custom-scrollbar w-full border-0 resize-none overflow-y-auto focus:outline-none px-4 pt-3 pb-2 bg-transparent max-h-[300px] min-h-[44px] text-foreground text-[0.95rem] leading-relaxed"
           onInput={handleInput}
           onFocus={() => setIsFocus(true)}
           onBlur={handleBlur}
@@ -99,7 +112,7 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
           onCompositionEnd={handleCompositionEnd}
         />
       </div>
-      <div className="flex justify-between mt-4 px-3 pb-2 items-center text-xs text-muted-foreground">
+      <div className="flex justify-between px-4 pb-2 items-center text-xs text-muted-foreground">
         <Tool />
       </div>
     </div>

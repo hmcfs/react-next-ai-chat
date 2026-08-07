@@ -55,11 +55,11 @@ export default function Tool() {
   };
 
   return (
-    <div className="w-full h-full px-2 flex flex-row items-center justify-between gap-2">
+    <div className="w-full h-full flex flex-row items-center justify-between gap-2">
       {/* 左侧上传区域 */}
       <div className="flex flex-row items-center gap-1">
         {/* 文件上传：label 原生触发，不依赖 JS .click() */}
-        <label className="flex flex-row items-center gap-1.5 py-1.5 px-3 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors">
+        <label className="flex flex-row items-center gap-1.5 py-1.5 px-2 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors">
           <ImageUp size={18} />
           <span className="text-[14px]">文件上传</span>
           <input
@@ -71,7 +71,7 @@ export default function Tool() {
         </label>
 
         {/* 图片上传：label 原生触发，不依赖 JS .click() */}
-        <label className="flex flex-row items-center gap-1.5 py-1.5 px-3 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors">
+        <label className="flex flex-row items-center gap-1.5 py-1.5 px-2 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors">
           <Image size={18} />
           <span className="text-[14px]">图片上传</span>
           <input
@@ -82,7 +82,7 @@ export default function Tool() {
           />
         </label>
         <div
-          className={`flex flex-row items-center gap-1.5 py-1.5 px-3 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors ${
+          className={`flex flex-row items-center gap-1.5 py-1.5 px-2 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors ${
             isFocusThink ? 'bg-card ring-1 ring-blue-400/60' : ''
           }`}
           onClick={(e) => {

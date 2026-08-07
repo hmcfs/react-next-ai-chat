@@ -57,7 +57,7 @@ export default function PreviewFiles() {
         e.stopPropagation();
         onRemove();
       }}
-      className="fixed -right-1.5 top-[200%] z-10 flex size-5 items-center justify-center rounded-full border border-border bg-background text-muted-foreground opacity-0 shadow-sm transition-opacity group-hover:opacity-100 hover:text-destructive hover:bg-accent"
+      className="absolute -right-1.5 -top-1.5 z-10 flex size-5 items-center justify-center rounded-full border border-border bg-background text-muted-foreground opacity-0 shadow-sm transition-opacity group-hover:opacity-100 hover:text-destructive hover:bg-accent"
     >
       <X className="size-3" />
     </button>

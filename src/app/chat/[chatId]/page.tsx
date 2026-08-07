@@ -65,21 +65,23 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isNewChat && !hasConsume.current && text) {
-      setIsNewChat(false);
-      setInput(text);
+    if (isNewChat && !hasConsume.current) {
       hasConsume.current = true;
-      sendMessage();
+      // 从 store 读取待发送的首条消息（由落地页 setMessages 写入），交给 sendMessage 处理
+      const pending = getMessageParams().messages?.[0]?.text;
+      if (pending) {
+        sendMessage(pending);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initMsg = () => {
+  const initMsg = (prompt: string) => {
     const attachments = concatFiles();
     setStoreMsgs([
       {
         role: 'user',
-        text: input || text,
+        text: prompt,
         attachments: attachments.length > 0 ? attachments : undefined,
       },
     ]);
@@ -92,11 +94,13 @@ export default function Chat() {
     clearFiles();
   };
 
-  async function sendMessage() {
-    const prompt = input.trim() || text;
+  async function sendMessage(overridePrompt?: string) {
+    const prompt = (overridePrompt ?? input).trim() || text;
     if (loading || !prompt) return;
 
-    initMsg();
+    setInput(prompt); // 让输入框显示待发送内容（contentEditable 同步）
+    setIsNewChat(false); // 消费「新会话」标记
+    initMsg(prompt);
     contentRef.current = '';
     reasoningRef.current = '';
     setThinkingOpen(true);
@@ -193,11 +197,14 @@ export default function Chat() {
         toast.error('加载历史消息异常');
       }
     };
-    if (chatId && chatId.length === 32) {
+    if (chatId && chatId.length === 32 && !isNewChat) {
       getHistoryMsg();
-    } else {
+    } else if (chatId && chatId.length !== 32) {
       router.replace('/chat');
     }
+    // isNewChat 为 true：新会话，跳过历史加载，避免覆盖自动发送的首条消息
+    // 注意：isNewChat 不能加入依赖，否则消费标记后会导致历史被重复加载
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId, router]);
 
   useEffect(() => {
@@ -212,11 +219,11 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex relative flex-col w-full max-w-[var(--chat-layout-width)] mx-auto min-h-screen bg-background">
+    <div className="flex relative flex-col max-w-[800px] w-[80%] mx-auto min-h-screen bg-background">
       {/* ==================== 消息列表区域 ==================== */}
-      <div className="flex-1 py-6 pt-20 px-4 pb-40">
+      <div className="flex-1 py-6 px-4 pb-40">
         {/* ---------- 空状态 ---------- */}
-        {messages.length === 0 && !loading && (
+        {/* {messages.length === 0 && !loading && (
           <div className="flex flex-col items-center justify-center mt-24 select-none">
             <div className="w-20 h-20 rounded-3xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6">
               <svg
@@ -236,7 +243,7 @@ export default function Chat() {
             <h2 className="text-2xl font-semibold text-foreground mb-2">开始新的对话</h2>
             <p className="text-muted-foreground text-sm">输入你的问题，我来为你解答</p>
           </div>
-        )}
+        )} */}
 
         {/* ---------- 加载状态 ---------- */}
         {messages.length === 0 && loading && (
