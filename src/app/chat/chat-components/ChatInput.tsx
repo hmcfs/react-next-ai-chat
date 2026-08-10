@@ -16,6 +16,7 @@ interface ChatInputProps {
 /** 共享输入框：预览 + 多行文本域（Enter 发送 / Shift+Enter 换行 / 粘贴上传）+ 工具栏 */
 export default function ChatInput({ value, onChange, onSend, placeholder }: ChatInputProps) {
   const [isFocus, setIsFocus] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const handlePaste = useFilePaste();
   const isComposingRef = useRef(false);
@@ -38,10 +39,12 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
 
   const handleCompositionStart = () => {
     isComposingRef.current = true;
+    setIsComposing(true);
   };
 
   const handleCompositionEnd = () => {
     isComposingRef.current = false;
+    setIsComposing(false);
     // 输入法确认后更新值
     const el = contentRef.current;
     if (el) onChange(el.innerText);
@@ -49,19 +52,24 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
 
   const handleBlur = () => {
     setIsFocus(false);
-    // 用 &nbsp; 替换末尾空格，防止被浏览器修剪
     const el = contentRef.current;
     if (el) {
+      // 失焦时输入法可能已中断但 compositionend 未触发，复位组词状态
+      isComposingRef.current = false;
+      setIsComposing(false);
+      // 用 &nbsp; 替换末尾空格，防止被浏览器修剪
       const text = el.innerText;
       if (text && text.endsWith(' ')) {
         el.innerText = text.replace(/ +$/, (m) => '\u00A0'.repeat(m.length));
-        onChange(el.innerText);
       }
+      // 以 DOM 实际内容回写 value：输入清空但 value 残留非空时，保证空输入失焦占位符能回显
+      onChange(el.innerText);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    // 输入法组词过程中按 Enter 是「确认候选词」，不能当发送（否则候选词未上屏就误发）
+    if (e.key === 'Enter' && !e.shiftKey && !isComposingRef.current) {
       e.preventDefault();
       onSend();
     }
@@ -91,8 +99,9 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
     >
       <PreviewFiles />
       <div className="relative min-h-[60px] mt-4">
-        {/* 占位符：用普通 span 代替 :empty 伪元素，避免 SSR/客户端 className 不一致 */}
-        {!value && (
+        {/* 占位符：用普通 span 代替 :empty 伪元素，避免 SSR/客户端 className 不一致。
+            输入法组词时 value 还没更新（onChange 被跳过），此时必须隐藏占位符，否则会盖住候选文字 */}
+        {!value && !isComposing && (
           <span className="pointer-events-none absolute left-4 top-3 text-[0.95rem] text-muted-foreground">
             {placeholder || '请输入您的问题...'}
           </span>

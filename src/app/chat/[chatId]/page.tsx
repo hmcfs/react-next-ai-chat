@@ -101,6 +101,7 @@ export default function Chat() {
     setInput(prompt); // 让输入框显示待发送内容（contentEditable 同步）
     setIsNewChat(false); // 消费「新会话」标记
     initMsg(prompt);
+    clearFiles(); // 附件已在 initMsg 中随 messageBodyRef 捕获，立即清除输入区预览（不再等流式回复结束）
     contentRef.current = '';
     reasoningRef.current = '';
     setThinkingOpen(true);

@@ -16,9 +16,10 @@ export default function Chat() {
       setMessages: state.setMessages,
     }))
   );
-  const { concatFiles } = useFileStore(
+  const { concatFiles, clearFiles } = useFileStore(
     useShallow((state) => ({
       concatFiles: state.concatFiles,
+      clearFiles: state.clear,
     }))
   );
   const [input, setInput] = useState('');
@@ -47,6 +48,7 @@ export default function Chat() {
           attachments: fs.length > 0 ? fs : undefined,
         },
       ]);
+      clearFiles(); // 附件已写入 messages，立即清除输入区预览，跳转前不再残留
 
       router.push(`/chat/${chatId}`);
 
