@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:3004": "next dev  -p 3004",
-    "dev:clean": "rimraf .next && next dev",
+    "dev:clean": "rimraf .next && next dev -p 3004",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
