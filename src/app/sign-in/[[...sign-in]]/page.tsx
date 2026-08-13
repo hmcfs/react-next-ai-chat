@@ -1,5 +1,18 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { SignInForm } from './SignInForm';
+
+export const metadata: Metadata = {
+  title: '登录',
+  description: '登录 Clair，继续使用你的 AI 对话助手。',
+  robots: {
+    index: false,
+    follow: false,
+  },
+  alternates: {
+    canonical: 'https://clair-ai.com/sign-in',
+  },
+};
 
 export default function SignInPage() {
   return (

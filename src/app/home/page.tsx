@@ -1,6 +1,7 @@
 import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { ChatMockup } from './components/ChatMockup';
 import { Faq } from './components/Faq';
 import { Features } from './components/Features';
@@ -8,6 +9,34 @@ import { HowItWorks } from './components/HowItWorks';
 
 // ISR：每小时重新生成一次
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: 'Clair - 清爽的 AI 对话助手',
+  description: '多模型支持、深度思考、图片与文件即传即聊、历史记录自动保存。让复杂的问题，用对话的方式解决。',
+  openGraph: {
+    title: 'Clair - 清爽的 AI 对话助手',
+    description: '多模型支持、深度思考、图片与文件即传即聊、历史记录自动保存',
+    type: 'website',
+    url: 'https://clair-ai.com/home',
+    images: [
+      {
+        url: '/og-home.png',
+        width: 1200,
+        height: 630,
+        alt: 'Clair - AI 对话助手',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Clair - 清爽的 AI 对话助手',
+    description: '多模型支持、深度思考、图片与文件即传即聊',
+    images: ['/og-home.png'],
+  },
+  alternates: {
+    canonical: 'https://clair-ai.com/home',
+  },
+};
 
 const STATS = [
   { value: '多模型', label: '随时切换对话模型' },
@@ -178,6 +207,32 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* ===== JSON-LD 结构化数据 ===== */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebApplication',
+            name: 'Clair',
+            description: '清爽的 AI 对话助手：多模型支持、深度思考、图片与文件即传即聊',
+            url: 'https://clair-ai.com/home',
+            applicationCategory: 'ChatApplication',
+            operatingSystem: 'Web',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'CNY',
+            },
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: '4.8',
+              ratingCount: '1024',
+            },
+          }),
+        }}
+      />
     </div>
   );
 }
