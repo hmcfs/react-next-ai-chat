@@ -1,10 +1,10 @@
 'use client';
 
+import { handlePlainTextPaste } from '@/lib/handlePlainTextPaste';
 import { useEffect, useRef, useState } from 'react';
 import PreviewFiles from './PreviewFiles';
 import Tool from './Tool';
 import { useFilePaste } from './useFilePaste';
-import { handlePlainTextPaste } from '@/lib/handlePlainTextPaste';
 
 interface ChatInputProps {
   value: string;
@@ -86,15 +86,17 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
   };
 
   const handlePasteEvent = (e: React.ClipboardEvent<HTMLDivElement>) => {
-    handlePlainTextPaste(e.nativeEvent, () => handlePaste(e as any));
+    handlePlainTextPaste(e.nativeEvent, () => {
+      // 将 HTMLDivElement 的 ClipboardEvent 适配为 HTMLTextAreaElement 的 ClipboardEvent
+      // 两者 nativeEvent 相同，仅 React 泛型不同
+      handlePaste(e as unknown as React.ClipboardEvent<HTMLTextAreaElement>);
+    });
   };
 
   return (
     <div
       className={`w-full min-w-[300px] rounded-2xl border bg-card transition-all duration-300 ${
-        isFocus
-          ? 'border-blue-400/70 ring-2 ring-blue-400/10 shadow-md'
-          : 'border-border shadow-sm'
+        isFocus ? 'border-blue-400/70 ring-2 ring-blue-400/10 shadow-md' : 'border-border shadow-sm'
       }`}
     >
       <PreviewFiles />
