@@ -1,5 +1,6 @@
 'use client';
 import SideBarLoading from '@/components/my/SideBarLoading';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -15,39 +16,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { useSidebarVisible } from '@/hooks/useSidebarVisible';
-import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { clientApi } from '@/lib/http/client-api';
+import { useAuthStore } from '@/lib/store';
+import type { UserInfo } from '@/types/user.type';
 import { MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { useShallow } from 'zustand/react/shallow';
 import { CustomDialog } from '../../app/chat/chat-components/CustomDialog';
-interface ChatRecord {
-  id: string;
-  title: string;
-  group: '昨天' | '30天内';
-}
-
-// 模拟对话列表数据
-const mockChatList: ChatRecord[] = [
-  { id: '1', title: 'NestJS控制器代码修正', group: '昨天' },
-  { id: '2', title: 'nestjs-cls内存存储说明', group: '30天内' },
-  { id: '3', title: '下拉菜单改弹窗替换', group: '30天内' },
-  { id: '4', title: 'NestJS共享attrs方法', group: '30天内' },
-  { id: '5', title: '异步上下文管理代码解释', group: '30天内' },
-  { id: '6', title: 'VSCode调试Edge浏览器配置', group: '30天内' },
-  { id: '7', title: 'NestJS装饰器错误处理', group: '30天内' },
-  { id: '8', title: '非递归DFS实现方法', group: '30天内' },
-  { id: '9', title: 'NestJS Fastify Redis连接测试', group: '30天内' },
-  { id: '10', title: '桶排序处理负数', group: '30天内' },
-  { id: '11', title: 'Git日志提交解释', group: '30天内' },
-  { id: '12', title: 'NestJS Fastify Redis连接测试', group: '30天内' },
-  { id: '13', title: 'NestJS Fastify Redis连接测试', group: '30天内' },
-  { id: '14', title: 'NestJS Fastify Redis连接测试', group: '30天内' },
-  { id: '15', title: 'NestJS Fastify Redis连接测试', group: '30天内' },
-];
 interface ChatSidebarProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -127,6 +105,13 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
     });
     return Array.from(map.entries()).map(([group, list]) => ({ group, list }));
   };
+  const { userInfo, setUserInfo } = useAuthStore(
+    useShallow((state) => ({
+      userInfo: state.userInfo,
+      setUserInfo: state.setUserInfo,
+    }))
+  );
+
   useEffect(() => {
     const getList = async () => {
       const data = (
@@ -136,8 +121,16 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
       setList(categoryList(data?.historyList || []));
       setPage(data?.page || 1);
     };
+    const validateInfo = async () => {
+      if (!userInfo) {
+        const { data } = await clientApi.get<UserInfo>(`/api/bff/user`);
+        setUserInfo(data!);
+      }
+    };
     getList();
+    validateInfo();
   }, []);
+
   useEffect(() => {
     console.log('pageList', list);
   }, [list]);
@@ -188,12 +181,6 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
   // 当前选中对话ID
   const [activeChatId, setActiveChatId] = useState<string>('');
 
-  // 按分组归类数据
-  const groupData = {
-    昨天: mockChatList.filter((item) => item.group === '昨天'),
-    '30天内': mockChatList.filter((item) => item.group === '30天内'),
-  };
-  const { isCollapsed, ref } = useSidebarVisible();
   // console.log(isCollapsed);
   const path = usePathname();
   const router = useRouter();
@@ -288,25 +275,6 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                 </SidebarGroup>
               ))}
             <SideBarLoading loading={loading} />
-            {/*  
- 
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-gray-400 font-normal">30天内</SidebarGroupLabel>
-              <SidebarMenu>
-                {groupData['30天内'].map((chat) => (
-                  <SidebarMenuItem key={chat.id}>
-                    <SidebarMenuButton
-                      isActive={activeChatId === chat.id}
-                      onClick={() => setActiveChatId(chat.id)}
-                      className="justify-between group-data-[active=true]:bg-blue-50 group-data-[active=true]:text-blue-600"
-                    >
-                      <span className="truncate">{chat.title}</span>
-                      <MoreHorizontal className="w-4 h-4 opacity-0 group-hover:opacity-100" />
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup> */}
           </ScrollArea>
         </SidebarContent>
 
@@ -315,10 +283,11 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar className="w-10 h-10">
-                <AvatarFallback>hh</AvatarFallback>
+                <AvatarFallback>{userInfo?.nickname?.toString().slice(0, 2)}</AvatarFallback>
               </Avatar>
-              <span>hh</span>
+              <strong>{userInfo?.nickname}</strong>
             </div>
+
             <div className="flex items-center gap-1">
               <ThemeToggle />
               <MoreHorizontal className="w-4 h-4 text-muted-foreground" />

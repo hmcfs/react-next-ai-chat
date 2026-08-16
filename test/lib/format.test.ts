@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
 import { formatFileSize } from '@/lib/format';
+import { describe, expect, it } from 'vitest';
 
 describe('formatFileSize', () => {
   it('should return empty string for null/undefined', () => {
-    expect(formatFileSize(null as any)).toBe('');
+    expect(formatFileSize(null as unknown as number)).toBe('');
     expect(formatFileSize(undefined)).toBe('');
   });
 

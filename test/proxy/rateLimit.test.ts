@@ -1,12 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { rateLimit } from '@/proxy/rateLimit';
+import type { NextRequest } from 'next/server';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const createMockRequest = (headers: Record<string, string>) => {
+const createMockRequest = (headers: Record<string, string>): NextRequest => {
   return {
     headers: {
       get: (key: string) => headers[key] || null,
     },
-  } as any;
+  } as unknown as NextRequest;
 };
 
 describe('rateLimit', () => {

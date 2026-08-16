@@ -1,4 +1,4 @@
-export const PUBLIC_ROUTES = ['/sign-in(.*)', '/sign-up(.*)'];
+export const PUBLIC_ROUTES = ['/login(.*)', '/register(.*)'];
 export const PROTECTED_ROUTES = ['/chat(.*)'];
 export function isPublic(pathname: string) {
   return PUBLIC_ROUTES.some((route) => new RegExp(route).test(pathname));

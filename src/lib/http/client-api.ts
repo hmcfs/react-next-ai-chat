@@ -51,9 +51,9 @@ async function clientBaseRequest<T>(
 
   // 客户端 401 统一拦截跳转
   if (res.status === 401) {
-    if (window.location.pathname !== '/sign-in') {
+    if (window.location.pathname !== '/login') {
       const redirect = encodeURIComponent(window.location.href);
-      window.location.href = `/sign-in?redirect=${redirect}`;
+      window.location.href = `/login?redirect=${redirect}`;
     }
     throw new Error(data?.msg || '登录已失效，请重新登录');
   }
