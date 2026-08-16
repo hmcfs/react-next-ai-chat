@@ -1,11 +1,11 @@
 'use client';
 
 import { clientApi } from '@/lib/http/client-api';
+import { UserInfo } from '@/types/user.type';
 import { AlertCircle, Check, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
 interface FieldErrors {
   username?: string;
   nickname?: string;
@@ -15,8 +15,9 @@ interface FieldErrors {
 }
 
 const USERNAME_RE = /^[a-zA-Z0-9]{2,20}$/;
+const PASSWORD_RE = /^[a-zA-Z0-9]{6,20}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+const NICKNAME_RE = /^[\w一-龥]{2,20}$/;
 export function RegisterForm() {
   const router = useRouter();
   const [username, setUsername] = useState('');
@@ -38,15 +39,19 @@ export function RegisterForm() {
     } else if (!USERNAME_RE.test(username.trim())) {
       next.username = '用户名需为 2-20 个字母或数字';
     }
-
+    if (!nickname.trim()) {
+      next.nickname = '请输入昵称';
+    } else if (!NICKNAME_RE.test(nickname.trim())) {
+      next.nickname = '昵称需为 2-20 个字符，可包含中文、字母、数字';
+    }
     if (email.trim() && !EMAIL_RE.test(email.trim())) {
       next.email = '邮箱格式不正确';
     }
 
     if (!password) {
       next.password = '请输入密码';
-    } else if (password.length < 6) {
-      next.password = '密码至少 6 位';
+    } else if (!PASSWORD_RE.test(password)) {
+      next.password = '密码需为 6-20 个字符，可包含字母、数字';
     }
 
     if (!confirmPassword) {
@@ -71,14 +76,14 @@ export function RegisterForm() {
 
     setIsLoading(true);
     try {
-      const res = await clientApi.post('/api/bff/register', {
+      const res = await clientApi.post<UserInfo>('/api/bff/register', {
         username: username.trim(),
         password,
         nickname: nickname.trim() || undefined,
         email: email.trim() || undefined,
       });
 
-      if (res.code !== 1) {
+      if (res.code !== 1 || !res.data) {
         setFormError(res.msg || '注册失败，请稍后重试');
         return;
       }
@@ -142,7 +147,7 @@ export function RegisterForm() {
               autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="2-50 个字符，将作为你的登录名"
+              placeholder="2-20 个字符，将作为你的登录名"
               className={inputClass(errors.username)}
             />
           </div>
@@ -151,7 +156,7 @@ export function RegisterForm() {
 
         <div className="space-y-1.5">
           <label htmlFor="nickname" className="text-sm font-medium">
-            昵称
+            昵称 <span className="text-destructive">*</span>
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute left-3.5 top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center">
@@ -163,7 +168,7 @@ export function RegisterForm() {
               autoComplete="nickname"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              placeholder="展示给其他用户的名称（选填）"
+              placeholder="昵称（必填）"
               className={inputClass(errors.nickname)}
             />
           </div>

@@ -1,13 +1,13 @@
 'use client';
-
 import { clientApi } from '@/lib/http/client-api';
-import { getUserInfoByToken } from '@/lib/jwt';
 import { useAuthStore } from '@/lib/store';
+import type { UserInfo } from '@/types/user.type';
 import { AlertCircle, Eye, EyeOff, Loader2, Lock, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useShallow } from 'zustand/react/shallow';
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -15,7 +15,13 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { setUserInfo } = useAuthStore();
+  const { setUserInfo, userInfo, clearUserInfo } = useAuthStore(
+    useShallow((state) => ({
+      setUserInfo: state.setUserInfo,
+      userInfo: state.userInfo,
+      clearUserInfo: state.clearUserInfo,
+    }))
+  );
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -29,15 +35,17 @@ export function LoginForm() {
     try {
       const res = await clientApi.post<{
         token: string;
+        info: UserInfo;
       }>('/api/bff/login', {
         username: email.trim(),
         password,
       });
-      const userInfo = getUserInfoByToken(res.data?.token || '');
-      if (res.code === 1 && res.data?.token && userInfo) {
-        setUserInfo(userInfo);
+
+      if (res.code === 1 && res.data?.token && res.data?.info) {
+        setUserInfo(res.data?.info);
         router.push('/chat');
       } else {
+        if (userInfo) clearUserInfo();
         setError(res.msg || '用户名或密码错误');
       }
     } catch (err) {
