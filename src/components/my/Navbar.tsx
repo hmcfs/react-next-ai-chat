@@ -17,13 +17,15 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { clientApi } from '@/lib/http/client-api';
+import { useAuthStore } from '@/lib/store';
+import type { UserInfo } from '@/types/user.type';
 import { MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { useShallow } from 'zustand/react/shallow';
 import { CustomDialog } from '../../app/chat/chat-components/CustomDialog';
-
 interface ChatSidebarProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -103,6 +105,13 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
     });
     return Array.from(map.entries()).map(([group, list]) => ({ group, list }));
   };
+  const { userInfo, setUserInfo } = useAuthStore(
+    useShallow((state) => ({
+      userInfo: state.userInfo,
+      setUserInfo: state.setUserInfo,
+    }))
+  );
+
   useEffect(() => {
     const getList = async () => {
       const data = (
@@ -112,8 +121,16 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
       setList(categoryList(data?.historyList || []));
       setPage(data?.page || 1);
     };
+    const validateInfo = async () => {
+      if (!userInfo) {
+        const { data } = await clientApi.get<UserInfo>(`/api/bff/user`);
+        setUserInfo(data!);
+      }
+    };
     getList();
+    validateInfo();
   }, []);
+
   useEffect(() => {
     console.log('pageList', list);
   }, [list]);
@@ -266,10 +283,11 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar className="w-10 h-10">
-                <AvatarFallback>hh</AvatarFallback>
+                <AvatarFallback>{userInfo?.nickname?.toString().slice(0, 2)}</AvatarFallback>
               </Avatar>
-              <span>hh</span>
+              <strong>{userInfo?.nickname}</strong>
             </div>
+
             <div className="flex items-center gap-1">
               <ThemeToggle />
               <MoreHorizontal className="w-4 h-4 text-muted-foreground" />

@@ -1,12 +1,13 @@
 'use client';
 
 import { clientApi } from '@/lib/http/client-api';
+import { getUserInfoByToken } from '@/lib/jwt';
+import { useAuthStore } from '@/lib/store';
 import { AlertCircle, Eye, EyeOff, Loader2, Lock, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const { setUserInfo } = useAuthStore();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -26,12 +27,15 @@ export function LoginForm() {
 
     setIsLoading(true);
     try {
-      const res = await clientApi.post<{ token: string; userId: string }>('/api/bff/login', {
+      const res = await clientApi.post<{
+        token: string;
+      }>('/api/bff/login', {
         username: email.trim(),
         password,
       });
-
-      if (res.code === 1 && res.data?.token) {
+      const userInfo = getUserInfoByToken(res.data?.token || '');
+      if (res.code === 1 && res.data?.token && userInfo) {
+        setUserInfo(userInfo);
         router.push('/chat');
       } else {
         setError(res.msg || '用户名或密码错误');
@@ -179,15 +183,25 @@ export function LoginForm() {
           </svg>
           Google
         </button>
+
         <button
           type="button"
           onClick={socialPlaceholder}
           className="flex h-11 items-center justify-center gap-2 rounded-xl border border-input bg-transparent text-sm font-medium transition-colors hover:bg-muted"
         >
-          <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.54 1.14-1.873 1.14-.384 0-.984-.36-1.568-.84-.689-.554-1.291-1.15-1.291-1.95 0-.864.394-1.73 1.052-2.32.548-.5 1.443-.81 2.21-.81.79 0 1.55.32 2.04.72.04.03.07.05.11.08h-.004zm-2.27 3.61c.38 0 2.31.18 3.61 1.66.01 0 1.19.86 1.19 2.66 0 1.86-1.11 2.94-1.81 3.62-.47.47-.83.88-.83 1.4 0 .5.33.94.67 1.38.34.44.86 1.03 1.24 1.8.38.78.65 1.53.65 2.2 0 1.82-1.03 3.1-1.72 3.82-.54.56-1.18 1.11-2.01 1.11-.84 0-1.11-.53-2.12-.53-.93 0-1.33.55-2.09.55-.76 0-1.32-.49-1.85-1.03-.71-.72-1.5-1.89-1.5-3.42 0-1.5.54-2.89 1.08-3.82.36-.62 1.07-1.41 1.89-1.41.73 0 1.22.48 2.03.48.79 0 1.23-.5 2.03-.5.78 0 1.46.62 1.8 1.04.38.46.81.82 1.02 1.16 0 0 .42-.16.85-.3.22-.07.51-.15.82-.15.83 0 1.08.44 1.08.44s-.36.54-.67 1.04c-.35.56-.6.88-1.17.88-.48 0-.96-.25-1.28-.5-.27-.21-.7-.5-1.4-.5-.98 0-2.32.87-2.32 2.6 0 1.08.46 2.06 1.09 2.76.44.5.91.82 1.42.82.5 0 .89-.56 1.36-.56.47 0 .83.38 1.13.74.43.51.63.87.63 1.18 0 .56-.52 1.02-1.12 1.49-.58.47-1.34.94-2.36.94-1.15 0-2.08-.5-2.81-1.02-.72-.52-1.29-1.17-1.79-1.82-.72-.95-1.24-1.97-1.24-3.34 0-1.85.89-3.39 1.84-4.3.69-.67 1.49-1.02 2.3-1.02.99 0 1.71.5 2.5.5.77 0 1.19-.48 1.99-.48.81 0 1.61.5 2.28 1.2.41.44.9 1.03.9 1.89 0 .36-.05.72-.15 1.04.11-.01.22-.01.33-.01.59 0 1.14.15 1.62.39z" />
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="M22 4L12 13 2 4" />
           </svg>
-          Apple
+          QQ邮箱
         </button>
       </div>
 

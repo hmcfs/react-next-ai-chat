@@ -14,7 +14,7 @@ interface FieldErrors {
   confirmPassword?: string;
 }
 
-const USERNAME_RE = /^[\w一-龥]{2,50}$/;
+const USERNAME_RE = /^[a-zA-Z0-9]{2,20}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function RegisterForm() {
@@ -36,7 +36,7 @@ export function RegisterForm() {
     if (!username.trim()) {
       next.username = '请输入用户名';
     } else if (!USERNAME_RE.test(username.trim())) {
-      next.username = '用户名需为 2-50 个字符（字母、数字、下划线或中文）';
+      next.username = '用户名需为 2-20 个字母或数字';
     }
 
     if (email.trim() && !EMAIL_RE.test(email.trim())) {
@@ -83,17 +83,7 @@ export function RegisterForm() {
         return;
       }
 
-      // 注册成功，自动登录
-      const loginRes = await clientApi.post<{ token: string; userId: string }>('/api/bff/login', {
-        username: username.trim(),
-        password,
-      });
-
-      if (loginRes.code === 1 && loginRes.data?.token) {
-        router.push('/chat');
-      } else {
-        router.push('/login');
-      }
+      router.push('/login');
     } catch (err) {
       console.error('注册请求异常：', err);
       setFormError('网络异常，请稍后重试');
