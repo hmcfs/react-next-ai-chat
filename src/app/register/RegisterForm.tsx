@@ -1,10 +1,10 @@
 'use client';
 
 import { clientApi } from '@/lib/http/client-api';
+import { AlertCircle, Check, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { AlertCircle, Check, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 
 interface FieldErrors {
   username?: string;
@@ -17,7 +17,7 @@ interface FieldErrors {
 const USERNAME_RE = /^[\w一-龥]{2,50}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function SignUpForm() {
+export function RegisterForm() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [nickname, setNickname] = useState('');
@@ -92,7 +92,7 @@ export function SignUpForm() {
       if (loginRes.code === 1 && loginRes.data?.token) {
         router.push('/chat');
       } else {
-        router.push('/sign-in');
+        router.push('/login');
       }
     } catch (err) {
       console.error('注册请求异常：', err);
@@ -112,7 +112,13 @@ export function SignUpForm() {
       {/* 移动端品牌 */}
       <div className="mb-10 flex items-center gap-2.5 lg:hidden">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/25">
-          <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="h-5 w-5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -235,7 +241,9 @@ export function SignUpForm() {
               className={inputClass(errors.confirmPassword)}
             />
           </div>
-          {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && (
+            <p className="text-xs text-destructive">{errors.confirmPassword}</p>
+          )}
         </div>
 
         <label className="flex cursor-pointer items-start gap-2.5 pt-1 text-sm text-muted-foreground">
@@ -270,7 +278,7 @@ export function SignUpForm() {
       <p className="mt-8 text-center text-sm text-muted-foreground">
         已有账户？{' '}
         <Link
-          href="/sign-in"
+          href="/login"
           className="font-semibold text-foreground underline-offset-4 transition-colors hover:underline"
         >
           去登录

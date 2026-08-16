@@ -1,7 +1,7 @@
 import { AuthShell } from '@/components/auth/auth-shell';
-import { MessageSquareText, FileText, BrainCircuit } from 'lucide-react';
+import { BrainCircuit, FileText, MessageSquareText } from 'lucide-react';
 import { Metadata } from 'next';
-import { SignInForm } from './SignInForm';
+import { LoginForm } from './LoginForm';
 
 export const metadata: Metadata = {
   title: '登录',
@@ -11,11 +11,11 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: 'https://clair-ai.com/sign-in',
+    canonical: 'https://clair-ai.com/login',
   },
 };
 
-export default function SignInPage() {
+export default function LoginPage() {
   return (
     <AuthShell
       headline="欢迎回来，接着聊。"
@@ -24,7 +24,10 @@ export default function SignInPage() {
         { role: 'user', text: '帮我总结一下今天的会议纪要' },
         { role: 'assistant', text: '好的，我整理了 3 个关键结论和 2 个待办事项，需要我列出来吗？' },
         { role: 'user', text: '顺便把重点事项排个优先级' },
-        { role: 'assistant', text: '已按紧急程度排好：① 修复线上登录问题 ② 确认下季度路线图 ③ 跟进客户反馈。要生成待办清单吗？' },
+        {
+          role: 'assistant',
+          text: '已按紧急程度排好：① 修复线上登录问题 ② 确认下季度路线图 ③ 跟进客户反馈。要生成待办清单吗？',
+        },
       ]}
       features={[
         { icon: MessageSquareText, title: '多模型支持', desc: '主流模型随意切换，按需选择' },
@@ -32,7 +35,7 @@ export default function SignInPage() {
         { icon: FileText, title: '即传即聊', desc: '图片、文档直接拖进来对话' },
       ]}
     >
-      <SignInForm />
+      <LoginForm />
     </AuthShell>
   );
 }

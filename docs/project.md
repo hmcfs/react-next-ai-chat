@@ -74,11 +74,10 @@ react-next-ai-chat/
 │   │   │   └── [id]/page.tsx
 │   │   │
 │   │   ├── home/page.tsx         # Home 页面
-│   │   ├── sign-in/              # 登录页面
-│   │   │   └── [[...sign-in]]/
-│   │   │       ├── layout.tsx
-│   │   │       └── page.tsx
-│   │   ├── sign-up/page.tsx      # 注册页面
+│   │   ├── login/                # 登录页面
+│   │   │   ├── page.tsx
+│   │   │   └── LoginForm.tsx
+│   │   ├── register/page.tsx      # 注册页面
 │   │   └── styles/               # 页面级样式
 │   │       ├── chat-layout.css
 │   │       └── chat-side.css
@@ -162,16 +161,16 @@ react-next-ai-chat/
 
 ### 3.1 页面路由表
 
-| 路由             | 文件位置                                                                              | 渲染模式 | 说明                   |
-| :--------------- | :------------------------------------------------------------------------------------ | :------- | :--------------------- |
-| `/`              | [src/app/page.tsx](../src/app/page.tsx)                                               | CSR      | 首页，重定向到 `/chat` |
-| `/chat`          | [src/app/chat/page.tsx](../src/app/chat/page.tsx)                                     | SSR      | 聊天主页面             |
-| `/chat/[chatId]` | [src/app/chat/[chatId]/page.tsx](../src/app/chat/[chatId]/page.tsx)                   | SSR      | 指定对话页面           |
-| `/draft`         | [src/app/draft/page.tsx](../src/app/draft/page.tsx)                                   | SSR      | 草稿列表               |
-| `/draft/[id]`    | [src/app/draft/[id]/page.tsx](../src/app/draft/[id]/page.tsx)                         | SSR      | 指定草稿               |
-| `/home`          | [src/app/home/page.tsx](../src/app/home/page.tsx)                                     | SSR      | Home 页面              |
-| `/sign-in`       | [src/app/sign-in/[[...sign-in]]/page.tsx](../src/app/sign-in/[[...sign-in]]/page.tsx) | CSR      | 登录页面（Clerk）      |
-| `/sign-up`       | [src/app/sign-up/page.tsx](../src/app/sign-up/page.tsx)                               | CSR      | 注册页面               |
+| 路由             | 文件位置                                                            | 渲染模式 | 说明                   |
+| :--------------- | :------------------------------------------------------------------ | :------- | :--------------------- |
+| `/`              | [src/app/page.tsx](../src/app/page.tsx)                             | CSR      | 首页，重定向到 `/chat` |
+| `/chat`          | [src/app/chat/page.tsx](../src/app/chat/page.tsx)                   | SSR      | 聊天主页面             |
+| `/chat/[chatId]` | [src/app/chat/[chatId]/page.tsx](../src/app/chat/[chatId]/page.tsx) | SSR      | 指定对话页面           |
+| `/draft`         | [src/app/draft/page.tsx](../src/app/draft/page.tsx)                 | SSR      | 草稿列表               |
+| `/draft/[id]`    | [src/app/draft/[id]/page.tsx](../src/app/draft/[id]/page.tsx)       | SSR      | 指定草稿               |
+| `/home`          | [src/app/home/page.tsx](../src/app/home/page.tsx)                   | SSR      | Home 页面              |
+| `/login`         | [src/app/login/page.tsx](../src/app/login/page.tsx)                 | SSR      | 登录页面               |
+| `/register`      | [src/app/register/page.tsx](../src/app/register/page.tsx)           | SSR      | 注册页面               |
 
 ### 3.2 布局层级
 
@@ -357,7 +356,7 @@ matcher: [
 1. 从 Cookie 读取 Token
 2. 验证 JWT 签名
 3. 检查 Redis 中 Token 是否有效
-4. 受保护路由未登录则跳转 `/sign-in`
+4. 受保护路由未登录则跳转 `/login`
 5. API 路由未登录返回 401
 
 ---
@@ -464,7 +463,7 @@ npm run db:gen
 验证 JWT 签名 + Redis 缓存
     ↓
 有效 → 注入 x-user-id 到请求头
-无效 → 跳转 /sign-in
+无效 → 跳转 /login
     ↓
 登录成功后设置 HttpOnly Cookie（3 天有效期）
 ```

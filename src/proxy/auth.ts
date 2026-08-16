@@ -15,7 +15,7 @@ export async function authProxy(req: NextRequest) {
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const url = new URL('/sign-in', req.url);
+    const url = new URL('/login', req.url);
     url.searchParams.set('redirect', pathname);
     return NextResponse.redirect(url.toString());
   }

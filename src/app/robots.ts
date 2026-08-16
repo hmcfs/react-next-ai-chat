@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: ['/', '/home'],
-      disallow: ['/api/', '/chat/', '/draft/', '/sign-in', '/sign-up'],
+      disallow: ['/api/', '/chat/', '/draft/', '/login', '/register'],
     },
     sitemap: 'https://clair-ai.com/sitemap.xml',
   };

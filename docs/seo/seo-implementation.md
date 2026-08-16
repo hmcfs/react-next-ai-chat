@@ -27,8 +27,8 @@
 | :--------------- | :-------- | :--------- | :------------ | :---------- |
 | `/`              | SSR       | 低         | ✓ 继承 root   | 允许索引    |
 | `/home`          | ISR       | **高**     | ✓ 独立配置    | 允许索引    |
-| `/sign-up`       | ISR       | 低         | ✓ 独立配置    | 禁止索引    |
-| `/sign-in`       | SSR + CSR | 低         | ✓ 独立配置    | 禁止索引    |
+| `/register`      | ISR       | 低         | ✓ 独立配置    | 禁止索引    |
+| `/login`         | SSR + CSR | 低         | ✓ 独立配置    | 禁止索引    |
 | `/chat`          | SSR + CSR | 中         | ✓ 独立配置    | 禁止索引    |
 | `/chat/[chatId]` | SSR + CSR | 低         | 继承 root     | 禁止索引    |
 | `/draft`         | SSR + CSR | 低         | 继承 root     | 禁止索引    |
@@ -38,8 +38,8 @@
 ```
 SEO 友好页面（爬虫可索引）：
 ├─ /home（ISR）→ ✓ 爬虫可直接获取完整 HTML
-├─ /sign-up（ISR）→ ✓ 爬虫可直接获取完整 HTML
-├─ /sign-in（SSR）→ ✓ 爬虫可获取布局 HTML
+├─ /register（ISR）→ ✓ 爬虫可直接获取完整 HTML
+├─ /login（SSR）→ ✓ 爬虫可获取布局 HTML
 └─ /chat（SSR + CSR）→ △ 爬虫可获取布局，内容需 JS
 
 SEO 不友好页面（爬虫不可索引）：
@@ -62,7 +62,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: ['/', '/home'],
-      disallow: ['/api/', '/chat/', '/draft/', '/sign-in', '/sign-up'],
+      disallow: ['/api/', '/chat/', '/draft/', '/login', '/register'],
     },
     sitemap: 'https://clair-ai.com/sitemap.xml',
   };
@@ -99,13 +99,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/sign-in`,
+      url: `${baseUrl}/login`,
       lastModified: now,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/sign-up`,
+      url: `${baseUrl}/register`,
       lastModified: now,
       changeFrequency: 'yearly',
       priority: 0.3,
@@ -221,10 +221,10 @@ export const metadata: Metadata = {
 };
 ```
 
-#### /sign-in 页面
+#### /login 页面
 
 ```typescript
-// src/app/sign-in/[[...sign-in]]/page.tsx
+// src/app/login/page.tsx
 export const metadata: Metadata = {
   title: '登录',
   description: '登录 Clair，继续使用你的 AI 对话助手。',
@@ -233,15 +233,15 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: 'https://clair-ai.com/sign-in',
+    canonical: 'https://clair-ai.com/login',
   },
 };
 ```
 
-#### /sign-up 页面
+#### /register 页面
 
 ```typescript
-// src/app/sign-up/page.tsx
+// src/app/register/page.tsx
 export const metadata: Metadata = {
   title: '注册',
   description: '注册 Clair，开始你的 AI 对话之旅。',
@@ -250,7 +250,7 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: 'https://clair-ai.com/sign-up',
+    canonical: 'https://clair-ai.com/register',
   },
 };
 ```
