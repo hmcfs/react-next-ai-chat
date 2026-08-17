@@ -1,5 +1,4 @@
 'use client';
-import SideBarLoading from '@/components/my/SideBarLoading';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -25,7 +24,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import { CustomDialog } from '../../app/chat/chat-components/CustomDialog';
+import { CustomDialog } from './CustomDialog';
+import SideBarLoading from './SideBarLoading';
+
 interface ChatSidebarProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -48,16 +49,13 @@ interface GroupList {
   list: HistoryList[];
 }
 const DATE_TYPE = ['今天', '最近', '30天内', '更早'];
+
 export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebarProps) {
   const [list, setList] = useState<GroupList[]>([]);
   const [page, setPage] = useState(1);
   const categoryList = (ListArray: HistoryList[]): GroupList[] => {
     if (!ListArray.length) return [];
     const start = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
-    console.log('standard', start);
-    console.log('curTime:', new Date().getTime());
-    // const start=new Date(cloneList[0].updateTime).getTime();
-    // const end=new Date(cloneList[cloneList.length-1].updateTime).getTime();
     const day = 24 * 60 * 60 * 1000;
     const collectList: GroupList[] = Array.from({ length: DATE_TYPE.length }, (item, index) => ({
       group: DATE_TYPE[index],
@@ -66,9 +64,8 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
 
     ListArray.sort(
       (a, b) => new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime()
-    ).forEach((i, _index) => {
+    ).forEach((i) => {
       const date = new Date(i.updateTime).getTime();
-      //console.log('diff', start - date);
       if (date >= start) {
         return collectList[0].list.push(i);
       }
@@ -80,7 +77,6 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
       }
       return collectList[3].list.push(i);
     });
-    console.log('collectList', collectList);
     return collectList;
   };
   const mergeGroupList = (arr1: GroupList[], arr2: GroupList[]): GroupList[] => {
@@ -131,9 +127,6 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
     validateInfo();
   }, []);
 
-  useEffect(() => {
-    console.log('pageList', list);
-  }, [list]);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const lastScrollTop = useRef(0);
@@ -169,8 +162,6 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
       }
       lastScrollTop.current = scrollTop;
       if (scrollHeight - scrollTop - clientHeight <= 50) {
-        console.log('到底了');
-        // console.log(hasMore, loading);
         if (hasMore && !loading) {
           onLoadMore();
         }
@@ -181,7 +172,6 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
   // 当前选中对话ID
   const [activeChatId, setActiveChatId] = useState<string>('');
 
-  // console.log(isCollapsed);
   const path = usePathname();
   const router = useRouter();
 
@@ -193,6 +183,51 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
     }
     router.push('/chat');
   };
+  // 会话历史列表：可滚动、按日期分组、触底加载（与组件一体，直接闭包访问状态）
+  const renderChatHistory = () => (
+    <SidebarContent className="">
+      <ScrollArea onScroll={handleScroll} className="h-full scroll-wrap-mask">
+        {list?.length > 0 &&
+          list.map((i) => (
+            <SidebarGroup key={i.group}>
+              {i.list.length > 0 && i.group && (
+                <>
+                  {i.group !== '' && (
+                    <SidebarGroupLabel className="text-muted-foreground font-normal">
+                      {i.group}
+                    </SidebarGroupLabel>
+                  )}
+                  <SidebarMenu>
+                    {i.list.map((chat) => (
+                      <SidebarMenuItem key={chat.chatId}>
+                        <SidebarMenuButton
+                          isActive={activeChatId === chat.chatId}
+                          onClick={() => {
+                            setActiveChatId(chat.chatId);
+                            onSelectChat(chat.chatId);
+                          }}
+                          className={`justify-between group hover:!bg-accent cursor-pointer ${
+                            activeChatId === chat.chatId
+                              ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-300'
+                              : ''
+                          }`}
+                        >
+                          <span className="truncate">{chat.title}</span>
+                          <MoreHorizontal
+                            className={`w-4 h-4 opacity-0 ${activeChatId === chat.chatId ? 'opacity-100' : 'group-hover:opacity-100'} transition-opacity duration-500 `}
+                          />
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </>
+              )}
+            </SidebarGroup>
+          ))}
+        <SideBarLoading loading={loading} />
+      </ScrollArea>
+    </SidebarContent>
+  );
   return (
     <>
       <CustomDialog open={showDialog} setOpen={setShowDialog} />
@@ -234,49 +269,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
           </Button>
         </SidebarHeader>
 
-        {/* 滚动对话列表区域 */}
-        <SidebarContent className="">
-          <ScrollArea onScroll={handleScroll} className="h-full scroll-wrap-mask">
-            {list?.length > 0 &&
-              list.map((i, index) => (
-                <SidebarGroup key={i.group}>
-                  {i.list.length > 0 && i.group && (
-                    <>
-                      {i.group !== '' && (
-                        <SidebarGroupLabel className="text-muted-foreground font-normal">
-                          {i.group}
-                        </SidebarGroupLabel>
-                      )}
-                      <SidebarMenu>
-                        {i.list.map((chat, index) => (
-                          <SidebarMenuItem key={chat.chatId}>
-                            <SidebarMenuButton
-                              isActive={activeChatId === chat.chatId}
-                              onClick={() => {
-                                setActiveChatId(chat.chatId);
-                                onSelectChat(chat.chatId);
-                              }}
-                              className={`justify-between group hover:!bg-accent cursor-pointer ${
-                                activeChatId === chat.chatId
-                                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-300'
-                                  : ''
-                              }`}
-                            >
-                              <span className="truncate">{chat.title}</span>
-                              <MoreHorizontal
-                                className={`w-4 h-4 opacity-0 ${activeChatId === chat.chatId ? 'opacity-100' : 'group-hover:opacity-100'} transition-opacity duration-500 `}
-                              />
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        ))}
-                      </SidebarMenu>
-                    </>
-                  )}
-                </SidebarGroup>
-              ))}
-            <SideBarLoading loading={loading} />
-          </ScrollArea>
-        </SidebarContent>
+        {renderChatHistory()}
 
         {/* 底部用户栏 */}
         <SidebarFooter className="px-4 py-2 bg-sidebar">

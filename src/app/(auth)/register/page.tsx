@@ -1,4 +1,4 @@
-import { AuthShell } from '@/components/auth/auth-shell';
+import { AuthShell } from '../auth-shell';
 import { BrainCircuit, FileText, MessageSquareText } from 'lucide-react';
 import { Metadata } from 'next';
 import { RegisterForm } from './RegisterForm';

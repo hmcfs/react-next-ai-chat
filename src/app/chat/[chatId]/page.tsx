@@ -1,7 +1,7 @@
 'use client';
 
 import ChatInput from '@/app/chat/chat-components/ChatInput';
-import Markdown from '@/components/my/ReactMarkdown';
+import Markdown from '@/app/chat/chat-components/ReactMarkdown';
 import { markdownToText } from '@/lib/markdown';
 import { useFileStore, useQuestionStore } from '@/lib/store';
 import { Brain } from 'lucide-react';

@@ -8,7 +8,7 @@ import { PanelLeft } from 'lucide-react';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useShallow } from 'zustand/react/shallow';
-import ChatSidebar from '../../components/my/Navbar';
+import ChatSidebar from '@/app/chat/chat-components/ChatSidebar';
 import { useRouter } from 'next/navigation';
 
 function cn(...inputs: (string | undefined | null | false)[]) {
