@@ -77,6 +77,8 @@ export const clientApi = {
     clientBaseRequest<T>(url, 'POST', body, undefined, options),
   put: <T>(url: string, body?: unknown, options?: RequestInit) =>
     clientBaseRequest<T>(url, 'PUT', body, undefined, options),
+  patch: <T>(url: string, body?: unknown, options?: RequestInit) =>
+    clientBaseRequest<T>(url, 'PATCH', body, undefined, options),
   delete: <T>(url: string, options?: RequestInit) =>
     clientBaseRequest<T>(url, 'DELETE', undefined, undefined, options),
 };
