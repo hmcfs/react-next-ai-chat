@@ -376,7 +376,11 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                                 <MoreHorizontal className="w-4 h-4" />
                               </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuContent
+                              side="right"
+                              align="start"
+                              className="w-40 z-[10000] border border-border bg-popover shadow-lg ring-foreground/20"
+                            >
                               <DropdownMenuItem onSelect={() => openRename(chat)}>
                                 <Pencil className="w-4 h-4" /> 重命名
                               </DropdownMenuItem>
@@ -388,8 +392,8 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
+                                variant="destructive"
                                 onSelect={() => setDeleteTarget(chat)}
-                                className="text-red-500 focus:text-red-500"
                               >
                                 <Trash2 className="w-4 h-4" /> 删除
                               </DropdownMenuItem>
