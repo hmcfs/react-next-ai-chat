@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@share/*": ["common/share/*"]
+      "@share/*": ["./common/share/*"]
     }
   },
   "include": [
