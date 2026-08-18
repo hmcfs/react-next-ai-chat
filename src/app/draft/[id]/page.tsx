@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MODEL_LIST } from '@/constants/index';
+import { MODEL_LIST } from '@share/constants';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 type Messages = {
