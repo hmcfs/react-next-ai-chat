@@ -222,7 +222,7 @@ export default function Chat() {
   return (
     <div className="flex relative flex-col max-w-[800px] w-[80%] mx-auto min-h-screen bg-background">
       {/* ==================== 消息列表区域 ==================== */}
-      <div className="flex-1 py-6 px-4 pb-40">
+      <div className="flex-1 py-6 px-4 pb-12">
         {/* ---------- 空状态 ---------- */}
         {/* {messages.length === 0 && !loading && (
           <div className="flex flex-col items-center justify-center mt-24 select-none">

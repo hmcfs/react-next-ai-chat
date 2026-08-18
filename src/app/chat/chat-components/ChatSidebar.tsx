@@ -301,7 +301,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
     try {
       const res = await clientApi.get<{ messages: ExportMessage[] }>(
         `/api/bff/chat/history/${chat.chatId}`,
-        { page: 1, pageSize: 100 }
+        { page: 1, pageSize: 3 }
       );
       const messages = res?.data?.messages ?? [];
       if (!messages.length) {
@@ -352,13 +352,13 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                               setActiveChatId(chat.chatId);
                               onSelectChat(chat.chatId);
                             }}
-                            className={`pr-8 justify-between hover:!bg-accent cursor-pointer ${
+                            className={`pr-8   hover:!bg-accent cursor-pointer ${
                               activeChatId === chat.chatId
                                 ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-300'
                                 : ''
                             }`}
                           >
-                            {chat.isPinned && <Pin className="w-3.5 h-3.5 shrink-0" />}
+                            {chat.isPinned && <Pin className="w-3.5 h-3.5 opacity-60 shrink-0" />}
                             <span className="truncate">{chat.title}</span>
                           </SidebarMenuButton>
                           <DropdownMenu>
@@ -379,7 +379,7 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
                             <DropdownMenuContent
                               side="right"
                               align="start"
-                              className="w-40 z-[10000] border border-border bg-popover shadow-lg ring-foreground/20"
+                              className="w-40 z-[10000] border border-border bg-popover   ring-foreground/20"
                             >
                               <DropdownMenuItem onSelect={() => openRename(chat)}>
                                 <Pencil className="w-4 h-4" /> 重命名
