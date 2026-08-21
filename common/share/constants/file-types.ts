@@ -16,4 +16,4 @@ export const SUPPORTED_TYPES = [
   'css',
 ];
 /** 图片附件类型：以图片形式发送，不参与 RAG 文本入库 */
-export const IMAGE_TYPES = ['jpeg', 'png', 'jpg', 'webp', 'gif'];
+export const IMAGE_TYPES = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg', 'ico', 'avif'];

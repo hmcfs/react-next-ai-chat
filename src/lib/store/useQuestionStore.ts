@@ -1,12 +1,16 @@
 import { create } from 'zustand';
+export type MessageAttachment = {
+  url: string;
+  fileType?: string;
+  fileName?: string;
+  minType?: string;
+  size?: number;
+};
 type MessageParams = { model: string; enableDeepThink: boolean; messages: Message[] };
 type Message = {
   role: string;
   text: string;
-  attachments?: {
-    url: string;
-    minType?: string;
-  }[];
+  attachments?: MessageAttachment[];
 };
 export type Model =
   | 'qwen3.6-flash'

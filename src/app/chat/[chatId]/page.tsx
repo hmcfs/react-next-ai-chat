@@ -1,6 +1,9 @@
 'use client';
 
 import ChatInput from '@/app/chat/chat-components/ChatInput';
+import MessageAttachments, {
+  type MessageAttachment,
+} from '@/app/chat/chat-components/MessageAttachments';
 import Markdown from '@/app/chat/chat-components/ReactMarkdown';
 import { markdownToText } from '@/lib/markdown';
 import { useFileStore, useQuestionStore } from '@/lib/store';
@@ -22,6 +25,7 @@ type ChatMessage = {
   reasoningContent?: string;
   createTime?: string;
   modelName?: string;
+  attachments?: MessageAttachment[];
 };
 
 export default function Chat() {
@@ -77,7 +81,9 @@ export default function Chat() {
   }, []);
 
   const initMsg = (prompt: string) => {
-    const attachments = concatFiles();
+    const queuedAttachments = concatFiles();
+    const savedAttachments = getMessageParams().messages?.[0]?.attachments ?? [];
+    const attachments = queuedAttachments.length > 0 ? queuedAttachments : savedAttachments;
     setStoreMsgs([
       {
         role: 'user',
@@ -86,6 +92,7 @@ export default function Chat() {
       },
     ]);
     messageBodyRef.current = getMessageParams();
+    return attachments;
   };
 
   const clearContent = () => {
@@ -100,13 +107,13 @@ export default function Chat() {
 
     setInput(prompt); // 让输入框显示待发送内容（contentEditable 同步）
     setIsNewChat(false); // 消费「新会话」标记
-    initMsg(prompt);
+    const attachments = initMsg(prompt);
     clearFiles(); // 附件已在 initMsg 中随 messageBodyRef 捕获，立即清除输入区预览（不再等流式回复结束）
     contentRef.current = '';
     reasoningRef.current = '';
     setThinkingOpen(true);
 
-    const userMsg: ChatMessage = { role: 'user', content: prompt };
+    const userMsg: ChatMessage = { role: 'user', content: prompt, attachments };
     setMessages((prev) => [
       ...prev,
       userMsg,
@@ -187,6 +194,7 @@ export default function Chat() {
               reasoningContent: msg.reasoningContent || undefined,
               createTime: msg.createTime,
               modelName: msg.modelName?.trim(),
+              attachments: msg.attachments,
             }))
             .reverse();
           setMessages(historyMessages);
@@ -289,7 +297,10 @@ export default function Chat() {
                   }`}
                 >
                   {msg.role === 'user' ? (
-                    <p className="whitespace-pre-wrap">{msg.content as string}</p>
+                    <>
+                      <p className="whitespace-pre-wrap">{msg.content as string}</p>
+                      <MessageAttachments attachments={msg.attachments} />
+                    </>
                   ) : (
                     <Markdown
                       content={
@@ -307,8 +318,8 @@ export default function Chat() {
 
                 {/* 时间：仅用户显示；模型名：仅 AI 显示 */}
                 <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground px-1">
-                  {msg.role === 'user' && msg.createTime && (
-                    <span>{formatTime(msg.createTime)}</span>
+                  {msg.role === 'user' && (
+                    <span>{formatTime(msg?.createTime || String(Date.now()))}</span>
                   )}
                   {msg.role === 'assistant' && msg.modelName && (
                     <span className="bg-muted px-2 py-0.5 rounded text-muted-foreground">
