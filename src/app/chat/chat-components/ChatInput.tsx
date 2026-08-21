@@ -103,11 +103,11 @@ export default function ChatInput({ value, onChange, onSend, placeholder }: Chat
       <div className="relative min-h-[60px] mt-4">
         {/* 占位符：用普通 span 代替 :empty 伪元素，避免 SSR/客户端 className 不一致。
             输入法组词时 value 还没更新（onChange 被跳过），此时必须隐藏占位符，否则会盖住候选文字 */}
-        {!value && !isComposing && (
+        {/* {!value && !isComposing && (
           <span className="pointer-events-none absolute left-4 top-3 text-[0.95rem] text-muted-foreground">
             {placeholder || '请输入您的问题...'}
           </span>
-        )}
+        )} */}
         <div
           ref={contentRef}
           contentEditable
