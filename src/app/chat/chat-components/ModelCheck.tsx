@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MODEL_LIST } from '@/constants/index';
+import { MODEL_LIST } from '@share/constants';
 import { Model, useQuestionStore } from '@/lib/store';
 type Props = {
   className?: string;
