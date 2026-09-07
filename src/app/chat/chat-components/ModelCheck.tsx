@@ -29,7 +29,7 @@ export default function ModelCheck({ className = '', changeModel, parentModel }:
   return (
     <div className={className}>
       <Select
-        value={parentModel || MODEL_LIST[0].value}
+        value={parentModel || MODEL_LIST[0].label}
         onValueChange={(value) => {
           setModel(value as Model);
           changeModel(value as Model);
