@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   CircuitBreaker,
-  getCircuitBreaker,
   circuitBreakers,
+  getCircuitBreaker,
   type CircuitBreakerOptions,
 } from '@/lib/circuit-breaker';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const defaultOptions: CircuitBreakerOptions = {
   failureThreshold: 3,
@@ -130,6 +130,27 @@ describe('CircuitBreaker', () => {
       vi.advanceTimersByTime(200);
 
       await expect(promise).rejects.toThrow('Request timeout');
+    });
+
+    it('should abort signal on timeout', async () => {
+      const cb = new CircuitBreaker({ ...defaultOptions, timeoutMs: 100 });
+      let aborted = false;
+
+      const promise = cb.execute(
+        (signal) =>
+          new Promise((resolve) => {
+            const timer = setTimeout(() => resolve('ok'), 200);
+            signal.addEventListener('abort', () => {
+              aborted = true;
+              clearTimeout(timer);
+            });
+          })
+      );
+
+      vi.advanceTimersByTime(200);
+
+      await expect(promise).rejects.toThrow('Request timeout');
+      expect(aborted).toBe(true);
     });
   });
 
