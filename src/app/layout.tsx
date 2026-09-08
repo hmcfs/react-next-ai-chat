@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from '@/components/theme/theme-provider';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -25,7 +25,8 @@ export const metadata: Metadata = {
     default: 'Clair - 清爽的 AI 对话助手',
     template: '%s | Clair',
   },
-  description: 'Clair 是一款清爽的 AI 对话助手：多模型支持、深度思考、图片与文件即传即聊、历史记录自动保存。让复杂的问题，用对话的方式解决。',
+  description:
+    'Clair 是一款清爽的 AI 对话助手：多模型支持、深度思考、图片与文件即传即聊、历史记录自动保存。让复杂的问题，用对话的方式解决。',
   keywords: ['AI', 'AI对话', '智能助手', '多模型', '流式输出', '图片理解', '文件上传'],
   authors: [{ name: 'Clair Team' }],
   creator: 'Clair',
@@ -86,7 +87,7 @@ export default function RootLayout({
         inter.variable
       )}
     >
-      <body className="min-h-full flex">
+      <body className="min-h-full flex" suppressHydrationWarning>
         <ThemeProvider>
           <TooltipProvider>
             <SidebarProvider>
