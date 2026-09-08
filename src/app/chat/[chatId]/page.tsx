@@ -107,7 +107,12 @@ export default function Chat() {
     reasoningRef.current = '';
     setThinkingOpen(true);
 
-    const userMsg: ChatMessage = { role: 'user', content: prompt, attachments };
+    const userMsg: ChatMessage = {
+      role: 'user',
+      content: prompt,
+      attachments,
+      createTime: new Date().toISOString(),
+    };
     setMessages((prev) => [
       ...prev,
       userMsg,
