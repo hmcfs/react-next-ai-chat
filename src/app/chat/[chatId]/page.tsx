@@ -5,14 +5,13 @@ import MessageAttachments, {
   type MessageAttachment,
 } from '@/app/chat/chat-components/MessageAttachments';
 import Markdown from '@/app/chat/chat-components/ReactMarkdown';
+import { clientApi } from '@/lib/http/client-api';
 import { markdownToText } from '@/lib/markdown';
 import { useFileStore, useQuestionStore } from '@/lib/store';
-import { Brain } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
-import { clientApi } from '@/lib/http/client-api';
 
 type TextContentItem = { type: 'text'; text: string };
 type ImageContentItem = { type: 'image_url'; image_url: { url: string } };
@@ -37,21 +36,16 @@ export default function Chat() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const {
-    getMessageParams,
-    setIsNewChat,
-    isNewChat,
-    clearMessages,
-    setStoreMsgs,
-  } = useQuestionStore(
-    useShallow((state) => ({
-      getMessageParams: state.getMessageParams,
-      setIsNewChat: state.setIsNewChat,
-      isNewChat: state.isNewChat,
-      clearMessages: state.clearMessages,
-      setStoreMsgs: state.setMessages,
-    }))
-  );
+  const { getMessageParams, setIsNewChat, isNewChat, clearMessages, setStoreMsgs } =
+    useQuestionStore(
+      useShallow((state) => ({
+        getMessageParams: state.getMessageParams,
+        setIsNewChat: state.setIsNewChat,
+        isNewChat: state.isNewChat,
+        clearMessages: state.clearMessages,
+        setStoreMsgs: state.setMessages,
+      }))
+    );
   const { clearFiles, concatFiles } = useFileStore(
     useShallow((state) => ({
       clearFiles: state.clear,
@@ -269,10 +263,7 @@ export default function Chat() {
         {/* ---------- 消息列表 ---------- */}
         <div className="space-y-6">
           {messages.map((msg, idx) => (
-            <div
-              key={msg.id || idx}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : ''}`}
-            >
+            <div key={msg.id || idx} className={`flex ${msg.role === 'user' ? 'justify-end' : ''}`}>
               {/* 消息主体：用户靠右限宽，AI 占满全宽 */}
               <div
                 className={`flex flex-col min-w-0 ${
@@ -292,15 +283,12 @@ export default function Chat() {
                 <div
                   className={`leading-relaxed text-[0.95rem] ${
                     msg.role === 'user'
-                      ? 'px-4 py-3 bg-blue-500 text-white rounded-2xl rounded-tr-sm shadow-sm'
+                      ? 'px-4 py-3 bg-blue-100 text-foreground rounded-2xl rounded-tr-sm shadow-sm'
                       : 'py-2 text-foreground'
                   }`}
                 >
                   {msg.role === 'user' ? (
-                    <>
-                      <p className="whitespace-pre-wrap">{msg.content as string}</p>
-                      <MessageAttachments attachments={msg.attachments} />
-                    </>
+                    <p className="whitespace-pre-wrap">{msg.content as string}</p>
                   ) : (
                     <Markdown
                       content={
@@ -315,6 +303,11 @@ export default function Chat() {
                     idx === messages.length - 1 &&
                     !(msg.content as string) && <TypingIndicator />}
                 </div>
+
+                {/* 附件：独立块级元素，与消息气泡分离 */}
+                {msg.role === 'user' && msg.attachments && msg.attachments.length > 0 && (
+                  <MessageAttachments attachments={msg.attachments} />
+                )}
 
                 {/* 时间：仅用户显示；模型名：仅 AI 显示 */}
                 <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground px-1">

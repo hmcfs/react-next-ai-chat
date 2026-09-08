@@ -1,6 +1,7 @@
 'use client';
 
 import { formatFileSize } from '@/lib/format';
+import { IMAGE_TYPES } from '@share/constants/file-types';
 import {
   File,
   FileArchive,
@@ -14,7 +15,6 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { IMAGE_TYPES } from '@share/constants/file-types';
 
 export type MessageAttachment = {
   url: string;
@@ -24,9 +24,8 @@ export type MessageAttachment = {
   size?: number;
 };
 
- const IMAGE_EXTENSIONS = new Set(IMAGE_TYPES);
+const IMAGE_EXTENSIONS = new Set(IMAGE_TYPES);
 function getExtension(attachment: MessageAttachment) {
-  
   const type = (attachment.fileType || attachment.minType || '').toLowerCase();
   if (type.startsWith('image/')) return type.slice('image/'.length);
   if (type && !type.includes('/')) return type.replace(/^\./, '');
@@ -78,40 +77,40 @@ export default function MessageAttachments({ attachments }: { attachments?: Mess
           const Icon = fileIcon(attachment);
           const fileName = getFileName(attachment);
 
-          if (image) {
-            return (
-              <button
-                key={`${attachment.url}-${index}`}
-                type="button"
-                onClick={() => setPreviewImage(attachment)}
-                className="group relative size-20 overflow-hidden rounded-xl border border-white/25 bg-white/10 text-left shadow-sm transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-                aria-label={`预览图片：${fileName}`}
-              >
-                <img src={attachment.url} alt={fileName} className="size-full object-cover" />
-                <span className="absolute inset-x-0 bottom-0 truncate bg-black/55 px-1.5 py-1 text-xs text-white">
-                  {fileName}
-                </span>
-              </button>
-            );
-          }
-
           return (
-            <a
+            <div
               key={`${attachment.url}-${index}`}
-              href={attachment.url}
-              target="_blank"
-              rel="noreferrer"
-              className="flex max-w-60 items-center gap-2 rounded-xl border border-white/25 bg-white/10 px-2.5 py-2 text-white shadow-sm transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-              title={`打开文件：${fileName}`}
+              className="group relative flex max-w-[220px] cursor-pointer items-center gap-2.5 rounded-xl border border-border p-2 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
             >
-              <Icon className="size-5 shrink-0" />
-              <span className="min-w-0">
-                <span className="block truncate text-sm">{fileName}</span>
+              {image ? (
+                <button
+                  type="button"
+                  onClick={() => setPreviewImage(attachment)}
+                  className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-accent"
+                  aria-label={`预览图片：${fileName}`}
+                >
+                  <img src={attachment.url} alt={fileName} className="h-full w-full object-cover" />
+                </button>
+              ) : (
+                <a
+                  href={attachment.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground"
+                  title={`打开文件：${fileName}`}
+                >
+                  <Icon className="size-5" />
+                </a>
+              )}
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate text-sm text-foreground">{fileName}</span>
                 {attachment.size != null && (
-                  <span className="block text-xs text-white/70">{formatFileSize(attachment.size)}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatFileSize(attachment.size)}
+                  </span>
                 )}
               </span>
-            </a>
+            </div>
           );
         })}
       </div>
