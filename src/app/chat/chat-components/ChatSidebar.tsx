@@ -96,7 +96,7 @@ function buildExportMarkdown(title: string, messages: ExportMessage[]): string {
     }
     const text = Array.isArray(msg.content)
       ? msg.content
-          .map((p) => (p.type === 'image_url' ? `![图片](${p.image_url?.url})` : p.text ?? ''))
+          .map((p) => (p.type === 'image_url' ? `![图片](${p.image_url?.url})` : (p.text ?? '')))
           .join('\n')
       : (msg.content ?? '');
     lines.push(text, '', '---', '');
@@ -422,16 +422,26 @@ export default function ChatSidebar({ open, setOpen, onSelectChat }: ChatSidebar
             <div className="flex items-center  text-2xl font-bold  ">
               <div className="flex items-center  ">
                 <AspectRatio ratio={1} className="mt-1.5 rounded-[50%] w-8 h-8 bg-muted">
-                  <Image
-                    src="/font2.png"
-                    alt="logo"
-                    fill
-                    className="w-full rounded-lg object-cover dark:brightness-90"
-                  />
+                  <div
+                    onClick={() => router.push('/home')}
+                    className="w-full h-full cursor-pointer"
+                  >
+                    <Image
+                      src="/font2.png"
+                      alt="logo"
+                      fill
+                      className="w-full rounded-lg object-cover dark:brightness-90"
+                    />
+                  </div>
                 </AspectRatio>
                 <span className="w-10 h-10 "></span>
               </div>
-              <div className="text-lg ml-4 text-[24px] font-bold">Clair</div>
+              <div
+                onClick={() => router.push('/home')}
+                className="text-lg ml-4 text-[24px] font-bold"
+              >
+                Clair
+              </div>
             </div>
             <div className="flex gap-3">
               <Search
