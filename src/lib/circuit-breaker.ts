@@ -34,24 +34,30 @@ export class CircuitBreaker {
     return this.state;
   }
 
-  async execute<T>(fn: () => Promise<T>): Promise<T> {
+  async execute<T>(fn: (signal: AbortSignal) => Promise<T>): Promise<T> {
     const state = this.getState();
 
     if (state === 'open') {
       throw new Error('Circuit breaker is open');
     }
 
+    const controller = new AbortController();
+
     try {
       const result = await Promise.race([
-        fn(),
+        fn(controller.signal),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Request timeout')), this.options.timeoutMs)
+          setTimeout(() => {
+            controller.abort();
+            reject(new Error('Request timeout'));
+          }, this.options.timeoutMs)
         ),
       ]);
 
       this.onSuccess();
       return result;
     } catch (error) {
+      controller.abort();
       this.onFailure();
       throw error;
     }

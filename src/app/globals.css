@@ -153,3 +153,23 @@
     @apply font-sans;
   }
 }
+
+/* 原生控件（滚动条/表单）跟随主题 */
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
+/* 尊重系统「减少动态效果」：关闭动画与过渡，避免眩晕（可访问性） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

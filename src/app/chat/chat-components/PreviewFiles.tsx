@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { createPortal } from 'react-dom';
 import { formatFileSize } from '@/lib/format';
 import { useFileStore } from '@/lib/store';
 import {
@@ -7,12 +5,14 @@ import {
   FileArchive,
   FileAudio,
   FileImage,
-  Presentation,
   FileSpreadsheet,
   FileText,
   FileVideo,
+  Presentation,
   X,
 } from 'lucide-react';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useShallow } from 'zustand/react/shallow';
 
 import { OFFICE_EMBED } from '@/constants/preview';
@@ -31,7 +31,9 @@ function fileIcon(fileType: string) {
 
 // 判断文件是否支持在线预览
 function canPreview(ext: string) {
-  return ['pdf', 'doc', 'docx', 'txt', 'md', 'rtf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv'].includes(ext);
+  return ['pdf', 'doc', 'docx', 'txt', 'md', 'rtf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv'].includes(
+    ext
+  );
 }
 
 export default function PreviewFiles() {
@@ -75,7 +77,7 @@ export default function PreviewFiles() {
       // 压缩包等触发下载
       const a = document.createElement('a');
       a.href = file.url;
-      a.download = file.fileName;
+      a.download = file.url.split('/').pop() || 'download';
       a.click();
     }
   };
@@ -90,11 +92,7 @@ export default function PreviewFiles() {
           className="group relative flex max-w-[220px] cursor-pointer items-center gap-2.5 rounded-xl border border-border bg-card p-2 pr-8 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
         >
           <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-accent">
-            <img
-              src={file.url}
-              alt={file.fileName}
-              className="h-full w-full object-cover"
-            />
+            <img src={file.url} alt={file.fileName} className="h-full w-full object-cover" />
           </span>
           <span className="flex min-w-0 flex-col">
             <span className="truncate text-sm text-foreground">{file.fileName}</span>

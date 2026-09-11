@@ -15,7 +15,7 @@ export async function proxyToBackend(req: NextRequest, path: string): Promise<Ne
   const circuitBreaker = getCircuitBreaker('backend', DEFAULT_CIRCUIT_BREAKER);
 
   try {
-    return await circuitBreaker.execute(async () => {
+    return await circuitBreaker.execute(async (signal) => {
       const url = new URL(path, BACKEND_URL);
       const headers = new Headers(req.headers);
       headers.set('Host', url.host);
@@ -47,6 +47,7 @@ export async function proxyToBackend(req: NextRequest, path: string): Promise<Ne
         method: req.method,
         headers,
         body: bodyToForward,
+        signal,
         redirect: 'manual',
       });
 

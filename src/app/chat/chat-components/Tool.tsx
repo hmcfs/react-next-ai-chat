@@ -4,7 +4,8 @@ import { useFileStore } from '@/lib/store/useFileStore';
 import { useQuestionStore } from '@/lib/store/useQuestionStore';
 import { uploadFiles } from '@/lib/uploadFiles';
 import { Image, ImageUp, Send } from 'lucide-react';
-import { useState } from 'react';
+import type { ChangeEvent } from 'react';
+
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -25,9 +26,8 @@ export default function Tool() {
       enableDeepThink: state.enableDeepThink,
     }))
   );
-  const [isFocusThink, setIsFocusThink] = useState(enableDeepThink);
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     // 先用 Array.from 快照文件数组（FileList 是活引用，清空 value 会把它一起清掉）
     const files = Array.from(e.target.files ?? []);
     e.target.value = '';
@@ -41,7 +41,7 @@ export default function Tool() {
     }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     e.target.value = '';
     if (files.length === 0) return;
@@ -83,15 +83,14 @@ export default function Tool() {
         </label>
         <div
           className={`flex flex-row items-center gap-1.5 py-1.5 px-2 hover:bg-accent rounded-md cursor-pointer text-foreground transition-colors ${
-            isFocusThink ? 'bg-card ring-1 ring-blue-400/60' : ''
+            enableDeepThink ? 'bg-card ring-1 ring-blue-400/60' : ''
           }`}
           onClick={(e) => {
             e.stopPropagation();
-            setEnableDeepThink(true);
-            setIsFocusThink(!isFocusThink);
+            setEnableDeepThink(!enableDeepThink);
           }}
         >
-          <span className={`text-[14px] ${isFocusThink ? 'text-blue-500' : ''}`}>深度思考</span>
+          <span className={`text-[14px] ${enableDeepThink ? 'text-blue-500' : ''}`}>深度思考</span>
         </div>
       </div>
 
